@@ -33,7 +33,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     //cambios serial
+    //cambios serial JERU
+    ui->ecg->set_serial_name("ECG");
     ui->ecg->iniciar_serial();
+
+    ui->ecg_2->set_serial_name("ECG2");
+    ui->ecg_2->iniciar_serial();
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
     //

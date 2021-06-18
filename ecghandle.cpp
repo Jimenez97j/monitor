@@ -36,8 +36,15 @@ ecghandle::ecghandle(QWidget *parent) :
     ///ui->plot_ecg->graph(1)->setPen(QPen(Qt::red, 1));
     ///ui->plot_ecg->graph(1)->rescaleAxes(true);
 
+    //serial name
+    serial_name = "";
+
     connect(cronometro_ecg, SIGNAL(timeout()), this, SLOT(funcionActivacionTimer()));
     cronometro_ecg->start(45);
+}
+
+void ecghandle::set_serial_name(QString name){
+    serial_name = name;
 }
 
 ecghandle::~ecghandle()
@@ -46,7 +53,7 @@ ecghandle::~ecghandle()
 }
 
 void ecghandle::iniciar_serial(){
-    local_serial = new SerialThread();
+    local_serial = new SerialThread(this, serial_name);
     connect(local_serial, SIGNAL(receive_data(QVector<double>, QVector<double>, int, double, double, double)), this, SLOT(plot_ECG(QVector<double>, QVector<double>, int, double, double, double)), Qt::QueuedConnection);
     //connect(local_serial, SIGNAL(receive_data_2(QVector<double>, QVector<double>, int, double, double, double)), this, SLOT(plot_ECG_2(QVector<double>, QVector<double>, int, double, double, double)), Qt::QueuedConnection);
     //cronometro_ecg->start(45);
