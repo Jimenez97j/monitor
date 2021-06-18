@@ -815,6 +815,7 @@ void MainWindow::on_iniciarpani_pressed(){
         //serial->write("U");
         //spo2serial->write_value("U");
         //spo2serial->write_value("B");
+        //JORGE
         emit spo2serial->escribe("U");
         //ui->iniciarpani->setStyleSheet("border-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
         ui->iniciarpani->setChecked(false);
