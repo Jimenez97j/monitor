@@ -1,12 +1,15 @@
 #include "paciente.h"
 #include "ui_paciente.h"
 
+int contpos_7 = 0;
 bool pac1=false,pac2=false,pac3=false; //variables para indicar cual boton esta activado
-Paciente::Paciente(QWidget *parent) :
+Paciente::Paciente(QWidget *parent, SerialSpo2 *serialspo2_registro) :
     QDialog(parent),
     ui(new Ui::Paciente)
 {
+    spo2serial_7 = serialspo2_registro;
     ui->setupUi(this);
+    connect(spo2serial_7, SIGNAL(boton_ajustes(QString )), this, SLOT(boton_handle_7(QString )), Qt::QueuedConnection);
     QString nombre, consulta;
     nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -41,22 +44,98 @@ Paciente::~Paciente(){
     delete ui;
 }
 
+void Paciente::boton_handle_7(QString x){
+
+    if (x == "derecha"){
+    contpos_7 = contpos_7 + 1;
+    if(contpos_7 > 8){
+        contpos_7= 8;
+    }
+    opciones_Paciente();
+    }
+
+    else if(x == "izquierda"){
+        contpos_7 = contpos_7 - 1;
+        if(contpos_7 < 0){
+            contpos_7 = 0;
+        }
+        opciones_Paciente();
+    }
+
+
+    else if(x == "click"){
+        on_okay_clicked();
+
+    }
+
+}
 
 void Paciente::on_paciente1_clicked(){
     emit sonido_click();
     pac1=true; //Se activa para marcar que es la seleccionada
     colorpaciente();
     pac1=false;// Se desactiva para no tener conflictos al cambiar el estado
+    emit bandera_perilla_7();
+    this->close();
+    contpos_7 = 0;
+    delete this;
 
 
 }
 
+void Paciente:: opciones_Paciente(){
+    switch(contpos_7)
+    {
+    case 0:
+        ui->notas->setStyleSheet("background-color:red;");
+        ui->paciente1->setStyleSheet("");
+        break;
+    case 1:
+        ui->paciente1->setStyleSheet("background-color:red;");
+        ui->notas->setStyleSheet("");
+        ui->paciente2->setStyleSheet("");
+        break;
+    case 2:
+        ui->paciente2->setStyleSheet("background-color:red;");
+        ui->paciente1->setStyleSheet("");
+        ui->paciente3->setStyleSheet("");
+        break;
+    case 3:
+        ui->paciente3->setStyleSheet("background-color:red;");
+        ui->paciente2->setStyleSheet("");
+        break;
+    }
+}
+
+void Paciente:: on_okay_clicked(){
+
+    switch(contpos_7)
+    {
+    case 0:
+       on_notas_selectionChanged();
+        break;
+    case 1:
+        on_paciente1_clicked();
+        break;
+    case 2:
+        on_paciente2_clicked();
+        break;
+    case 3:
+        on_paciente3_clicked();
+        break;
+    }
+
+}
 
 void Paciente::on_paciente2_clicked(){
     emit sonido_click();
     pac2=true;
     colorpaciente();
     pac2=false;
+    emit bandera_perilla_7();
+    this->close();
+    contpos_7 = 0;
+    delete this;
 
 }
 
@@ -66,6 +145,10 @@ void Paciente::on_paciente3_clicked(){
     pac3=true;
     colorpaciente();
     pac3=false;
+    emit bandera_perilla_7();
+    this->close();
+    contpos_7 = 0;
+    delete this;
 
 
 }

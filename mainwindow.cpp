@@ -420,10 +420,10 @@ void MainWindow:: on_ok_clicked(){
         on_modelo2_pressed();
         break;
     case 9:
-        on_ajustes_pressed();
+        on_toolButton_pressed();
         break;
     case 10:
-        on_toolButton_pressed();
+        on_ajustes_pressed();
         break;
     }
 
@@ -492,16 +492,16 @@ void MainWindow:: opciones(){
     case 8:
         ui->modelo2->setStyleSheet("background-color:red;border-image: url(:/imagenes/solonumerico.png) 0 0 0 0 stretch stretch;");
         ui->Paciente->setStyleSheet("border-image: url(:/imagenes/Paciente.png) 0 0 0 0 stretch stretch;");
-        ui->ajustes->setStyleSheet("border-image: url(:/imagenes/config.png) 0 0 0 0 stretch stretch;");
+        ui->toolButton->setStyleSheet("border-image: url(:/imagenes/sonido.png) 0 0 0 0 stretch stretch;");
         break;
     case 9:
-        ui->ajustes->setStyleSheet("background-color:red;border-image: url(:/imagenes/config.png) 0 0 0 0 stretch stretch;");
+        ui->toolButton->setStyleSheet("background-color:red;border-image: url(:/imagenes/sonido.png) 0 0 0 0 stretch stretch;");
         ui->modelo2->setStyleSheet("border-image: url(:/imagenes/solonumerico.png) 0 0 0 0 stretch stretch;");
-        ui->toolButton->setStyleSheet("border-image:  url(:/imagenes/sonido.png) 0 0 0 0 stretch stretch;");
+        ui->ajustes->setStyleSheet("border-image:  url(:/imagenes/config.png) 0 0 0 0 stretch stretch;");
         break;
     case 10:
-        ui->toolButton->setStyleSheet("background-color:red;border-image:  url(:/imagenes/sonido.png) 0 0 0 0 stretch stretch;");
-        ui->ajustes->setStyleSheet("border-image: url(:/imagenes/config.png) 0 0 0 0 stretch stretch;");
+        ui->ajustes->setStyleSheet("background-color:red;border-image:  url(:/imagenes/config.png) 0 0 0 0 stretch stretch;");
+        ui->toolButton->setStyleSheet("border-image: url(:/imagenes/sonido.png) 0 0 0 0 stretch stretch;");
         break;
     }
 }
@@ -836,12 +836,14 @@ void MainWindow::on_open_records_pressed(){
 
 
 void MainWindow::on_Paciente_pressed(){
+    bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    paciente = new Paciente;
+    paciente = new Paciente(this, spo2serial);
     paciente->setWindowFlags(Qt::FramelessWindowHint);
     paciente->setWindowFlags(Qt::Popup);
     paciente->setGeometry(701, 105, 340, 588);
     QObject::connect(paciente, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+    QObject::connect(paciente, SIGNAL(bandera_perilla_7()), this, SLOT(cambiar_bandera_2()));
     paciente->exec();
     show();
 }
@@ -852,7 +854,7 @@ void MainWindow::on_registro_usuario_pressed(){
     registros = new Registro(this, spo2serial);
     registros->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(registros, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(settings, SIGNAL(bandera_perilla()), this, SLOT(cambiar_bandera()));
+    QObject::connect(registros, SIGNAL(bandera_perilla_6()), this, SLOT(cambiar_bandera()));
     registros->exec();
     show();
 }
@@ -1437,10 +1439,11 @@ void MainWindow::der12(){
 //show the numeric view
 void MainWindow::on_modelo2_pressed(){
       //cronometro->disconnect();
+      bandera_2 = false;
       cronometro->stop();
      //  is_graph_ples_activated = false;
       //serial_ecg->close(); //verificar si este metodo funciona o si es mejor una variable booleana y seguir recibiendo datos
-      numerico = new MOD2;
+      numerico = new MOD2(0, spo2serial);
       numerico->setWindowFlags(Qt::FramelessWindowHint);
       sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
 

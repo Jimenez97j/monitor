@@ -56,6 +56,11 @@ private slots:
 
     void opciones_registro();
 
+    void on_okay_clicked();
+
+
+
+
 private:
     Ui::Registro *ui;
     QSqlDatabase db;

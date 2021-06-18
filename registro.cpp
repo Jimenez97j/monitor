@@ -60,8 +60,8 @@ void Registro::boton_handle_6(QString x){
     qDebug()<<"hola";
     if (x == "derecha"){
     contpos_6 = contpos_6 + 1;
-    if(contpos_6 > 8){
-        contpos_6 = 8;
+    if(contpos_6 > 10){
+        contpos_6 = 10;
     }
     opciones_registro();
     }
@@ -73,8 +73,51 @@ void Registro::boton_handle_6(QString x){
         }
         opciones_registro();
     }
+   else if(x == "click"){
+        on_okay_clicked();
+
+    }
 }
 
+void Registro:: on_okay_clicked(){
+
+    switch(contpos_6)
+    {
+    case 0:
+      on_names_selectionChanged();
+        break;
+    case 1:
+        on_names_2_selectionChanged();
+        break;
+    case 2:
+        on_last_name_selectionChanged();
+        break;
+    case 3:
+        on_mother_last_name_selectionChanged();
+        break;
+    case 4:
+
+        break;
+    case 5:
+
+        break;
+    case 6:
+
+        break;
+    case 7:
+
+        break;
+    case 8:
+        on_notes_selectionChanged();
+        break;
+    case 9:
+        on_CERRAR_pressed();
+        break;
+    case 10:
+        on_OK_pressed();
+        break;
+    }
+}
 
 void Registro:: opciones_registro(){
     switch(contpos_6)
@@ -172,7 +215,10 @@ void Registro::on_OK_pressed()
     crear.exec();
     save_settings_mode.clear();
     emit sonido_click();
+    emit bandera_perilla_6();
     this->close();
+    contpos_6 = 0;
+    delete this;
 
 }
 

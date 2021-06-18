@@ -5,6 +5,8 @@
 #include <QDesktopWidget>
 #include <QScreen>
 
+int contpos_8 = 0;
+
 
 QString hora2;
 int captura = 0, time_color = 0, time_check_alarms_value = 0;
@@ -17,11 +19,13 @@ int numbers_alarms = 0;
 bool cambio_numeros_mod2 = true, cambio_numeros2_mod2 = true, cambio_numeros3_mod2 = true;
 QTimer *cronometro_mod2 =new QTimer();
 
-MOD2::MOD2(QWidget *parent) :
+MOD2::MOD2(QWidget *parent, SerialSpo2 *serialspo2_alarmas) :
     QDialog(parent),
     ui(new Ui::MOD2)
 {
+    spo2serial_8 = serialspo2_alarmas;
     ui->setupUi(this); QString nombre, consulta, maincolor;
+    connect(spo2serial_8, SIGNAL(boton_ajustes(QString )), this, SLOT(boton_handle_8(QString )), Qt::QueuedConnection);
     ui->sound->setCheckable(true);
     ui->pani->setCheckable(true);
     nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
@@ -80,6 +84,139 @@ MOD2::~MOD2()
     delete ui;
 }
 
+void MOD2::boton_handle_8(QString y){
+
+    if (y == "derecha"){
+    contpos_8 = contpos_8 + 1;
+    if(contpos_8 > 11){
+        contpos_8 = 11;
+    }
+        opciones_mod2();
+    }
+
+    else if(y == "izquierda"){
+        contpos_8 = contpos_8 - 1;
+        if(contpos_8 < 0){
+            contpos_8 = 0;
+        }
+        opciones_mod2();
+    }
+
+    else if(y == "click"){
+        on_okay_clicked();
+
+    }
+
+}
+
+void MOD2:: opciones_mod2(){
+    switch(contpos_8)
+    {
+    case 0:
+        ui->registros->setStyleSheet("background-color:red;");
+        ui->captura->setStyleSheet("");
+        break;
+    case 1:
+        ui->captura->setStyleSheet("background-color:red;");
+        ui->registros->setStyleSheet("");
+        ui->galeria->setStyleSheet("");
+        break;
+    case 2:
+        ui->galeria->setStyleSheet("background-color:red;");
+        ui->captura->setStyleSheet("");
+        ui->alarmas->setStyleSheet("");
+        break;
+    case 3:
+        ui->alarmas->setStyleSheet("background-color:red;");
+        ui->galeria->setStyleSheet("");
+        ui->pani->setStyleSheet("");
+        break;
+    case 4:
+        ui->pani->setStyleSheet("background-color:red;");
+        ui->alarmas->setStyleSheet("");
+        ui->derivaciones->setStyleSheet("");
+        break;
+    case 5:
+        ui->derivaciones->setStyleSheet("background-color:red;");
+        ui->pani->setStyleSheet("");
+        ui->registro->setStyleSheet("");
+        break;
+    case 6:
+        ui->registro->setStyleSheet("background-color:red;");
+        ui->derivaciones->setStyleSheet("");
+        ui->paciente->setStyleSheet("");
+        break;
+    case 7:
+        ui->paciente->setStyleSheet("background-color:red;");
+        ui->registro->setStyleSheet("");
+        ui->close->setStyleSheet("");
+        break;
+    case 8:
+        ui->close->setStyleSheet("background-color:red;");
+        ui->paciente->setStyleSheet("");
+        ui->sound->setStyleSheet("");
+        break;
+    case 9:
+        ui->sound->setStyleSheet("background-color:red;");
+        ui->close->setStyleSheet("");
+        ui->ajustes->setStyleSheet("");
+        break;
+    case 10:
+        ui->ajustes->setStyleSheet("background-color:red;");
+        ui->sound->setStyleSheet("");
+        ui->internet->setStyleSheet("");
+        break;
+    case 11:
+        ui->internet->setStyleSheet("background-color:red;");
+        ui->ajustes->setStyleSheet("");
+        break;
+        break;
+    }
+}
+
+void MOD2:: on_okay_clicked(){
+
+    switch(contpos_8)
+    {
+    case 0:
+       on_registros_pressed();
+        break;
+    case 1:
+        on_captura_pressed();
+        break;
+    case 2:
+        on_galeria_pressed();
+        break;
+    case 3:
+        on_alarmas_pressed();
+        break;
+    case 4:
+        on_pani_pressed();
+        break;
+    case 5:
+        //on_derivaciones_pressed();
+        break;
+    case 6:
+        on_registro_pressed();
+        break;
+    case 7:
+        on_paciente_pressed();
+        break;
+    case 8:
+        on_close_pressed();
+        break;
+    case 9:
+        on_sound_pressed();
+        break;
+    case 10:
+        on_ajustes_pressed();
+        break;
+    case 11:
+        on_internet_clicked();
+        break;
+    }
+
+}
 
 void MOD2::on_registros_pressed()
 {

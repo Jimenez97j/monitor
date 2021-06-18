@@ -98,7 +98,7 @@
      <rect>
       <x>30</x>
       <y>390</y>
-      <width>1071</width>
+      <width>991</width>
       <height>281</height>
      </rect>
     </property>
@@ -661,8 +661,8 @@ border-color: white;
      <widget class="QLabel" name="bpm_ecg">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>7</y>
+        <x>0</x>
+        <y>10</y>
         <width>101</width>
         <height>61</height>
        </rect>
@@ -4315,6 +4315,36 @@ border-color: white;</string>
       <string>C°</string>
      </property>
     </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>1036</x>
+       <y>16</y>
+       <width>231</width>
+       <height>661</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="recursos.qrc">:/imagenes/fondoCuadricula1.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <zorder>label</zorder>
+    <zorder>analisis</zorder>
+    <zorder>ECGBLOCK</zorder>
+    <zorder>OXBLOCK</zorder>
+    <zorder>TEMP</zorder>
+    <zorder>PANI</zorder>
+    <zorder>DIAS</zorder>
+    <zorder>SYS</zorder>
+    <zorder>temp</zorder>
+    <zorder>temp_label_2</zorder>
+    <zorder>temp_label</zorder>
    </widget>
    <widget class="QWidget" name="Barra" native="true">
     <property name="geometry">
@@ -4837,7 +4867,7 @@ border-color: white;</string>
      <rect>
       <x>30</x>
       <y>30</y>
-      <width>1071</width>
+      <width>991</width>
       <height>301</height>
      </rect>
     </property>

@@ -15,6 +15,7 @@
 #include <paciente.h>
 #include <QLabel>
 #include <enviardatos.h>
+#include <serialspo2.h>
 
 namespace Ui {
 class MOD2;
@@ -35,7 +36,7 @@ signals:
     void time_check_alarms();
 
 public:
-    explicit MOD2(QWidget *parent = nullptr);
+    explicit MOD2(QWidget *parent = nullptr, SerialSpo2 *serialspo2_ajustes = NULL );
     ~MOD2();
     QString* labels();
     void sonido_toggle(bool toggle);
@@ -65,6 +66,9 @@ private slots:
     void on_paciente_pressed();
     void on_pani_pressed();
     void on_internet_pressed();
+    void boton_handle_8(QString y);
+    void opciones_mod2();
+    void on_okay_clicked();
 
 signals:
     void change_color();
@@ -80,6 +84,7 @@ private:
     QSqlDatabase db;
     ajustes* settings;
     enviardatos* envdat;
+    SerialSpo2 *spo2serial_8;
 };
 
 #endif // MOD2_H

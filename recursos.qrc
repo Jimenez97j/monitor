@@ -239,5 +239,6 @@
         <file>imagenes/btn_VisualizarV.png</file>
         <file>imagenes/btn_EnviarTemp.png</file>
         <file>imagenes/btn_Pulso.png</file>
+        <file>imagenes/fondoCuadricula1.png</file>
     </qresource>
 </RCC>
