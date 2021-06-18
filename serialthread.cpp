@@ -50,6 +50,7 @@ void SerialThread::handle_data()
     int aux = 0; //Como limpiaremos el buffer es necesesario comprobar que nuestro dato continuo venga completo, esta variable ayudará a ese proposito
     arreglo.append(ecg_port->readLine());
     //port->clear();
+    //Jeru
     cadena2.append(arreglo);
     int got = cadena2.indexOf('\n');
         if(got >= 0){
