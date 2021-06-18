@@ -1,0 +1,696 @@
+#ifndef FUNCIONES_H
+#define FUNCIONES_H
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "qcustomplot.h"
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+
+//main color of the app
+QString maincolor = "white", paciente_activo, savespo2="00";
+int reescale_config = 0;
+QString consulta, bpm_save_reg = "sin-datos", spo2_save_reg = "sin-datos",
+rpm_save_reg = "sin-datos", ps_save_reg = "sin-datos", px_save_reg = "sin-datos",
+bpm_mod2=" --",sop2_mod2="  --",temp_mod2="--",sys_mod2="--",dia_mod2=" --",
+med_mod2="--";
+
+//variables for alarms toggle and priority
+bool ecg_in = false, ecg_out = false, spo2_in = false, spo2_out = false, temp_in = false, temp_out = false;
+bool save_bpm_once = true, bpm_send_data = false;
+double bpm_data_compare;
+int bpm_counting_pulse = 0, bpm_pulse = 0;
+bool is_graph_ples_activated = true; //if the second mode is on, graphs should stop
+
+bool press_flag_data = false,silenciado = true, status = true, change_bottom_sound_status = false;
+//variables for ecg detection
+bool detection = false, detection_mode_change = false, banderapuntos=false;
+//select the derivation of ecg to show
+bool active = false,  activated=true, activated2=true, activated3=true;
+bool arr[12] =   { false, false, false, false, false, false, false, false, false, false, false, false };
+bool bandera_pani=false;
+
+int estatebutton = 0, contador= 0, promedio = 0;
+
+int  pantalla= 0; //Error en PANI
+
+int number_of_data_pm = 4320; //saving data per minute, 4320 savings for 72 hours
+
+double saving_temperature  = 0;
+
+//variables for pestimographic graph
+double datos_en_pantalla = 300, datos_grafica_max = 300, upset= 0, rango_max, rango_min, rescale_value=200, data_save = 0;
+//variables for ECG graph
+double datos_en_pantalla_ECG = 400, datos_grafica_max_ECG = 400, upset_ECG= 0, rango_max_ECG=744100, rango_min_ECG, rescale_value_ECG=2500, data_save_ECG = 0;
+//variables for rpm graph
+double datos_en_pantalla_rpm = 100, datos_grafica_max_rpm = 800, upset_rpm= 0, rango_max_rpm, rango_min_rpm, rescale_value_rpm=20, data_save_rpm = 0;
+QByteArray presion = "A";
+
+
+void MainWindow::silenciar_alarmas(bool valor, bool boton){
+
+    if(ecg_in){
+        //parpadeo numerico aquí
+        //serial write el comando al arduino para el color rojo y sonido
+        spo2_out = false;
+        temp_out = false;
+    }
+    else{
+        //apagar parpadeo numerico ecg
+    }
+    if(spo2_in)
+    {
+        //parpadeo numerico aquí
+        if(spo2_out){
+            //serial write el comando al arduino para el color amarillo y sonido
+            temp_out = false;
+        }
+    }
+    else{
+        //apagar parpadeo numerico spo2
+    }
+    if(temp_in){
+        //parpadeo numerico aquí
+        if(temp_out){
+        //serial write el comando al arduino para el color azul y sonido
+        }
+    }
+    else{
+        //apagar parpadeo numerico temp
+    }
+
+    if(ecg_in && spo2_in && temp_in)
+    {
+        silenciado = true;    //pendiente de verificar implementacion
+    }
+    else{
+        //serial write para apagar leds;
+    }
+}
+
+
+void MainWindow::on_toolButton_pressed(){
+    if(silenciado){
+        silenciado=false;
+        ui->toolButton->setStyleSheet("QToolButton {background-image: url(:/imagenes/nosound.png); background-repeat:none; border:none}");
+
+    }
+    else{
+        silenciado=true;
+        ui->toolButton->setStyleSheet("QToolButton {background-image: url(:/imagenes/sonido.png); background-repeat:none; border:none}");
+    }
+}
+
+
+void MainWindow::addPoint_spo2(double x, double y){ //fuction to add a new point to the array for graph
+    if(y < 500){
+
+    }else{
+    qv_x_spo2.append(x);
+    qv_y_spo2.append(y);
+    if(qv_y_spo2_reescale.length()>100){
+        qv_y_spo2_reescale[reescale_config] = y;
+        reescale_config = reescale_config + 1;
+        if(reescale_config>100){reescale_config=0;}
+    }
+    else{
+        qv_y_spo2_reescale.append(y);
+    }
+
+    if(save_bpm_once){
+        bpm_data_compare = y;
+        save_bpm_once = false;
+    }else{
+        if(y>bpm_data_compare){
+            bpm_counting_pulse = bpm_counting_pulse + 1;
+            bpm_data_compare = y;
+        }else{
+            bpm_counting_pulse = 0;
+            bpm_data_compare = y;
+        }
+        if(bpm_counting_pulse>4){
+                bpm_pulse = bpm_pulse + 1;
+                bpm_counting_pulse = 0;
+        }
+        if(bpm_send_data){
+            bpm_send_data = false;
+            bpm_pulse = bpm_pulse * 4;
+            qDebug() << bpm_pulse;
+            bpm_pulse = 0;
+            bpm_counting_pulse = 0;
+        }
+    }
+    }
+}
+
+
+void MainWindow::clearData() //function to clear the array and initialize the variables of the ECG graph
+{
+    qv_x_ECG.clear();
+    qv_y_ECG.clear();
+    datos_en_pantalla_ECG = 400, datos_grafica_max_ECG = 400, upset_ECG= 0; //reiniciamos el eje x, los datos mostrados y nuestro desplazamiento
+}
+
+
+void MainWindow::clearData_spo2() //function to clear the array and initialize the variables of the ECG graph
+{
+    qv_x_spo2.clear();
+    qv_y_spo2.clear();
+    datos_en_pantalla = 300, datos_grafica_max = 300, upset= 0;
+}
+
+
+void MainWindow::plot_spo2(){  //function for ploting the spo2
+
+    if(is_graph_ples_activated){
+        double minrangeLine = *std::min_element(qv_y_spo2_reescale.begin(),qv_y_spo2_reescale.end());
+        double maxrangeLine = *std::max_element(qv_y_spo2_reescale.begin(),qv_y_spo2_reescale.end());
+       // ui->plot->yrescaleAxis(true);
+        ui->plot->yAxis->setRange(minrangeLine, maxrangeLine);  //Reescale the Y axis if it is necessary
+        ui->plot->xAxis->setRange(upset,datos_grafica_max); //Reescale the X axis if it is necessary
+        ui->plot->graph(0)->setData(qv_x_spo2,qv_y_spo2); //Add the array of values to the graph set
+        ui->plot->replot(); //paint the new values in the screen
+        ui->plot->update(); // update the graph
+        datos_grafica_max=datos_grafica_max+1; //increment the variable to move the graph along with data.
+        upset=upset+1; //increment the value to move the array along with data.
+    }
+}
+
+
+void MainWindow::RecibirArreglo(){
+    int alarma_max = 0;
+    QSqlQuery crear;
+    QByteArray arreglo;
+    int alarma_max_spo2;
+    arreglo=serial->readLine();
+   // qDebug()<<arreglo;
+    cadena=arreglo; //transform the array into a string for using string methods.
+    length = cadena.length()-2;
+
+    //+++++++++++++++++++++++++++++++++++++ SpO2(%) +++++++++++++++++++++++++++++++++++++++
+
+    if(cadena[0] == 'A'){
+        QString data;
+        for (int i = 1; i<length ;i++ ) {
+            data[i] = cadena[i];
+        }
+         if(data.toDouble() == 0){
+             data=savespo2;
+         }
+         else{
+             savespo2=data;
+         }
+         spo2_save_reg = data + " " + "%"; //value to save into database
+         ui->SPO2->setText(data);
+         sop2_mod2 = data;
+         consulta.clear();
+         consulta.append("SELECT * FROM alarmas WHERE ID = '1'");
+         crear.prepare(consulta);
+         crear.exec();
+         crear.next();
+         alarma_max = crear.value(0).toInt();
+         if(data.toInt() > alarma_max){
+             spo2_in = true;
+             spo2_out = true;
+            silenciar_alarmas(true, silenciado);
+         }
+         else{silenciar_alarmas(false, silenciado);}
+         if(data.toInt() < alarma_max){
+             spo2_in = true;
+             spo2_out = true;
+            silenciar_alarmas(true, silenciado);
+         }
+         else{silenciar_alarmas(false, silenciado);}
+    }
+
+    //+++++++++++++++++++++++++++++++++++++ PLETH +++++++++++++++++++++++++++++++++++++++++
+
+        if(cadena[0] == 'B'){ //Search for the specific data simbol
+        QString data;   // variable donde guardaremos el valor numerico sin la letra B
+        for (int i = 1; i<length ;i++ ) { //recorremos la cadena recibida por serial desde una posición después de la letra B hasta el final de la misma
+            data[i] = cadena[i];
+        }
+         if(1){
+         datos_en_pantalla = datos_en_pantalla + 1; //Incrementamos en 1 el eje inferior (x) de nuestra grafica
+         addPoint_spo2(datos_en_pantalla,  data.toDouble()); //Se prepara el punto convirtiendo la variable data (string) a double ( numero)
+         plot_spo2(); //Se envia el punto a gráficar
+         ui->bpmsp2_4->setText("SpO2");
+         }
+         else {
+             ui->bpmsp2_4->setText("<font color='red' size='.3'>No Finger</font>");
+             savespo2 = "--";
+             ui->SPO2->setText("00");
+         }
+    }
+
+    //+++++++++++++++++++++++++++++++++++ SPO2(BPM) +++++++++++++++++++++++++++++++++++++++++
+
+    if(cadena[0] == 'J'){
+        QString data;
+        for (int i = 1; i<length ;i++ ) {
+            data[i] = cadena[i];
+        }
+           ui->bpmsp2->setText(data);
+    }
+
+    //++++++++++++++++++++++++++++++++++ TEMPERATURE ++++++++++++++++++++++++++++++++++++++++
+
+    if(cadena[0] == 'K'){
+        promedio = promedio + 1;
+        QString data;
+        for (int i = 1; i<length ;i++ ) {
+            data[i] = cadena[i];
+        }
+           saving_temperature = saving_temperature + data.toDouble();
+           if(promedio>9){
+           saving_temperature =  saving_temperature/10;
+           QString valueAsString = QString::number(saving_temperature);
+           ui->temp->setText(valueAsString);
+           promedio = 0;
+           saving_temperature = 0;
+           temp_mod2 = valueAsString;
+           valueAsString.clear();
+       }
+    }
+    if(upset>600){
+        clearData_spo2();
+    }
+    serial->clear();
+}
+
+
+void MainWindow::RecibirArreglo_ECG(){ //funcion para recibir el dato del sensor de oximetria y verificar de cual se trata
+    QByteArray arreglo; //variable donde recibirimos el dato serial
+    int aux; //Como limpiaremos el buffer es necesesario comprobar que nuestro dato continuo venga completo, esta variable ayudará a ese proposito
+    arreglo=serial_ecg->readLine();
+    //serial_ecg->clear();
+    cadena2 = arreglo;
+    aux = cadena2.size(); //guardamos el tamaño del dato serial recibido
+    double grafica=cadena2.toDouble();
+    grafica=grafica*100;
+
+    if(aux>8){ // Para el ECG esperamos un dato similar a -xxx.x- de un total de 7 espacios, por lo que con 6, es considerado dato completo
+
+        datos_en_pantalla_ECG = datos_en_pantalla_ECG + 1; //Incrementamos en 1 el eje inferior (x) de nuestra grafica
+        if(grafica<200){
+          //   NeedReescale_ECG(grafica); //Llamamos a nuestra funcion para ver si es necesario reescalar el eje Y
+            addPoint_ECG(datos_en_pantalla_ECG,  grafica); //Se prepara el punto convirtiendo la variable data (string) a double ( numero)
+            plot_ECG(); //Se envia el punto a gráficar
+        }
+    }
+
+    if(upset_ECG>800){ //Para evitar almacenar datos inncesarios, cada 4500 datos se realiza una limpieza
+
+        clearData(); //limpiamos vectores de las gráficas
+        serial_ecg->clear(); // limpiamos buffer
+        arreglo.clear(); // limpiamos array que guarda los datos del serial
+    }
+}
+
+
+void MainWindow::plot_ECG(){  //función requerida para gráficar
+    double minrangeLine = *std::min_element(qv_y_spo2_reescale.begin(),qv_y_spo2_reescale.end());
+    double maxrangeLine = *std::max_element(qv_y_spo2_reescale.begin(),qv_y_spo2_reescale.end());
+   // ui->plot->yrescaleAxis(true);
+    ui->plot->yAxis->setRange(minrangeLine, maxrangeLine);  //Reescale the Y axis if it is necessary
+    ui->plot->xAxis->setRange(upset,datos_grafica_max); //Reescale the X axis if it is necessary
+    ui->plot_ecg->graph(0)->setData(qv_x_ECG,qv_y_ECG); //se añaden los valores qv_x, qv_y al set de datos para la gráfica
+    ui->plot_ecg->replot(); //se vuelven a dibujar los valores
+    ui->plot_ecg->update(); // se actualiza la gráfica
+    datos_grafica_max_ECG=datos_grafica_max_ECG+1;
+    upset_ECG=upset_ECG+0.7;
+}
+
+
+void MainWindow::addPoint_ECG(double x, double y){ //funcion que agrega un nuevo punto a nuestro array de puntos a graficar
+
+    qv_x_ECG.append(x);
+    qv_y_ECG.append(y);
+    if(qv_y_ecg_reescale.length()>100){
+        qv_y_ecg_reescale[reescale_config] = y;
+        reescale_config = reescale_config + 1;
+        if(reescale_config>100){reescale_config=0;}
+    }
+    else{
+        qv_y_ecg_reescale.append(y);
+    }
+}
+
+
+void MainWindow::NeedReescale_ECG(double data){
+    if(data_save_ECG + rescale_value_ECG > data) //verificamos si la grafica actual permanece dentro del rango superior
+    {
+        if(data_save_ECG - rescale_value_ECG < data) // verificamos si la grafica actual permanece dentro del rango inferior
+        {
+          //  data_save = data_save; // SI las condiciones anteriores (ambas) se cumplen no realizamos accion alguna
+        }
+        else
+        {
+             rango_min_ECG  = data + rescale_value_ECG;
+             rango_max_ECG = data - rescale_value_ECG;//si la grafica no encaja en el rango inferior recalculamos en funcion de rescale_value
+             data_save_ECG = data; //guardamos el dato de la ultima vez que se reescalo para continuar comparando
+        }
+    }
+    else{
+          rango_min_ECG  = data + rescale_value_ECG;
+          rango_max_ECG = data - rescale_value_ECG;; // reescale Y axis
+          data_save_ECG = data; // save the last data for future comparation
+    }
+}
+
+
+void MainWindow::RecibirArreglo_ECG_numerico(){
+    QByteArray arreglo;
+    arreglo=serial_ecg_data->readLine();
+    cadena=arreglo; // convert array into string in order to use string functions
+    length = cadena.length()-2;
+    if(cadena[0] == 'D'){
+        QString data;
+        for (int i = 1; i<length ;i++ ) {
+            data[i] = cadena[i];
+        }
+         bpm_save_reg = data + " " + "bpm"; //save bpm register into database
+         ui->bpm_ecg->setText(data);
+    }
+
+    if(cadena[0] == 'E'){
+        QString data;
+        for (int i = 1; i<length ;i++ ) {
+            data[i] = cadena[i];
+        }
+         rpm_save_reg = data + " " + "rpm"; // value to save for rpm register into database
+         ui->rpm->setText(data);
+    }
+}
+
+
+//Funciones para la grafica de la respiración
+void MainWindow::NeedReescale_rpm(double data){
+    if(data_save_rpm + rescale_value_rpm > data){ //verificamos si la grafica actual permanece dentro del rango superior
+
+        if(data_save_rpm - rescale_value_rpm < data){ // verificamos si la grafica actual permanece dentro del rango inferior
+          //  data_save = data_save; // SI las condiciones anteriores (ambas) se cumplen no realizamos accion alguna
+        }
+        else{
+             rango_min_rpm  = data + rescale_value_rpm;
+             rango_max_rpm = data - rescale_value_rpm;//si la grafica no encaja en el rango inferior recalculamos en funcion de rescale_value
+             data_save_rpm = data; //guardamos el dato de la ultima vez que se reescalo para continuar comparando
+        }
+     }
+        else{
+             rango_min_rpm  = data + rescale_value_rpm;
+             rango_max_rpm = data - rescale_value_rpm;; // si la grafica no encaja en el rango superior recalculamos en funcion de rescale_value
+             data_save_rpm = data; // guardamos el dato de la ultima vez que se reescalo para continuar comparando
+        }
+}
+
+
+void MainWindow::addPoint_rpm(double x, double y){ //funcion que agrega un nuevo punto a nuestro array de puntos a graficar
+    qv_x_rpm.append(x);
+    qv_y_rpm.append(y);
+}
+
+
+//funcion para guardar el registro de los signos vitales del paciente cada min
+void MainWindow::save_data_db(){
+    bool  save_or_update = false;
+    QSqlQuery crear;
+    QString hora;
+    int count_register = 0, last_update_register;
+    hora  = QDateTime::currentDateTime().toString("dd-MM-yyyy hh:mm:ss");
+    consulta.clear();
+    //Check is it necessary to insert a new data or update (the program is required to save up to 6 days0.............
+    consulta.append("SELECT COUNT(id) FROM registros");
+    crear.prepare(consulta);
+    crear.exec();
+    crear.next();
+    consulta.clear();
+    count_register = crear.value(0).toInt(); //count the number of registers in the database
+
+    if(count_register==number_of_data_pm - 1){
+        consulta.append("UPDATE registros SET bandera = '0' WHERE id = 1");
+        crear.prepare(consulta);
+        crear.exec();
+        consulta.clear();
+    }
+
+    if(count_register<number_of_data_pm){
+        save_or_update = false;
+    }
+
+    else{save_or_update = true;}
+    // creamos las instancias para hacer un insert en la tabla (DB)
+
+    //check if there is new data from de press
+
+    if(press_flag_data){
+        press_flag_data = false;
+    }
+
+    else{
+      ps_save_reg = "sin-datos", px_save_reg = "sin-datos";
+    }
+     consulta.clear();
+     consulta.append("SELECT id FROM registros WHERE bandera = '0'");
+     crear.prepare(consulta);
+     crear.exec();
+     crear.next();
+     last_update_register = crear.value(0).toInt() + 1;
+
+    if(last_update_register == number_of_data_pm + 1)
+     {last_update_register = 1;}
+     QString value= QString::number(last_update_register);
+     consulta.clear();
+
+    if(save_or_update){
+     consulta.append("UPDATE registros SET hora = '" + hora +"', paciente='" + paciente_activo +"', bpm = '" + bpm_save_reg
+                     +"', spo2 = '" + spo2_save_reg +"', rpm = '" + rpm_save_reg +"', prem = '" +
+                     ps_save_reg +"', prex =  '" + px_save_reg +"', bandera = '1' WHERE bandera = '0'");
+     crear.prepare(consulta);
+     crear.exec();
+     consulta.clear();
+     consulta.append("UPDATE registros SET bandera = '0' WHERE id = " + value );
+     crear.prepare(consulta);
+     crear.exec();
+     consulta.clear();
+    }
+
+    else{
+     consulta.append("INSERT INTO registros(hora,paciente, bpm, spo2, rpm, prem, prex, bandera) "
+                    "VALUES ('" + hora +"', '" + paciente_activo +"','"
+                    + bpm_save_reg +"', '" +
+                    spo2_save_reg +"', '" +
+                    rpm_save_reg +"', '" +
+                    ps_save_reg +"', '" +
+                                px_save_reg +"', '1' )");
+                crear.prepare(consulta);
+                crear.exec();
+                consulta.clear();
+    }
+}
+
+
+void MainWindow::datos_presion(){
+    QString sys, dys;
+    QByteArray arreglo, arreglo2,arreglo3;
+    arreglo=serial_presion->readLine(); //for some reason its necessary to read two lines at time.
+    arreglo2=serial_presion->readLine();
+    arreglo3=serial_presion->readLine();
+    press_flag_data = true; //true for saving data just one time (the medition time)
+    cadena=arreglo; //transform the array into a string for using string methods.
+    length = cadena.length()-1;
+    cadena2=arreglo2; //transform the array into a string for using string methods.
+    lenght2 = cadena2.length()-1;
+    cadena3=arreglo3; //transform the array into a string for using string methods.
+    lenght3 = cadena3.length()-1;
+
+
+    //++++++++++++++++++++++++++++++++ SYSTOLIC ++++++++++++++++++++++++++++++++++++++++
+
+
+    if(cadena[0] == 'S'){  //start point to get the systolic
+        QString data;
+        for (int i = 1; i<length ;i++ ) {
+            data[i] = cadena[i];
+        }
+             sys=data;
+         ps_save_reg = sys; //value to save into database
+         ui->pres_sis->setText(data);
+         sys_mod2 = data;
+         contador=0;
+         ui->iniciarpani->setStyleSheet("background-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
+         bandera_pani=false;
+    }
+
+
+    //++++++++++++++++++++++++++++++++ DYASTOLIC +++++++++++++++++++++++++++++++++++++++++++
+
+
+    if(cadena2[0] == 'D'){ //start point to get the dyastolic
+        QString data;
+        for (int i = 1; i<lenght2 ;i++ ) {
+            data[i] = cadena2[i];
+        }
+         dys=data;
+         px_save_reg = dys; //value to save into database
+         ui->pres_sis_2->setText(data);
+         dia_mod2 = data;
+         contador=0;
+         ui->iniciarpani->setStyleSheet("background-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
+         bandera_pani=false;
+    }
+
+
+    //++++++++++++++++++++++++++++++++ PANI AVERAGE ++++++++++++++++++++++++++++++++++++++++
+
+
+    if(cadena3[0] == 'M'){ //start point to get the average
+        QString data;
+        for (int i = 1; i<lenght2 ;i++ ) {
+            data[i] = cadena2[i];
+        }
+         dys=data;
+         ui->rpm->setText(data);
+         med_mod2 = data;
+         contador=0;
+         ui->iniciarpani->setStyleSheet("background-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
+         bandera_pani=false;
+    }
+
+
+    //++++++++++++++++++++++++++++++++ PANI ERROR ++++++++++++++++++++++++++++++++++++++++
+
+
+    if(cadena[0] == 'E'){
+        pantalla=0;
+        contador=contador+1;
+        ps_save_reg = "error de medición"; //value to save into database
+        px_save_reg = "error de medición";
+        ui->pres_sis->setText("Err");
+        ui->pres_sis_2->setText("Err");
+        ui->rpm->setText("Err");
+        ui->label_5->setText("<font color='red' size='1'>Se ha detectado error en medición PANI, inicialize nuevamente </font>");
+        ui->iniciarpani->setStyleSheet("background-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
+     }
+}
+
+int derivaciones::statebutton(){
+   return estatebutton;
+}
+
+void MainWindow::alarmasnumeros(QLabel *label,QString color){
+label->setStyleSheet(color);
+}
+
+void MOD2::alarmasnumeros(QLabel *label,QString color){
+label->setStyleSheet(color);
+}
+
+void ajustes::cleanAll(){
+    QSqlQuery crear;
+    consulta.append("DELETE FROM registros WHERE 1");
+    crear.prepare(consulta);
+    crear.exec();
+    consulta.clear();
+}
+
+void ajustes::changebackground(QString color){
+   maincolor = color;
+   QSqlQuery crear;
+   QString windowcolor;
+   windowcolor.append("UPDATE ajustes SET color = '" + color + "' WHERE 1");
+   crear.prepare(windowcolor);
+   crear.exec();
+   windowcolor.clear();
+}
+
+QString ajustes::getajustes(){
+    QSqlQuery crear;
+    QString actualcolor, windowcolor;
+    windowcolor.append("SELECT * FROM ajustes WHERE 1");
+    crear.prepare(windowcolor);
+    crear.exec();
+    crear.next();
+    actualcolor = crear.value(1).toString();
+    windowcolor.clear();
+
+    if(actualcolor == "#326d72"){
+        actualcolor = "Verde Aqua";
+    }
+
+    if(actualcolor == "#20214f"){
+        actualcolor = "Morado renaciente";
+    }
+
+    if(actualcolor == "#ffffff"){
+        actualcolor = "Blanco Luminoso";
+    }
+
+    if(actualcolor == "#000000"){
+        actualcolor = "Negro Espacial";
+    }
+
+    if(actualcolor == "#003e6c"){
+        actualcolor = "Azul Opaco";
+    }
+
+    return actualcolor;
+}
+
+QString* MOD2::labels()
+{
+    QString* arr = new QString[6];
+    arr[0] = bpm_mod2;
+    arr[1] = sop2_mod2;
+    arr[2] = temp_mod2;
+    arr[3] = sys_mod2;
+    arr[4] = dia_mod2;
+    arr[5] = med_mod2;
+    return arr;
+}
+
+QString ajustes::detection_status(){
+    QSqlQuery crear;
+    QString get_settings_mode, result;
+    get_settings_mode.append("SELECT * FROM ajustes WHERE 1");
+    crear.prepare(get_settings_mode);
+    crear.exec();
+    crear.next();
+    result = crear.value(2).toString();
+    get_settings_mode.clear();
+    return result;
+}
+
+void ajustes::detection_mode(bool state_mode){
+    detection_mode_change = true;
+    QSqlQuery crear;
+    QString save_settings_mode;
+
+    if(state_mode){
+         save_settings_mode.append("UPDATE ajustes SET detection_mode = 'true' WHERE 1");
+         detection = true;
+         banderapuntos=true;
+    }
+
+    else{
+        save_settings_mode.append("UPDATE ajustes SET detection_mode = 'false' WHERE 1");
+        detection = false;
+        banderapuntos=false;
+    }
+    crear.prepare(save_settings_mode);
+    crear.exec();
+}
+
+void Paciente::paciente_activo_change(QString name_active_pacient){
+    paciente_activo = name_active_pacient;
+}
+
+bool MOD2::sonido_get_status(){
+    return silenciado;
+}
+
+bool MOD2::get_pani_status(){
+    return bandera_pani;
+}
+
+#endif // FUNCIONES_H

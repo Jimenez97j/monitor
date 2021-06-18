@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/home/ivan/Escritorio/BETAS/INTERFAZ ALARMAS/INTERFAZ 2.5/Pantalla touch/beta 2.1 monitor signos v">
+        <file>imagenes/alarmas.png</file>
+        <file>imagenes/barra.png</file>
+        <file>imagenes/boton amarillo.png</file>
+        <file>imagenes/boton azul.png</file>
+        <file>imagenes/boton verde.png</file>
+        <file>imagenes/cerrar.png</file>
+        <file>imagenes/Corchete Amarillo.png</file>
+        <file>imagenes/Corchete Rojo.png</file>
+        <file>imagenes/Corchete Verde.png</file>
+        <file>imagenes/Cuadricula.png</file>
+        <file>imagenes/Cuadricula2.png</file>
+        <file>imagenes/Cuadricula3.png</file>
+        <file>imagenes/datos.png</file>
+        <file>imagenes/detenerpani.png</file>
+        <file>imagenes/fondobotonera.png</file>
+        <file>imagenes/imprimir.png</file>
+        <file>imagenes/inciar.png.png</file>
+        <file>imagenes/inciarpani.png</file>
+        <file>imagenes/iniciar.png</file>
+        <file>imagenes/mas.png</file>
+        <file>imagenes/menos.png</file>
+        <file>imagenes/Monitor.png</file>
+        <file>imagenes/nosound.png</file>
+        <file>imagenes/PRINT.png</file>
+        <file>imagenes/sonido.png</file>
+    </qresource>
+</RCC>
