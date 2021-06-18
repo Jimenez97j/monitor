@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     //cambios serial
+    //pequeña modificacion
     ui->ecg->iniciar_serial();
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
