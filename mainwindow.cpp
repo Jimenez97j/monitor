@@ -846,10 +846,12 @@ void MainWindow::on_Paciente_pressed(){
 }
 
 void MainWindow::on_registro_usuario_pressed(){
+     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    registros = new Registro;
+    registros = new Registro(this, spo2serial);
     registros->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(registros, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+    QObject::connect(settings, SIGNAL(bandera_perilla()), this, SLOT(cambiar_bandera()));
     registros->exec();
     show();
 }

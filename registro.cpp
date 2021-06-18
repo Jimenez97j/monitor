@@ -1,12 +1,15 @@
 ﻿#include "registro.h"
 #include "ui_registro.h"
 #include <qdebug.h>
+int contpos_6 = 0;
 
-Registro::Registro(QWidget *parent) :
+Registro::Registro(QWidget *parent, SerialSpo2 *serialspo2_registro) :
     QDialog(parent),
     ui(new Ui::Registro)
 {
+    spo2serial_6 = serialspo2_registro;
     ui->setupUi(this);
+    connect(spo2serial_6, SIGNAL(boton_ajustes(QString )), this, SLOT(boton_handle_6(QString )), Qt::QueuedConnection);
     //blood combobox set settings
      ui->blood_type->addItem("A +");
      ui->blood_type->addItem("A -");
@@ -51,10 +54,97 @@ Registro::~Registro(){
     delete ui;
 }
 
+void Registro::boton_handle_6(QString x){
+
+
+    qDebug()<<"hola";
+    if (x == "derecha"){
+    contpos_6 = contpos_6 + 1;
+    if(contpos_6 > 8){
+        contpos_6 = 8;
+    }
+    opciones_registro();
+    }
+
+    else if(x == "izquierda"){
+        contpos_6 = contpos_6 - 1;
+        if(contpos_6 < 0){
+            contpos_6 = 0;
+        }
+        opciones_registro();
+    }
+}
+
+
+void Registro:: opciones_registro(){
+    switch(contpos_6)
+    {
+    case 0:
+        ui->names->setStyleSheet("background-color:red;");
+        ui->names_2->setStyleSheet("");
+        break;
+    case 1:
+        ui->names_2->setStyleSheet("background-color:red;");
+        ui->names->setStyleSheet("");
+        ui->last_name->setStyleSheet("");
+        break;
+    case 2:
+        ui->last_name->setStyleSheet("background-color:red;");
+        ui->names_2->setStyleSheet("");
+        ui->mother_last_name->setStyleSheet("");
+        break;
+    case 3:
+        ui->mother_last_name->setStyleSheet("background-color:red;");
+        ui->last_name->setStyleSheet("");
+        ui->blood_type->setStyleSheet("");
+        break;
+    case 4:
+        ui->blood_type->setStyleSheet("background-color:red;");
+        ui->mother_last_name->setStyleSheet("");
+        ui->gender->setStyleSheet("");
+        break;
+    case 5:
+        ui->gender->setStyleSheet("background-color:red;");
+        ui->blood_type->setStyleSheet("");
+        ui->age_c->setStyleSheet("");
+        break;
+    case 6:
+        ui->age_c->setStyleSheet("background-color:red;");
+        ui->gender->setStyleSheet("");
+        ui->num_paciente->setStyleSheet("");
+        break;
+    case 7:
+        ui->num_paciente->setStyleSheet("background-color:red;");
+        ui->age_c->setStyleSheet("");
+        ui->notes->setStyleSheet("");
+        break;
+    case 8:
+        ui->notes->setStyleSheet("background-color:red;");
+        ui->num_paciente->setStyleSheet("");
+        ui->CERRAR->setStyleSheet("");
+        break;
+    case 9:
+        ui->CERRAR->setStyleSheet("background-color:red;");
+        ui->notes->setStyleSheet("");
+        ui->OK->setStyleSheet("");
+        break;
+    case 10:
+        ui->OK->setStyleSheet("background-color:red;");
+        ui->CERRAR->setStyleSheet("");
+        break;
+    }
+}
+
+
+
+
 void Registro::on_CERRAR_pressed()
 {
     emit sonido_click();
+    emit bandera_perilla_6();
     this->close();
+    contpos_6 = 0;
+    delete this;
 }
 
 void Registro::on_OK_pressed()

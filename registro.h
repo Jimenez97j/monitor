@@ -6,6 +6,7 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 #include <teclado.h>
+#include <serialspo2.h>
 
 
 namespace Ui {
@@ -17,10 +18,13 @@ class Registro : public QDialog
     Q_OBJECT
 
 public:
+    explicit Registro(QWidget *parent = nullptr, SerialSpo2 *serialspo2_registro = NULL);
+
     explicit Registro(QWidget *parent = nullptr);
     ~Registro();
 signals:
       void sonido_click();
+      void bandera_perilla_6();
 public slots:
       void letter_press(QString letter);
       void letter_press_lastname(QString letter);
@@ -48,10 +52,15 @@ private slots:
 
     void on_names_2_selectionChanged();
 
+    void boton_handle_6(QString x);
+
+    void opciones_registro();
+
 private:
     Ui::Registro *ui;
     QSqlDatabase db;
     Teclado* teclado;
+    SerialSpo2 *spo2serial_6;
 
 };
 
