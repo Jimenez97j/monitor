@@ -138,7 +138,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->color->setStyleSheet("background-color:" + maincolor);//background
     ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
     ui->ecg->change_square_ecg(maincolor);   //background erase rectangle
-    //ui->ecg_2->change_square_ecg(maincolor);
+    ui->ecg_2->change_square_ecg(maincolor);
 
  if(maincolor == "#326d72"){
      //for the ples graph
@@ -164,7 +164,7 @@ MainWindow::MainWindow(QWidget *parent)
 
      //for the ecg graph
      ui->ecg->change_color_chart(1);
-     //ui->ecg_2->change_color_chart(1);
+     ui->ecg_2->change_color_chart(1);
  }
  if(maincolor == "#20214f"){
      //for the ples graph
@@ -190,7 +190,7 @@ MainWindow::MainWindow(QWidget *parent)
 
      //for the ecg graph
      ui->ecg->change_color_chart(2);
-     //ui->ecg_2->change_color_chart(2);
+     ui->ecg_2->change_color_chart(2);
  }
  if(maincolor == "#ffffff"){
      //for the ples graph
@@ -216,7 +216,7 @@ MainWindow::MainWindow(QWidget *parent)
 
      //for the ecg graph
      ui->ecg->change_color_chart(3);
-     //ui->ecg_2->change_color_chart(3);
+     ui->ecg_2->change_color_chart(3);
  }
  if(maincolor == "#000000"){
      //for the ples graph
@@ -242,7 +242,7 @@ MainWindow::MainWindow(QWidget *parent)
 
      //for the ecg graph
      ui->ecg->change_color_chart(4);
-     //ui->ecg_2->change_color_chart(4);
+     ui->ecg_2->change_color_chart(4);
 
  }
  if(maincolor == "#003e6c"){
@@ -268,7 +268,7 @@ MainWindow::MainWindow(QWidget *parent)
      ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
      ui->ecg->change_color_chart(5);
-     //ui->ecg_2->change_color_chart(5);
+     ui->ecg_2->change_color_chart(5);
      //for the ecg graph
     //graficar->change_color_chart(5);
  }
@@ -1212,7 +1212,7 @@ void MainWindow::change_color_once(){
         ui->color->setStyleSheet("background-color:" + maincolor);//background
         ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
         ui->ecg->change_square_ecg(maincolor);
-        //ui->ecg_2->change_square_ecg(maincolor);
+        ui->ecg_2->change_square_ecg(maincolor);
         //ui->borrargraph_ecg->setStyleSheet("background-color:" + maincolor);//background erase rectangle
 
      if(maincolor == "#326d72"){
@@ -1239,7 +1239,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(1);
-         //ui->ecg_2->change_color_chart(1);
+         ui->ecg_2->change_color_chart(1);
 
      }
      if(maincolor == "#20214f"){
@@ -1266,7 +1266,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(2);
-         //ui->ecg_2->change_color_chart(2);
+         ui->ecg_2->change_color_chart(2);
 
      }
      if(maincolor == "#ffffff"){
@@ -1293,7 +1293,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(3);
-         //ui->ecg_2->change_color_chart(3);
+         ui->ecg_2->change_color_chart(3);
 
 
      }
@@ -1321,7 +1321,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(4);
-         //ui->ecg_2->change_color_chart(4);
+         ui->ecg_2->change_color_chart(4);
 
 
      }
@@ -1349,7 +1349,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(5);
-         //ui->ecg_2->change_color_chart(5);
+         ui->ecg_2->change_color_chart(5);
 
      }
 }
