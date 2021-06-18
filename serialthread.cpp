@@ -57,6 +57,7 @@ void SerialThread::handle_data()
           //  QStringList list2 = cadena2.split(QLatin1Char('\n'));
             //foreach(QString resultado, list2){
             //dato,dato
+            //Jeru 2
             QStringList temp = cadena2.split(",");
             //qDebug() << "SERIAL " << temp;
             double grafica;
