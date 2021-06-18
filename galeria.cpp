@@ -4,7 +4,8 @@
 #include <QDebug>
 
 bool miniatura = true;
-int contpos_3 = 0;
+int contpos_3 = 0, contpos_list_images = 0;
+bool list_images_show = false;
 
 galeria::galeria(QWidget *parent, SerialSpo2 *serialspo2_galeria) :
     QDialog(parent),
@@ -35,6 +36,7 @@ void galeria::iniciar(){
     if(lista.length()>4){
     QPixmap mypix3 ("./imagenes/" + lista[lista.length()-3]);
     ui->min3->setPixmap(mypix3);}
+
 }
 
 
@@ -42,55 +44,77 @@ galeria::~galeria(){
     delete ui;
 }
 
+
+
 void galeria::boton_handle(QString p){
 
-
-    qDebug()<<"hola";
-    if (p == "derecha"){
-    contpos_3 = contpos_3 + 1;
-    if(contpos_3 > 5){
-        contpos_3 = 5;
-    }
-    opciones_galeria();
-    }
-
-    else if(p == "izquierda"){
-        contpos_3 = contpos_3 - 1;
-        if(contpos_3 < 0){
-            contpos_3 = 0;
+    if(list_images_show){
+        if (p == "derecha"){
+            contpos_list_images = contpos_list_images + 1;
+            if(contpos_list_images > 5){
+                contpos_list_images = 5;
+            }
+            opciones_galeria();
         }
-        opciones_galeria();
+        else if(p == "izquierda"){
+            contpos_list_images = contpos_list_images - 1;
+            if(contpos_list_images < 0){
+                contpos_list_images = 0;
+            }
+            opciones_galeria();
+        }
+
+        else if(p == "click"){
+            on_oka_clicked();
+        }
     }
+    else{
+        if (p == "derecha"){
+            contpos_3 = contpos_3 + 1;
+            if(contpos_3 > 5){
+                contpos_3 = 5;
+            }
+            opciones_galeria();
+        }
 
-    else if(p == "click"){
-        on_oka_clicked();
+        else if(p == "izquierda"){
+            contpos_3 = contpos_3 - 1;
+            if(contpos_3 < 0){
+                contpos_3 = 0;
+            }
+            opciones_galeria();
+        }
 
+        else if(p == "click"){
+            on_oka_clicked();
+        }
     }
 
 }
 
 void galeria:: on_oka_clicked(){
-
+    qDebug()<<contpos_3;
     switch(contpos_3)
     {
-    case 0:
-       on_comboBox_currentIndexChanged("0");
-        break;
-    case 1:
-        on_min1_boton_pressed();
-        break;
-    case 2:
-        on_min2_boton_pressed();
-        break;
-    case 3:
-        on_min3_boton_pressed();
-        break;
-    case 4:
-        on_trash_pressed();
-        break;
-    case 5:
-        on_toolButton_pressed();
-        break;
+         case 0:
+                 ui->comboBox->showPopup();
+                 list_images_show = true;
+                 break;
+         case 1:
+                 on_min1_boton_pressed();
+                 break;
+         case 2:
+                 on_min2_boton_pressed();
+                 break;
+         case 3:
+                 on_min3_boton_pressed();
+                 break;
+         case 4:
+                 on_trash_pressed();
+                 break;
+         case 5:
+                 on_toolButton_pressed();
+                 break;
     }
 
 }
@@ -100,34 +124,31 @@ void galeria:: opciones_galeria(){
     {
     case 0:
         ui->comboBox->setStyleSheet("background-color:red;");
-        ui->min1_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);\nbackground-repeat:none;\nborder:none;\n\n");
+        ui->min1_boton->setStyleSheet("");
         break;
     case 1:
         ui->min1_boton->setStyleSheet("background-color:red;");
-        ui->comboBox->setStyleSheet("background-color: rgba(191, 64, 64, 0);\nbackground-repeat:none;\nborder:none;\n\n");
-        ui->min2_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);\nbackground-repeat:none;\nborder:none;\n\n");
+        ui->comboBox->setStyleSheet("");
+        ui->min2_boton->setStyleSheet("");
         break;
     case 2:
         ui->min2_boton->setStyleSheet("background-color:red;");
-        ui->min1_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);\nbackground-repeat:none;\nborder:none;\n\n");
-        ui->min3_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);\nbackground-repeat:none;\nborder:none;\n\n");
+        ui->min1_boton->setStyleSheet("");
+        ui->min3_boton->setStyleSheet("");
         break;
     case 3:
         ui->min3_boton->setStyleSheet("background-color:red;");
-        ui->min2_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);\nbackground-repeat:none;\nborder:none;\n\n");
-        ui->trash->setStyleSheet("border: 0px;");
-        ui->trash->setIcon(QIcon(":/imagenes/btn_Eliminar.png"));
+        ui->min2_boton->setStyleSheet("");
+        ui->trash->setStyleSheet("");
         break;
     case 4:
         ui->trash->setStyleSheet("background-color:red;");
-        ui->min3_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);\nbackground-repeat:none;\nborder:none;\n\n");
-        ui->toolButton->setStyleSheet("border: 0px;");
-        ui->toolButton->setIcon(QIcon(":/imagenes/btn_Cerrar.png"));
+        ui->min3_boton->setStyleSheet("");
+        ui->toolButton->setStyleSheet("");
         break;
     case 5:
         ui->toolButton->setStyleSheet("background-color:red;");
-        ui->trash->setStyleSheet("border: 0px;");
-        ui->trash->setIcon(QIcon(":/imagenes/btn_Eliminar.png"));
+        ui->trash->setStyleSheet("");
         break;
     }
 }
