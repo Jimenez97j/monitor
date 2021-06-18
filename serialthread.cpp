@@ -54,22 +54,7 @@ void SerialThread::handle_data()
     cadena2.append(arreglo);
     int got = cadena2.indexOf('\n');
         if(got >= 0){
-          //  QStringList list2 = cadena2.split(QLatin1Char('\n'));
-            //foreach(QString resultado, list2){
-            //dato,dato
-            //Jeru 2
-            QStringList temp = cadena2.split(",");
-            //qDebug() << "SERIAL " << temp;
-            double grafica;
-            double grafica_2;
-            if(temp.size() == 2){
-                //qDebug() << "ENTRA SERIAL";
-                grafica = temp.at(0).toDouble();
-                grafica_2 = temp.at(1).toDouble();
-                //qDebug() << grafica;
-                //qDebug() << grafica_2;
-
-            }
+            double grafica = cadena2.toDouble();
             aux = cadena2.length();
                if(aux>8){ // Para el ECG esperamos un dato similar a -xxx.x- de un total de 7 espacios, por lo que con 6, es considerado dato completo
                    if(true){
