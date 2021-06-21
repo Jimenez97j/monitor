@@ -69,7 +69,7 @@ private slots:
     void boton_handle_8(QString y);
     void opciones_mod2();
     void on_okay_clicked();
-    void cambiar_bandera_barra_2();
+    void cambiar_bandera_barra();
 
 signals:
     void change_color();

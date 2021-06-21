@@ -28,7 +28,7 @@ MOD2::MOD2(QWidget *parent, SerialSpo2 *serialspo2_modelo_2) :
     spo2serial_8 = serialspo2_modelo_2;
     ui->setupUi(this); QString nombre, consulta, maincolor;
     connect(spo2serial_8, SIGNAL(boton_ajustes(QString )), this, SLOT(boton_handle_8(QString )), Qt::QueuedConnection);
-    connect(spo2serial_8, SIGNAL(cambiar_estado_bandera_3()), this, SLOT(cambiar_bandera_barra_2()));
+    //connect(spo2serial_8, SIGNAL(cambiar_estado_bandera_3()), this, SLOT(cambiar_bandera_barra_2()));
     ui->sound->setCheckable(true);
     ui->pani->setCheckable(true);
     nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
@@ -222,7 +222,7 @@ void MOD2:: on_okay_clicked(){
 
 }
 
-void MOD2::cambiar_bandera_barra_2(){
+void MOD2::cambiar_bandera_barra(){
 
     bandera_3 = true;
 }
@@ -450,7 +450,7 @@ void MOD2::change_color_mod2(){
 
 void MOD2::on_sound_pressed()
 {
-    bandera_3 = false;
+    //bandera_3 = false;
     if(bocina){
         bocina=false;
         ui->sound->setChecked(false);
@@ -471,7 +471,7 @@ void MOD2::on_sound_pressed()
 
 void MOD2::on_captura_pressed()
 {
-    bandera_3 = false;
+    //bandera_3 = false;
     QScreen *QSCREEN = QGuiApplication::primaryScreen();
     QPixmap qpix = QSCREEN->grabWindow(this->winId(), 0, 0, QApplication::desktop()->width(),
                                        QApplication::desktop()->height());
@@ -527,7 +527,7 @@ void MOD2::on_paciente_pressed()
 
 void MOD2::on_pani_pressed()
 {
-    bandera_3 = false;
+    //bandera_3 = false;
 
     if(!pani_toggle_style)
     {
