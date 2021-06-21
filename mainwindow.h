@@ -99,6 +99,7 @@ public slots:
     void enviar_datos(int);
 signals:
     void networkReplyReadyRead();
+    void cambiar_estado_bandera_3();
 private slots:
     void boton_ajustes2(QString h);
     void funcionActivacionTimer();

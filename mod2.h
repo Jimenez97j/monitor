@@ -36,7 +36,7 @@ signals:
     void time_check_alarms();
 
 public:
-    explicit MOD2(QWidget *parent = nullptr, SerialSpo2 *serialspo2_ajustes = NULL );
+    explicit MOD2(QWidget *parent = nullptr, SerialSpo2 *serialspo2_modelo_2 = NULL );
     ~MOD2();
     QString* labels();
     void sonido_toggle(bool toggle);
@@ -69,6 +69,7 @@ private slots:
     void boton_handle_8(QString y);
     void opciones_mod2();
     void on_okay_clicked();
+    void cambiar_bandera_barra_2();
 
 signals:
     void change_color();
@@ -78,6 +79,7 @@ signals:
     void sound_change_on();
     void closing_window();
     void stoppani();
+    void bandera_perilla_8();
 
 private:
     Ui::MOD2 *ui;

@@ -25,6 +25,7 @@ int registro_firebase = 0;
 QString *arrdata_to_send;
 int contpos = 0;
 bool bandera_2= true;
+bool bandera_barra_2= true;
 bool bandera_click = true;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -431,7 +432,13 @@ void MainWindow:: on_ok_clicked(){
 
 
 void MainWindow::cambiar_bandera(){
-    bandera_2 = true;
+   if (bandera_barra_2) {
+       bandera_2 = true;
+   }
+   else{
+       emit cambiar_estado_bandera_3();
+
+   }
 }
 
 void MainWindow::cambiar_bandera_2(){
@@ -1439,6 +1446,7 @@ void MainWindow::der12(){
 //show the numeric view
 void MainWindow::on_modelo2_pressed(){
       //cronometro->disconnect();
+      bandera_barra_2 = false;
       bandera_2 = false;
       cronometro->stop();
      //  is_graph_ples_activated = false;
@@ -1465,6 +1473,7 @@ void MainWindow::on_modelo2_pressed(){
       QObject::connect(numerico, SIGNAL(galeria_2()), this, SLOT(on_galeria_open_pressed()));
       QObject::connect(numerico, SIGNAL(registro_2()), this, SLOT(on_registro_usuario_pressed()));
       QObject::connect(numerico, SIGNAL(time_check_alarms()), this, SLOT(check_alarms_time_to()));
+      QObject::connect(numerico, SIGNAL(bandera_perilla_8()), this, SLOT(cambiar_bandera_barra_2()));
       //QObject::connect(numerico, SIGNAL((), this, SLOT()))
       numerico->exec();
       show();

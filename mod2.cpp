@@ -14,18 +14,20 @@ bool capture_activated = false, capture_activated_animation = false, update_colo
 QString *arrdata;
 bool *activated_mod;
 bool bocina = true, pani_toggle_style = true;
+bool bandera_3= true;
 //variables for alarms
 int numbers_alarms = 0;
 bool cambio_numeros_mod2 = true, cambio_numeros2_mod2 = true, cambio_numeros3_mod2 = true;
 QTimer *cronometro_mod2 =new QTimer();
 
-MOD2::MOD2(QWidget *parent, SerialSpo2 *serialspo2_alarmas) :
+MOD2::MOD2(QWidget *parent, SerialSpo2 *serialspo2_modelo_2) :
     QDialog(parent),
     ui(new Ui::MOD2)
 {
-    spo2serial_8 = serialspo2_alarmas;
+    spo2serial_8 = serialspo2_modelo_2;
     ui->setupUi(this); QString nombre, consulta, maincolor;
     connect(spo2serial_8, SIGNAL(boton_ajustes(QString )), this, SLOT(boton_handle_8(QString )), Qt::QueuedConnection);
+    connect(spo2serial_8, SIGNAL(cambiar_estado_bandera_3()), this, SLOT(cambiar_bandera_barra_2()));
     ui->sound->setCheckable(true);
     ui->pani->setCheckable(true);
     nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
@@ -85,7 +87,7 @@ MOD2::~MOD2()
 }
 
 void MOD2::boton_handle_8(QString y){
-
+if (bandera_3 == true){
     if (y == "derecha"){
     contpos_8 = contpos_8 + 1;
     if(contpos_8 > 11){
@@ -107,6 +109,7 @@ void MOD2::boton_handle_8(QString y){
 
     }
 
+}
 }
 
 void MOD2:: opciones_mod2(){
@@ -218,8 +221,14 @@ void MOD2:: on_okay_clicked(){
 
 }
 
+void MOD2::cambiar_bandera_barra_2(){
+
+    bandera_3 = true;
+}
+
 void MOD2::on_registros_pressed()
 {
+    bandera_3 = false;
     emit records_2();
 }
 
@@ -229,7 +238,10 @@ void MOD2::on_close_pressed()
     cronometro_mod2->disconnect();
     cronometro_mod2->stop();
     emit closing_window(); //verificar si este metodo funciona o si es mejor una variable booleana y seguir recibiendo datos
+    emit bandera_perilla_8();
     this->close();
+    contpos_8 = 0;
+    delete this;
 }
 
 void MOD2::funcionActivacionTimer(){
@@ -401,16 +413,19 @@ void MOD2::funcionActivacionTimer(){
 
 void MOD2::on_galeria_pressed()
 {
+    bandera_3 = false;
     emit galeria_2();
 }
 
 void MOD2::on_alarmas_pressed()
 {
+   bandera_3 = false;
    emit alarmas_2();
 }
 
 void MOD2::on_ajustes_pressed()
 {
+    bandera_3 = false;
     emit ajustes_2();
     update_color_time = true;
 }
@@ -434,6 +449,7 @@ void MOD2::change_color_mod2(){
 
 void MOD2::on_sound_pressed()
 {
+    bandera_3 = false;
     if(bocina){
         bocina=false;
         ui->sound->setChecked(false);
@@ -454,6 +470,7 @@ void MOD2::on_sound_pressed()
 
 void MOD2::on_captura_pressed()
 {
+    bandera_3 = false;
     QScreen *QSCREEN = QGuiApplication::primaryScreen();
     QPixmap qpix = QSCREEN->grabWindow(this->winId(), 0, 0, QApplication::desktop()->width(),
                                        QApplication::desktop()->height());
@@ -480,6 +497,7 @@ void MOD2::on_captura_pressed()
 }
 
 void MOD2::on_internet_clicked(){
+    bandera_3 = false;
     envdat = new enviardatos;
     //enviardatosw = new enviardatos;
     envdat->setWindowFlags(Qt::FramelessWindowHint);
@@ -494,11 +512,13 @@ void MOD2::on_internet_clicked(){
 
 void MOD2::on_registro_pressed()
 {
+    bandera_3 = false;
     emit registro_2();
 }
 
 void MOD2::on_paciente_pressed()
 {
+    bandera_3 = false;
     emit paciente_2();
 }
 
@@ -506,6 +526,7 @@ void MOD2::on_paciente_pressed()
 
 void MOD2::on_pani_pressed()
 {
+    bandera_3 = false;
 
     if(!pani_toggle_style)
     {
