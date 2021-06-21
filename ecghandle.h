@@ -22,15 +22,17 @@ public:
     void iniciar_serial();
     void set_serial_name(QString name);
     QString serial_name;
+    SerialThread *local_serial;
 private slots:
     void plot_ECG(QVector<double> x , QVector<double> y , int square, double max, double minrangeLine, double maxrangeLine);
     void plot_ECG_2(QVector<double> x , QVector<double> y , int square, double max, double minrangeLine, double maxrangeLine);
     void funcionActivacionTimer();
 signals:
     void compartir_dato(QVector<double> x , QVector<double> y , int square, double max, double minrangeLine, double maxrangeLine);
+    void envia_mqtt(QString data);
 private:
     Ui::ecghandle *ui;
-    SerialThread *local_serial;
+
 
 };
 

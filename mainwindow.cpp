@@ -31,11 +31,28 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    // MQTT
+    mqtt_fc = 0;
+    mqtt_porce_spo2 = 0;
+    mqtt_bpm = 0;
+    mqtt_sys = 0;
+    mqtt_dia = 0;
+    mqtt_resp = 12;
+    mqtt_connected = false;
+    mqttTimer = new QTimer;
+    connect(mqttTimer, SIGNAL(timeout()),this, SLOT(envia_signos_mqtt()));
+    mqttTimer->setInterval(10000);
+    mqttTimer->start();
+    //
     ui->setupUi(this);
     //cambios serial
     //cambios serial JERU
     //ui->ecg->set_serial_name("ECG");
     ui->ecg->iniciar_serial();
+
+
+    //ecg-mqtt-publish
+    connect(ui->ecg->local_serial, SIGNAL(envia_a_mqtt_publish(QString)), this, SLOT(publish_ecg_mqtt(QString)));
 
     //ui->ecg_2->set_serial_name("DATOSECG"); //ECG2
     ui->ecg_2->iniciar_serial();
@@ -290,6 +307,8 @@ MainWindow::MainWindow(QWidget *parent)
     //error for pani
     connect(spo2serial, SIGNAL(errorpani()), this, SLOT(errorpani()), Qt::QueuedConnection);
    connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
+   //mqtt jeru
+   connect(spo2serial, SIGNAL(spo2_plot_mqtt(double)),this, SLOT(publish_spo2_mqtt(double)));
 //+++++++++++++++++++++++++++++++++++++ SERIAL PORT ECG(DATOS) +++++++++++++++++++++++++++++++++++
 
     serial_ecg_data= new QSerialPort(); // Serial port for bpm, rpm
@@ -310,8 +329,8 @@ MainWindow::MainWindow(QWidget *parent)
     //+++++++++++++++++++++++++++++++++++++++++ MQTT(ARRHYTHMIA) ++++++++++++++++++++++++++++++++++++++
 
     m_client = new QMqttClient(this);
-    m_client->setHostname("192.168.1.248");
-    m_client->setPort(1883);
+    m_client->setHostname("192.168.1.248"); //192.168.1.248
+    m_client->setPort(1883); //1883
     connect(m_client, &QMqttClient::stateChanged, this, &MainWindow::updateLogStateChange);
     connect(m_client, &QMqttClient::disconnected, this, &MainWindow::brokerDisconnected);
     connect(m_client, &QMqttClient::connected, this, &MainWindow::brokerConnected);
@@ -349,6 +368,35 @@ MainWindow::MainWindow(QWidget *parent)
 
     //qDebug("btn_Bocina");
 
+}
+
+void MainWindow::envia_signos_mqtt(){
+    if(mqtt_connected){
+        /*mqtt_fc = 0;
+        mqtt_porce_spo2 = 0;
+        mqtt_bpm = 0;
+        mqtt_sys = 0;
+        mqtt_dia = 0;
+        mqtt_resp = 12;*/
+        QString temp = QString::number(mqtt_fc) + "," + QString::number(mqtt_porce_spo2) + ","  + QString::number(mqtt_bpm) + "," + QString::number(mqtt_sys) + "," + QString::number(mqtt_dia) + "," + QString::number(mqtt_resp);
+        m_client->publish(QMqttTopicName("monitor/signos"), temp.toUtf8());
+        qDebug() << "[MQTT] Envia signos";
+    }
+}
+
+void MainWindow::publish_spo2_mqtt(double data){
+    if(mqtt_connected){
+        QString temp = QString::number(data, 'f', 3);
+        m_client->publish(QMqttTopicName("monitor/pleth"), temp.toUtf8());
+        qDebug() << "[MQTT] Envia pleth spo2";
+    }
+}
+
+void MainWindow::publish_ecg_mqtt(QString data){
+    if(mqtt_connected){
+        m_client->publish(QMqttTopicName("monitor/ecg"), data.toUtf8());
+        qDebug() << "[MQTT] Envia ecg";
+    }
 }
 
 void MainWindow::boton_ajustes2(QString h)
@@ -555,11 +603,13 @@ void MainWindow::panivalues(QString s, QString d, QString m){
     ps_save_reg = s; //value to save into database
     ui->pres_sis->setText(s);
     sys_mod2 = s;
+    mqtt_sys = s.toInt();
 
 //*****************************Dystolic**************************************************
     px_save_reg = d; //value to save into database
     ui->pres_sis_2->setText(d);
     dia_mod2 = d;
+    mqtt_dia = d.toInt();
 //****************************MEDIA********************************************************
     ui->rpm->setText(m);
     if(m.toFloat()>0 || s.toFloat() > 30){
@@ -591,6 +641,7 @@ void MainWindow::porcentualspo2(QString spo2value){
         sop2_mod2 = spo2value;
         savespo2 = spo2value.toDouble();
         spo2_save_reg = spo2value + " " + "%";
+        mqtt_porce_spo2 = savespo2;
         if(savespo2<70){
             is_spo2_ready = false;
         }
@@ -607,6 +658,7 @@ void MainWindow::cuadronegro_spo2(int square){
 
 void MainWindow::bpm_count_spo2(QString bpm){
     ui->bpmsp2->setText(bpm);
+    mqtt_bpm = bpm.toInt();
 }
 
 void MainWindow::not_data(){
@@ -711,18 +763,21 @@ void MainWindow::updateLogStateChange(){
 }
 
 void MainWindow::brokerConnected(){
+    qDebug() << "[MQTT] Conectado";
     const QString topic = "ecg";
+    mqtt_connected = true;
     auto subscription = m_client->subscribe(topic);
     if (!subscription)
     {
         return;
     }
-    qDebug()<<"holi";
+    //qDebug()<<"holi";
 }
 
 void MainWindow::brokerDisconnected()
 {
-
+    qDebug() << "[MQTT] Desconectado";
+    mqtt_connected = false;
 }
 
 void MainWindow::get_alarms_value(){

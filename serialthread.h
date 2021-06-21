@@ -29,6 +29,7 @@ private slots:
 signals:
   void receive_data(QVector<double>, QVector<double>, int, double, double, double);
   void receive_data_2(QVector<double>, QVector<double>, int, double, double, double);
+  void envia_a_mqtt_publish(QString data);
 
 private:
   QThread *my_thread;

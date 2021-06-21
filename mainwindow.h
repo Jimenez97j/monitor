@@ -22,6 +22,7 @@
 #include <QNetworkConfiguration>
 #include <QNetworkConfigurationManager>
 #include <QNetworkSession>
+#include <QTimer>
 
 
 
@@ -58,6 +59,7 @@ public:
     void sonidoboton2(QString audio);
     void active_timer_for_alarms(bool state);
   //  void RecibirArreglo_ECG();
+    QTimer *mqttTimer;
 public slots:
     void alarm_sound();
     void check_alarms_time_to();
@@ -97,6 +99,9 @@ public slots:
     void plot_spo2(QVector<double>, QVector<double>, int, double, double, double);
     void networkReadyRead();
     void enviar_datos(int);
+    void envia_signos_mqtt();
+    void publish_spo2_mqtt(double data);
+    void publish_ecg_mqtt(QString data);
 signals:
     void networkReplyReadyRead();
 private slots:
@@ -161,6 +166,14 @@ private:
     Paciente* paciente;
     ecghandle* graficar;
     SerialSpo2 *spo2serial;
+
+    int mqtt_fc;
+    int mqtt_porce_spo2;
+    int mqtt_bpm;
+    int mqtt_sys;
+    int mqtt_dia;
+    int mqtt_resp;
+    bool mqtt_connected;
 
 };
 #endif // MAINWINDOW_H

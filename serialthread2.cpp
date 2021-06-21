@@ -53,7 +53,7 @@ void SerialThread2::handle_data()
     cadena2_2.append(arreglo);
     int got = cadena2_2.indexOf('\n');
         if(got >= 0){
-            qDebug() <<"serialThread2: " << cadena2_2;
+            //qDebug() <<"serialThread2: " << cadena2_2;
             double grafica = cadena2_2.toDouble();
             aux = cadena2_2.length();
                if(aux>8){ // Para el ECG esperamos un dato similar a -xxx.x- de un total de 7 espacios, por lo que con 6, es considerado dato completo

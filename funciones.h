@@ -282,6 +282,7 @@ void MainWindow::RecibirArreglo_ECG_numerico(){
        }
         bpm_save_reg = data + " " + "bpm"; //save bpm register into database
         bpm_mod2 = data;
+        mqtt_fc = bpm_mod2.toInt();
         ui->bpm_ecg->setText(data);
         save_alarm_data_bpm = data.toDouble();
    }

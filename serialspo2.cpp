@@ -409,6 +409,8 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
    }else{
        qv_x_spo2.append(x);
        qv_y_spo2.append(y);
+       //Jeru MQTT emit data y
+       emit spo2_plot_mqtt(y);
        //qDebug()<< qv_x_spo2;
    }
    if(qv_y_spo2_reescale.length()>75){
