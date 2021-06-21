@@ -284,6 +284,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(spo2serial, SIGNAL(panivalues(QString, QString, QString)), this, SLOT(panivalues(QString, QString, QString)), Qt::QueuedConnection);
     //error for pani
     connect(spo2serial, SIGNAL(errorpani()), this, SLOT(errorpani()), Qt::QueuedConnection);
+    teclado = new SerialSpo2(0,"ttyUSB0");
+    connect(teclado, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
    connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
 //+++++++++++++++++++++++++++++++++++++ SERIAL PORT ECG(DATOS) +++++++++++++++++++++++++++++++++++
 
@@ -1136,7 +1138,7 @@ void MainWindow::funcionActivacionTimer(){
 void MainWindow::on_galeria_open_pressed(){
     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    galeria1 = new galeria(0, spo2serial);
+    galeria1 = new galeria(0, teclado);
     galeria1->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(galeria1, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(galeria1, SIGNAL(sonido_basura()), this, SLOT(sonido_basura()));

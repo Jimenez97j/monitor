@@ -160,7 +160,7 @@ private:
     enviardatos* enviardatosw;
     Paciente* paciente;
     ecghandle* graficar;
-    SerialSpo2 *spo2serial;
+    SerialSpo2 *spo2serial, *teclado;
 
 };
 #endif // MAINWINDOW_H
