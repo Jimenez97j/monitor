@@ -140,27 +140,27 @@ void galeria:: opciones_galeria(){
         ui->min1_boton->setStyleSheet("");
         break;
     case 1:
-        ui->min1_boton->setStyleSheet("background-color:red;");
+        ui->min1_boton->setStyleSheet("border-color:red;");
         ui->comboBox->setStyleSheet("");
         ui->min2_boton->setStyleSheet("");
         break;
     case 2:
-        ui->min2_boton->setStyleSheet("background-color:red;");
+        ui->min2_boton->setStyleSheet("border-color:red;");
         ui->min1_boton->setStyleSheet("");
         ui->min3_boton->setStyleSheet("");
         break;
     case 3:
-        ui->min3_boton->setStyleSheet("background-color:red;");
+        ui->min3_boton->setStyleSheet("border-color:red;");
         ui->min2_boton->setStyleSheet("");
         ui->trash->setStyleSheet("");
         break;
     case 4:
-        ui->trash->setStyleSheet("background-color:red;");
+        ui->trash->setStyleSheet("border-color:red;");
         ui->min3_boton->setStyleSheet("");
         ui->toolButton->setStyleSheet("");
         break;
     case 5:
-        ui->toolButton->setStyleSheet("background-color:red;");
+        ui->toolButton->setStyleSheet("border-color:red;");
         ui->trash->setStyleSheet("");
         break;
     }
