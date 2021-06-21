@@ -1,21 +1,18 @@
-#include "ecghandle.h"
-#include "ui_ecghandle.h"
-#include <serialthread.h>
+#include "graficaecg.h"
+#include "ui_graficaecg.h"
+#include <serialthread2.h>
 #include <QDebug>
 #include <QTimer>
 
 //variables for ECG graph
-QTimer *cronometro_ecg =new QTimer();
+QTimer *cronometro_ecg_2 =new QTimer();
 
-
-ecghandle::ecghandle(QWidget *parent) :
+GraficaEcg::GraficaEcg(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ecghandle)
+    ui(new Ui::GraficaEcg)
 {
-    ///local_serial = new SerialThread();
-    ///connect(local_serial, SIGNAL(receive_data(QVector<double>, QVector<double>, int, double, double, double)), this, SLOT(plot_ECG(QVector<double>, QVector<double>, int, double, double, double)), Qt::QueuedConnection);
-   // local_serial->comenzar();
     ui->setupUi(this);
+
     //++++++++++++++++++++++++++++++++++++++++++++++ PLOT ECG ++++++++++++++++++++++++++++++++++++++++
 
     ui->plot_ecg->addGraph();
@@ -39,21 +36,21 @@ ecghandle::ecghandle(QWidget *parent) :
     //serial name
     serial_name = "";
 
-    connect(cronometro_ecg, SIGNAL(timeout()), this, SLOT(funcionActivacionTimer()));
-    cronometro_ecg->start(45);
+    connect(cronometro_ecg_2, SIGNAL(timeout()), this, SLOT(funcionActivacionTimer()));
+    cronometro_ecg_2->start(45);
 }
 
-void ecghandle::set_serial_name(QString name){
-    serial_name = name;
-}
-
-ecghandle::~ecghandle()
+GraficaEcg::~GraficaEcg()
 {
     delete ui;
 }
 
-void ecghandle::iniciar_serial(){
-    local_serial = new SerialThread();
+void GraficaEcg::set_serial_name(QString name){
+    serial_name = name;
+}
+
+void GraficaEcg::iniciar_serial(){
+    local_serial = new SerialThread2();
     //local_serial->set_name(serial_name);
     connect(local_serial, SIGNAL(receive_data(QVector<double>, QVector<double>, int, double, double, double)), this, SLOT(plot_ECG(QVector<double>, QVector<double>, int, double, double, double)), Qt::QueuedConnection);
     //local_serial->iniciar();
@@ -61,13 +58,13 @@ void ecghandle::iniciar_serial(){
     //cronometro_ecg->start(45);
 }
 
-void ecghandle::funcionActivacionTimer(){
+void GraficaEcg::funcionActivacionTimer(){
 
    ui->plot_ecg->replot(); //se vuelven a dibujar los valores
    ui->plot_ecg->update(); // se actualiza la gráfica
 }
 
-void ecghandle::plot_ECG(QVector<double> x , QVector<double> y , int square, double max, double minrangeLine, double maxrangeLine){  //función requerida para gráficar
+void GraficaEcg::plot_ECG(QVector<double> x , QVector<double> y , int square, double max, double minrangeLine, double maxrangeLine){  //función requerida para gráficar
    //qDebug() << "plot_ECG";
     ui->borrargraph_ecg->setGeometry(square, 8, 23, 151); //a rectange is moved as the system create the graph
    //ui->plot_ecg->yAxis->rescale(true);
@@ -80,7 +77,7 @@ void ecghandle::plot_ECG(QVector<double> x , QVector<double> y , int square, dou
 
 }
 
-void ecghandle::plot_ECG_2(QVector<double> x , QVector<double> y , int square, double max, double minrangeLine, double maxrangeLine){  //función requerida para gráficar
+void GraficaEcg::plot_ECG_2(QVector<double> x , QVector<double> y , int square, double max, double minrangeLine, double maxrangeLine){  //función requerida para gráficar
     //qDebug() << "plot_ECG_2";
     //emit compartir_dato(x,y,square, max, minrangeLine,maxrangeLine);
    ///ui->borrargraph_ecg_2->setGeometry(square, 8, 23, 151); //a rectange is moved as the system create the graph
@@ -91,11 +88,11 @@ void ecghandle::plot_ECG_2(QVector<double> x , QVector<double> y , int square, d
 
 }
 
-void ecghandle::change_square_ecg(QString color_square){
+void GraficaEcg::change_square_ecg(QString color_square){
     ui->borrargraph_ecg->setStyleSheet("backgroung-color:"+color_square);
 }
 
-void ecghandle::change_color_chart(int what_style){
+void GraficaEcg::change_color_chart(int what_style){
 
     if(what_style == 1){
         ui->plot_ecg->graph(0)->setPen(QPen(Qt::white, 1)); //color and width of the line
@@ -154,7 +151,3 @@ void ecghandle::change_color_chart(int what_style){
     ui->plot_ecg->update();
     ui->plot_ecg->replot();
 }
-
-
-
-

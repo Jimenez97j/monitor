@@ -8,11 +8,11 @@ int  reescale_config_ecg = 0 , cuadronegro_ecg = 0, countingdata_ecg = 0;
 double datos_en_pantalla_ECG_2 = 0, datos_grafica_max_ECG_2 = 600, upset_ECG_2 = 0, rango_min_ECG_2, rescale_value_ECG_2=2500, data_save_ECG_2 = 0;
 int  reescale_config_ecg_2 = 0 , cuadronegro_ecg_2 = 0, countingdata_ecg_2 = 0;
 
-SerialThread::SerialThread(QObject *parent, QString name) : QObject(parent)
+SerialThread::SerialThread(QObject *parent) : QObject(parent)
 {
     my_thread = new QThread();
     ecg_port = new QSerialPort();
-    init_port(name);
+    init_port(); //name
     this->moveToThread(my_thread);
     ecg_port->moveToThread(my_thread);
     my_thread->start(); //start thread
@@ -30,10 +30,10 @@ SerialThread::~SerialThread()
     my_thread->deleteLater();
 }
 
-void SerialThread::init_port(QString name)
+void SerialThread::init_port()
 {
     ecg_port = new QSerialPort();
-    ecg_port ->setPortName(name); //"ECG"
+    ecg_port ->setPortName("ECG"); //"ECG"
     ecg_port ->setBaudRate(QSerialPort::Baud115200);
     ecg_port ->setReadBufferSize(1);
     ecg_port ->setParity(QSerialPort::NoParity);
@@ -54,6 +54,7 @@ void SerialThread::handle_data()
     cadena2.append(arreglo);
     int got = cadena2.indexOf('\n');
         if(got >= 0){
+            //qDebug() <<"serialThread: " << cadena2;
             double grafica = cadena2.toDouble();
             aux = cadena2.length();
                if(aux>8){ // Para el ECG esperamos un dato similar a -xxx.x- de un total de 7 espacios, por lo que con 6, es considerado dato completo

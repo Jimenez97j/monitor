@@ -13,12 +13,14 @@ class SerialThread : public QObject
 {
   Q_OBJECT
 public:
-  explicit SerialThread(QObject *parent = nullptr, QString name="");
+  explicit SerialThread(QObject *parent = nullptr);
   ~SerialThread();
     void addPoint_ECG(double x, double y);
     void addPoint_ECG_2(double x, double y);
     bool is_available();
-  void init_port(QString name); //Initialize the serial port
+    //void set_name(QString name);
+    //void iniciar();
+  void init_port(); //Initialize the serial port
   QSerialPort *ecg_port;
 public slots:
     void handle_data(); //Process the received data

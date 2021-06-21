@@ -4867,7 +4867,7 @@ border-color: white;</string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="ecghandle" name="ecg_2" native="true">
+   <widget class="GraficaEcg" name="ecg_2" native="true">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -4907,6 +4907,12 @@ border-color: white;</string>
    <class>ecghandle</class>
    <extends>QWidget</extends>
    <header>ecghandle.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GraficaEcg</class>
+   <extends>QWidget</extends>
+   <header location="global">graficaecg.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

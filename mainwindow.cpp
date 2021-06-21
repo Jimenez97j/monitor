@@ -34,10 +34,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     //cambios serial
     //cambios serial JERU
-    ui->ecg->set_serial_name("ECG");
+    //ui->ecg->set_serial_name("ECG");
     ui->ecg->iniciar_serial();
 
-    ui->ecg_2->set_serial_name("ECG2");
+    //ui->ecg_2->set_serial_name("DATOSECG"); //ECG2
     ui->ecg_2->iniciar_serial();
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
@@ -293,7 +293,7 @@ MainWindow::MainWindow(QWidget *parent)
 //+++++++++++++++++++++++++++++++++++++ SERIAL PORT ECG(DATOS) +++++++++++++++++++++++++++++++++++
 
     serial_ecg_data= new QSerialPort(); // Serial port for bpm, rpm
-    serial_ecg_data->setPortName("DATOSECG");
+    serial_ecg_data->setPortName("nobody"); //DATOSECG
     serial_ecg_data->setBaudRate(QSerialPort::Baud115200);
     serial_ecg_data->setReadBufferSize(5);
     serial_ecg_data->setParity(QSerialPort::NoParity);
