@@ -16,6 +16,8 @@ galeria::galeria(QWidget *parent, SerialSpo2 *serialspo2_galeria) :
     spo2serial_3 = serialspo2_galeria;
     opciones_galeria();
     connect(spo2serial_3, SIGNAL(boton_ajustes(QString )), this, SLOT(boton_handle(QString )), Qt::QueuedConnection);
+
+
     iniciar();
  }
 
@@ -27,6 +29,7 @@ void galeria::iniciar(){
         ui->comboBox->addItem(lista[i]);
         i++;
         list_size = list_size + 1;
+
     }
     if(lista.length()>2){
     QPixmap mypix ("./imagenes/" + lista[lista.length()-1]);
@@ -57,14 +60,15 @@ void galeria::boton_handle(QString p){
             }
             //opciones_galeria();
             ui->comboBox->setCurrentIndex(contpos_list_images);
-
+            ui->comboBox->setStyleSheet("QComboBox::item:active{background-color:white;}");
         }
         else if(p == "izquierda"){
             contpos_list_images = contpos_list_images - 1;
             if(contpos_list_images < 0){
                 contpos_list_images = 0;
             }
-            opciones_galeria();
+            ui->comboBox->setCurrentIndex(contpos_list_images);
+            ui->comboBox->colorCount();
         }
 
         else if(p == "click"){
@@ -130,7 +134,7 @@ void galeria:: opciones_galeria(){
     switch(contpos_3)
     {
     case 0:
-        ui->comboBox->setStyleSheet("background-color:red;");
+        ui->comboBox->setStyleSheet("border-color:red;");
         ui->min1_boton->setStyleSheet("");
         break;
     case 1:
