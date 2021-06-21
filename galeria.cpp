@@ -60,7 +60,8 @@ void galeria::boton_handle(QString p){
             }
             //opciones_galeria();
             ui->comboBox->setCurrentIndex(contpos_list_images);
-            ui->comboBox->setStyleSheet("QComboBox::item:active{background-color:white;}");
+            ui->comboBox->setStyleSheet("QComboBox::item:active{background-color:red;}");
+
         }
         else if(p == "izquierda"){
             contpos_list_images = contpos_list_images - 1;
@@ -68,7 +69,8 @@ void galeria::boton_handle(QString p){
                 contpos_list_images = 0;
             }
             ui->comboBox->setCurrentIndex(contpos_list_images);
-            ui->comboBox->colorCount();
+            ui->comboBox->setStyleSheet("QComboBox::item:active{background-color:red;}");
+
         }
 
         else if(p == "click"){
