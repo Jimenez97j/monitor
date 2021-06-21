@@ -4,7 +4,7 @@
 #include <QDebug>
 
 bool miniatura = true;
-int contpos_3 = 0, contpos_list_images = 0;
+int contpos_3 = 0, contpos_list_images = 0, list_size = 0;
 bool list_images_show = false;
 
 galeria::galeria(QWidget *parent, SerialSpo2 *serialspo2_galeria) :
@@ -26,6 +26,7 @@ void galeria::iniciar(){
     while (lista.length() > i) {
         ui->comboBox->addItem(lista[i]);
         i++;
+        list_size = list_size + 1;
     }
     if(lista.length()>2){
     QPixmap mypix ("./imagenes/" + lista[lista.length()-1]);
@@ -51,10 +52,12 @@ void galeria::boton_handle(QString p){
     if(list_images_show){
         if (p == "derecha"){
             contpos_list_images = contpos_list_images + 1;
-            if(contpos_list_images > 5){
-                contpos_list_images = 5;
+            if(contpos_list_images > list_size){
+                contpos_list_images = list_size;
             }
-            opciones_galeria();
+            //opciones_galeria();
+            ui->comboBox->setCurrentIndex(contpos_list_images);
+
         }
         else if(p == "izquierda"){
             contpos_list_images = contpos_list_images - 1;
@@ -97,8 +100,12 @@ void galeria:: on_oka_clicked(){
     switch(contpos_3)
     {
          case 0:
-                 ui->comboBox->showPopup();
-                 list_images_show = true;
+                 list_images_show = !list_images_show;
+                 if(list_images_show){
+                     ui->comboBox->showPopup();
+                 }else{
+                     ui->comboBox->hidePopup();
+                 }
                  break;
          case 1:
                  on_min1_boton_pressed();
