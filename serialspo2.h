@@ -12,10 +12,10 @@ class SerialSpo2 : public QObject
 {
   Q_OBJECT
 public:
-  explicit SerialSpo2(QObject *parent = nullptr);
+  explicit SerialSpo2(QObject *parent = nullptr, QString port = "");
   ~SerialSpo2();
     void addPoint_spo2(double x, double y);
-    void init_port(); //Initialize the serial port
+    void init_port(QString port); //Initialize the serial port
     void init_port_2();
     void close_port();
     void IsActive();

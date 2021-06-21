@@ -32,11 +32,11 @@ int reescale_config = 0, countingdata = 0, cuadronegro_value = 0;
 double datos_en_pantalla = 0, datos_grafica_max = 120, upset= 0, rango_max, rango_min, rescale_value=200, data_save = 0;
 
 
-SerialSpo2::SerialSpo2(QObject *parent) : QObject(parent)
+SerialSpo2::SerialSpo2(QObject *parent, QString port) : QObject(parent)
 {
     my_thread2 = new QThread();
     spo2_port = new QSerialPort();
-    init_port();
+    init_port(port);
     this->moveToThread(my_thread2);
     spo2_port->moveToThread(my_thread2);
     my_thread2->start(); //start thread
@@ -55,11 +55,11 @@ SerialSpo2::~SerialSpo2()
     my_thread2->deleteLater();
 }
 
-void SerialSpo2::init_port()
+void SerialSpo2::init_port(QString port)
 {
     //++++++++++++++++++++++++++++++ SERIAL PORT SPO2/TEMPERATURE/WARNINGS +++++++++++++++++++++++++++
     spo2_port= new QSerialPort();
-    spo2_port->setPortName("ttyUSB0"); //ttyUSB1
+    spo2_port->setPortName(port); //ttyUSB1
     spo2_port->setBaudRate(QSerialPort::Baud115200);
     spo2_port->setReadBufferSize(10);
     spo2_port->setParity(QSerialPort::NoParity);
@@ -76,7 +76,7 @@ void SerialSpo2::init_port()
 void SerialSpo2::handle_data()
 {
     QString arreglo;
-    arreglo = spo2_port->readLine();
+    arreglo = spo2_port->readAll();
     cadena.append(arreglo); //transform the array into a string for using string methods.
        length = cadena.length();
        int got = cadena.indexOf('\n');
@@ -483,7 +483,7 @@ void SerialSpo2::procesaDato(QByteArray value_write)
         confirm_command = "B";
     }
     if(value_write == "U"){
-    //    spo2_port->write(value_write);
+       // spo2_port->write(value_write);
         pani_activated = false;
         confirm_command = "U";
     }
@@ -491,7 +491,7 @@ void SerialSpo2::procesaDato(QByteArray value_write)
        search_confirm = true;
     }
     else{
-      //  spo2_port->write(value_write);
+       // spo2_port->write(value_write);
         confirm_command = value_write;
         search_confirm = true;
     }

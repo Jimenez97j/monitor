@@ -16,6 +16,7 @@ bool *activated_mod;
 bool bocina = true, pani_toggle_style = true;
 bool bandera_3= true;
 //variables for alarms
+//Juan
 int numbers_alarms = 0;
 bool cambio_numeros_mod2 = true, cambio_numeros2_mod2 = true, cambio_numeros3_mod2 = true;
 QTimer *cronometro_mod2 =new QTimer();
