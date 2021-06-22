@@ -977,7 +977,7 @@ void MainWindow::enviar_datos(int valor){
 void MainWindow::on_alarmas_pressed(){
     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    alarma = new config_alarmas(this, spo2serial);
+    alarma = new config_alarmas(this, teclado);
     alarma->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(alarma, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(alarma, SIGNAL(alarms_change()), this, SLOT(alarms_change()));
