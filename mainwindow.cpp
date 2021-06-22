@@ -836,7 +836,7 @@ void MainWindow::on_iniciarpani_pressed(){
 
 void MainWindow::on_open_records_pressed(){
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    records = new alarmas;
+    records = new alarmas(0, teclado);
     records->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(records, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     records->exec();

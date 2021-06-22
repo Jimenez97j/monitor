@@ -1,7 +1,8 @@
 ﻿#include "registro.h"
 #include "ui_registro.h"
 #include <qdebug.h>
-int contpos_6 = 0;
+int contpos_6 = 0, list_size_registro = 0;
+bool status_list = false;
 
 Registro::Registro(QWidget *parent, SerialSpo2 *serialspo2_registro) :
     QDialog(parent),
@@ -56,26 +57,26 @@ Registro::~Registro(){
 
 void Registro::boton_handle_6(QString x){
 
-
-    qDebug()<<"hola";
-    if (x == "derecha"){
-    contpos_6 = contpos_6 + 1;
-    if(contpos_6 > 10){
-        contpos_6 = 10;
-    }
-    opciones_registro();
-    }
-
-    else if(x == "izquierda"){
-        contpos_6 = contpos_6 - 1;
-        if(contpos_6 < 0){
-            contpos_6 = 0;
+    if(status_list){
+        if (x == "derecha"){
+        contpos_6 = contpos_6 + 1;
+        if(contpos_6 > 10){
+            contpos_6 = 10;
         }
         opciones_registro();
-    }
-   else if(x == "click"){
-        on_okay_clicked();
+        }
 
+        else if(x == "izquierda"){
+            contpos_6 = contpos_6 - 1;
+            if(contpos_6 < 0){
+                contpos_6 = 0;
+            }
+            opciones_registro();
+        }
+       else if(x == "click"){
+            on_okay_clicked();
+
+        }
     }
 }
 
@@ -96,7 +97,14 @@ void Registro:: on_okay_clicked(){
         on_mother_last_name_selectionChanged();
         break;
     case 4:
-            ui->blood_type->showPopup();
+            status_list = !status_list;
+
+            if(status_list){
+                ui->blood_type->showPopup();
+            }else{
+                ui->blood_type->hidePopup();
+            }
+
         break;
     case 5:
 
