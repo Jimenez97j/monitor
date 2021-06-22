@@ -43,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mqttTimer, SIGNAL(timeout()),this, SLOT(envia_signos_mqtt()));
     mqttTimer->setInterval(10000);
     mqttTimer->start();
+    mqtt_cont_ecg = 0;
+    mqtt_list_ecg = new QStringList;
     //
     ui->setupUi(this);
     //cambios serial
@@ -394,8 +396,18 @@ void MainWindow::publish_spo2_mqtt(double data){
 
 void MainWindow::publish_ecg_mqtt(QString data){
     if(mqtt_connected){
-        m_client->publish(QMqttTopicName("monitor/ecg"), data.toUtf8());
-        qDebug() << "[MQTT] Envia ecg";
+        //agregar contador
+        if(mqtt_cont_ecg < 20){
+            mqtt_list_ecg->append(data);
+            mqtt_cont_ecg++;
+        }
+        else{
+            mqtt_cont_ecg = 0;
+            QString temp = mqtt_list_ecg->join(",");
+            mqtt_list_ecg->clear();
+            m_client->publish(QMqttTopicName("monitor/ecg"), temp.toUtf8());
+            qDebug() << "[MQTT] Envia ecg";
+        }
     }
 }
 

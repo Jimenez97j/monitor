@@ -174,6 +174,8 @@ private:
     int mqtt_dia;
     int mqtt_resp;
     bool mqtt_connected;
+    int mqtt_cont_ecg;
+    QStringList *mqtt_list_ecg;
 
 };
 #endif // MAINWINDOW_H
