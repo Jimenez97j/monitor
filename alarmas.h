@@ -6,6 +6,7 @@
 #include <QtSql/QSqlError>
 #include <serialspo2.h>
 #include <teclado.h>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {class alarmas;}
@@ -19,9 +20,17 @@ public:
     explicit alarmas(QWidget *parent = nullptr, SerialSpo2 *serialspo2_registro = NULL);
     ~alarmas();
     void crearTabla();
+
+    int numero_eventos;
+    int numero_scrolls;
+    int contador_scrolls;
+    int numero_eventos_mostrados;
+    int numero_mas_eventos;
+    void bajar();
+    void subir();
+    void obtener_numero_scrolls();
 signals:
     void sonido_click();
-
 private slots:
     void on_pushButton_pressed();
     void boton_handle_7(QString x);

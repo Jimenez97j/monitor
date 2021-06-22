@@ -136,9 +136,9 @@ private slots:
 
     void on_ok_clicked();
     void cambiar_bandera();
-    void cambiar_bandera_2();
-    void cambiar_bandera_3();
-    void cambiar_bandera_4();
+    //void cambiar_bandera_2();
+    //void cambiar_bandera_3();
+    //void cambiar_bandera_4();
 private:
     QNetworkSession *session;
     QNetworkAccessManager * m_networkManager;
