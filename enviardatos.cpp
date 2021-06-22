@@ -22,8 +22,8 @@ void enviardatos::boton_handle_9(QString x){
 
     if (x == "derecha"){
     contpos_9 = contpos_9 + 1;
-    if(contpos_9 > 8){
-        contpos_9 = 8;
+    if(contpos_9 > 4){
+        contpos_9 = 4;
     }
     opciones_enviardatos();
     }

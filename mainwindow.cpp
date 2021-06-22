@@ -505,6 +505,11 @@ void MainWindow:: opciones(){
     case 10:
         ui->ajustes->setStyleSheet("background-color:red;border-image:  url(:/imagenes/config.png) 0 0 0 0 stretch stretch;");
         ui->toolButton->setStyleSheet("border-image: url(:/imagenes/sonido.png) 0 0 0 0 stretch stretch;");
+        ui->toolButton_2->setStyleSheet("");
+        break;
+    case 11:
+        ui->toolButton_2->setStyleSheet("background-color:red;");
+        ui->ajustes->setStyleSheet("");
         break;
     }
 }
@@ -772,8 +777,9 @@ void MainWindow::on_screenshot_pressed(){
     hora_captura=0;
 }
 void MainWindow::on_toolButton_2_clicked(){
+    bandera_2 = false;
     qDebug("ON TOOL BUTTON");
-    enviardatosw = new enviardatos;
+    enviardatosw = new enviardatos(this, teclado);
     enviardatosw->setWindowFlags(Qt::FramelessWindowHint);
     enviardatosw->setWindowFlags(Qt::Popup);
     QObject::connect(enviardatosw, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
