@@ -5,10 +5,12 @@
 #include <QDir>
 #include <guiausuario.h>
 
-ajustes::ajustes(QWidget *parent) :
+int contpos_2 = 0;
+ajustes::ajustes(QWidget *parent, SerialSpo2 *serialspo2_ajustes) :
     QDialog(parent),
     ui(new Ui::ajustes)
 {
+    spo2serial_2 = serialspo2_ajustes;
     ui->setupUi(this);
     QString maincolor = getajustes();
 
@@ -64,10 +66,119 @@ ajustes::ajustes(QWidget *parent) :
 
     ui->dateEdit->setDateTime(QDateTime::currentDateTime());
     ui->timeEdit->setTime(QTime::currentTime());
+    connect(spo2serial_2, SIGNAL(boton_ajustes(QString )), this, SLOT(boton_handle(QString )), Qt::QueuedConnection);
 }
 
 ajustes::~ajustes(){
     delete ui;
+}
+
+void ajustes::boton_handle(QString x){
+
+    if (x == "derecha"){
+    contpos_2 = contpos_2 + 1;
+    if(contpos_2 > 8){
+        contpos_2 = 8;
+    }
+    opciones_ajustes();
+    }
+
+    else if(x == "izquierda"){
+        contpos_2 = contpos_2 - 1;
+        if(contpos_2 < 0){
+            contpos_2 = 0;
+        }
+        opciones_ajustes();
+    }
+   else if(x == "click"){
+        on_okay_clicked();
+
+    }
+
+}
+
+void ajustes:: on_okay_clicked(){
+
+    switch(contpos_2)
+    {
+    case 0:
+
+        break;
+    case 1:
+
+        break;
+    case 2:
+
+        break;
+    case 3:
+        on_toolButton_2_clicked();
+        break;
+    case 4:
+
+        break;
+    case 5:
+        on_Guia_Usu_pressed();
+        break;
+    case 6:
+
+        break;
+    case 7:
+        on_cleanAll_pressed();
+        break;
+    case 8:
+        on_toolButton_pressed();
+        break;
+    }
+
+}
+
+void ajustes:: opciones_ajustes(){
+    switch(contpos_2)
+    {
+    case 0:
+        ui->comboBox->setStyleSheet("background-color:red;");
+        ui->dateEdit->setStyleSheet("");
+        break;
+    case 1:
+        ui->dateEdit->setStyleSheet("background-color:red;");
+        ui->comboBox->setStyleSheet("");
+        ui->timeEdit->setStyleSheet("");
+        break;
+    case 2:
+        ui->timeEdit->setStyleSheet("background-color:red;");
+        ui->dateEdit->setStyleSheet("");
+        ui->toolButton_2->setStyleSheet("");
+        break;
+    case 3:
+        ui->toolButton_2->setStyleSheet("background-color:red;");
+        ui->timeEdit->setStyleSheet("");
+        ui->time_save->setStyleSheet("");
+        break;
+    case 4:
+        ui->time_save->setStyleSheet("background-color:red;");
+        ui->toolButton_2->setStyleSheet("");
+        ui->Guia_Usu->setStyleSheet("");
+        break;
+    case 5:
+        ui->Guia_Usu->setStyleSheet("background-color:red;");
+        ui->time_save->setStyleSheet("");
+        ui->checkBox->setStyleSheet("");
+        break;
+    case 6:
+        ui->checkBox->setStyleSheet("background-color:red;");
+        ui->Guia_Usu->setStyleSheet("");
+        ui->cleanAll->setStyleSheet("");
+        break;
+    case 7:
+        ui->cleanAll->setStyleSheet("background-color:red;");
+        ui->checkBox->setStyleSheet("");
+        ui->toolButton->setStyleSheet("");
+        break;
+    case 8:
+        ui->toolButton->setStyleSheet("background-color:red;");
+        ui->cleanAll->setStyleSheet("");
+        break;
+    }
 }
 
 void ajustes::on_cleanAll_pressed(){
@@ -125,7 +236,10 @@ void ajustes::on_comboBox_currentIndexChanged(int index){
 
 void ajustes::on_toolButton_pressed(){
     emit sonido_click();
+    emit bandera_perilla();
     this->close();
+    contpos_2 = 0;
+    delete this;
 }
 
 void ajustes::on_checkBox_toggled(bool checked){

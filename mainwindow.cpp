@@ -443,18 +443,12 @@ void MainWindow::cambiar_bandera(){
    }
 }
 
-void MainWindow::cambiar_bandera_2(){
+
+
+void MainWindow::cambiar_bandera_barra_2(){
+    bandera_barra_2 =true;
     bandera_2 = true;
 }
-
-void MainWindow::cambiar_bandera_3(){
-    bandera_2 = true;
-}
-
-void MainWindow::cambiar_bandera_4(){
-    bandera_2 = true;
-}
-
 
 void MainWindow:: opciones(){
     switch(contpos)
@@ -511,6 +505,11 @@ void MainWindow:: opciones(){
     case 10:
         ui->ajustes->setStyleSheet("background-color:red;border-image:  url(:/imagenes/config.png) 0 0 0 0 stretch stretch;");
         ui->toolButton->setStyleSheet("border-image: url(:/imagenes/sonido.png) 0 0 0 0 stretch stretch;");
+        ui->toolButton_2->setStyleSheet("");
+        break;
+    case 11:
+        ui->toolButton_2->setStyleSheet("background-color:red;");
+        ui->ajustes->setStyleSheet("");
         break;
     }
 }
@@ -778,8 +777,9 @@ void MainWindow::on_screenshot_pressed(){
     hora_captura=0;
 }
 void MainWindow::on_toolButton_2_clicked(){
+    bandera_2 = false;
     qDebug("ON TOOL BUTTON");
-    enviardatosw = new enviardatos;
+    enviardatosw = new enviardatos(this, teclado);
     enviardatosw->setWindowFlags(Qt::FramelessWindowHint);
     enviardatosw->setWindowFlags(Qt::Popup);
     QObject::connect(enviardatosw, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
@@ -847,12 +847,12 @@ void MainWindow::on_open_records_pressed(){
 void MainWindow::on_Paciente_pressed(){
     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    paciente = new Paciente(this, spo2serial);
+    paciente = new Paciente(this, teclado);
     paciente->setWindowFlags(Qt::FramelessWindowHint);
     paciente->setWindowFlags(Qt::Popup);
     paciente->setGeometry(701, 105, 340, 588);
     QObject::connect(paciente, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(paciente, SIGNAL(bandera_perilla_7()), this, SLOT(cambiar_bandera_2()));
+    QObject::connect(paciente, SIGNAL(bandera_perilla_7()), this, SLOT(cambiar_bandera()));
     paciente->exec();
     show();
 }
@@ -860,7 +860,7 @@ void MainWindow::on_Paciente_pressed(){
 void MainWindow::on_registro_usuario_pressed(){
      bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    registros = new Registro(this, spo2serial);
+    registros = new Registro(this, teclado);
     registros->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(registros, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(registros, SIGNAL(bandera_perilla_6()), this, SLOT(cambiar_bandera()));
@@ -981,7 +981,7 @@ void MainWindow::on_alarmas_pressed(){
     alarma->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(alarma, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(alarma, SIGNAL(alarms_change()), this, SLOT(alarms_change()));
-    QObject::connect(alarma, SIGNAL(bandera_perilla_3()), this, SLOT(cambiar_bandera_3()));
+    QObject::connect(alarma, SIGNAL(bandera_perilla_3()), this, SLOT(cambiar_bandera()));
     alarma->exec();
     show();
 }
@@ -1155,7 +1155,7 @@ void MainWindow::on_galeria_open_pressed(){
     galeria1->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(galeria1, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(galeria1, SIGNAL(sonido_basura()), this, SLOT(sonido_basura()));
-    QObject::connect(galeria1, SIGNAL(bandera_perilla_2()), this, SLOT(cambiar_bandera_2()));
+    QObject::connect(galeria1, SIGNAL(bandera_perilla_2()), this, SLOT(cambiar_bandera()));
     galeria1->exec();
     show();
 
@@ -1164,13 +1164,15 @@ void MainWindow::on_galeria_open_pressed(){
 
 //show settings window
 void MainWindow::on_ajustes_pressed(){
+    bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    settings = new ajustes;
+    settings = new ajustes(this, teclado);
     settings->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(settings, SIGNAL(change_color_click()), this, SLOT(change_color_once()));
     QObject::connect(settings, SIGNAL(detection_change()), this, SLOT(detection_toggle()));
     QObject::connect(settings, SIGNAL(time_save_change(int)), this, SLOT(time_save_change(int)));
     QObject::connect(settings, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+    QObject::connect(settings, SIGNAL(bandera_perilla()), this, SLOT(cambiar_bandera()));
     settings->exec();
     show();
 }
@@ -1369,7 +1371,7 @@ void MainWindow::on_derivaciones_pressed(){
     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
 
-    selection = new derivaciones(this, spo2serial);
+    selection = new derivaciones(this, teclado);
     selection->setWindowFlags(Qt::FramelessWindowHint);
     selection->setWindowFlags(Qt::Popup);
     //selection->setGeometry(0,378,721,61);
@@ -1388,7 +1390,7 @@ void MainWindow::on_derivaciones_pressed(){
     QObject::connect(selection, SIGNAL(der11()), this, SLOT(der11()));
     QObject::connect(selection, SIGNAL(der12()), this, SLOT(der12()));
     QObject::connect(selection, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(selection, SIGNAL(bandera_perilla_4()), this, SLOT(cambiar_bandera_4()));
+    QObject::connect(selection, SIGNAL(bandera_perilla_4()), this, SLOT(cambiar_bandera()));
 
     selection->exec();
     show();
@@ -1453,9 +1455,10 @@ void MainWindow::on_modelo2_pressed(){
       cronometro->stop();
      //  is_graph_ples_activated = false;
       //serial_ecg->close(); //verificar si este metodo funciona o si es mejor una variable booleana y seguir recibiendo datos
-      numerico = new MOD2(0, spo2serial);
+      numerico = new MOD2(0, teclado);
       numerico->setWindowFlags(Qt::FramelessWindowHint);
       sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+      QObject::connect(this, SIGNAL(cambiar_estado_bandera_3()), numerico, SLOT(cambiar_bandera_barra()));
 
       //the next signals is to handle changes in the settings windows when it is oppened from the numeric view
       QObject::connect(numerico, SIGNAL(change_color()), this, SLOT(change_color_once()));
