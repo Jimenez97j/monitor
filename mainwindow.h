@@ -136,6 +136,7 @@ private slots:
 
     void on_ok_clicked();
     void cambiar_bandera();
+
 private:
     QNetworkSession *session;
     QNetworkAccessManager * m_networkManager;

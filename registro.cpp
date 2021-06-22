@@ -96,7 +96,7 @@ void Registro:: on_okay_clicked(){
         on_mother_last_name_selectionChanged();
         break;
     case 4:
-
+            ui->blood_type->showPopup();
         break;
     case 5:
 

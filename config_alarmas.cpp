@@ -121,73 +121,76 @@ void config_alarmas:: opciones_alarmas(){
     switch(contpos_4)
     {
     case 0:
-        ui->menos_min_ecg->setStyleSheet("background-color:red;");
-        ui->mas_min_ecg->setStyleSheet("");
-        break;
-    case 1:
-        ui->mas_min_ecg->setStyleSheet("background-color:red;");
-        ui->menos_min_ecg->setStyleSheet("");
-        ui->menos_max_ecg->setStyleSheet("");
-        break;
-    case 2:
-        ui->menos_max_ecg->setStyleSheet("background-color:red;");
-        ui->mas_min_ecg->setStyleSheet("");
-        ui->mas_max_ecg->setStyleSheet("");
-        break;
-    case 3:
-        ui->mas_max_ecg->setStyleSheet("background-color:red;");
-        ui->menos_max_ecg->setStyleSheet("");
-        ui->menos_min_spo2->setStyleSheet("");
-        break;
-    case 4:
-        ui->menos_min_spo2->setStyleSheet("background-color:red;");
-        ui->mas_max_ecg->setStyleSheet("");
-        ui->mas_min_spo2->setStyleSheet("");
-        break;
-    case 5:
-        ui->mas_min_spo2->setStyleSheet("background-color:red;");
-        ui->menos_min_spo2->setStyleSheet("");
-        ui->menos_max_spo2->setStyleSheet("");
-        break;
-    case 6:
-        ui->menos_max_spo2->setStyleSheet("background-color:red;");
-        ui->mas_min_spo2->setStyleSheet("");
-        ui->mas_max_spo2->setStyleSheet("");
-        break;
-    case 7:
-        ui->mas_max_spo2->setStyleSheet("background-color:red;");
-        ui->menos_max_spo2->setStyleSheet("");
-        ui->menos_min_rpm->setStyleSheet("");
-        break;
-    case 8:
-        ui->menos_min_rpm->setStyleSheet("background-color:red;");
-        ui->mas_max_spo2->setStyleSheet("");
-        ui->mas_min_rpm->setStyleSheet("");
-        break;
-    case 9:
-        ui->mas_min_rpm->setStyleSheet("background-color:red;");
-        ui->menos_min_rpm->setStyleSheet("");
-        ui->menos_max_rpm->setStyleSheet("");
-        break;
-    case 10:
-        ui->menos_max_rpm->setStyleSheet("background-color:red;");
-        ui->mas_min_rpm->setStyleSheet("");
-        ui->mas_max_rpm->setStyleSheet("");
-        break;
-    case 11:
-        ui->mas_max_rpm->setStyleSheet("background-color:red;");
-        ui->menos_max_rpm->setStyleSheet("");
-        ui->CERRAR->setStyleSheet("");
-        break;
-    case 12:
-        ui->CERRAR->setStyleSheet("background-color:red;");
-        ui->mas_max_rpm->setStyleSheet("");
-        ui->OK->setStyleSheet("");
-        break;
-    case 13:
-        ui->OK->setStyleSheet("background-color:red;");
-        ui->CERRAR->setStyleSheet("");
-        break;
+    ui->menos_min_ecg->setIcon(QIcon(":/imagenes/btn_signo_MenosV.png"));
+    ui->mas_min_ecg->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+
+    break;
+case 1:
+    ui->mas_min_ecg->setIcon(QIcon(":/imagenes/btn_signo_,MasV.png"));
+    ui->menos_min_ecg->setIcon(QIcon(":/imagenes/btn_signo_Menos.png"));
+    ui->menos_max_ecg->setIcon(QIcon(":/imagenes/btn_signo_Menos.png"));
+
+    break;
+case 2:
+
+    ui->menos_max_ecg->setIcon(QIcon(":/imagenes/btn_signo_MenosV.png"));
+    ui->mas_min_ecg->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+    ui->mas_max_ecg->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+    break;
+case 3:
+    ui->mas_max_ecg->setIcon(QIcon(":/imagenes/btn_signo_,MasV.png"));
+    ui->menos_max_ecg->setIcon(QIcon(":/imagenes/btn_signo_Menos.png"));
+    ui->menos_min_spo2->setIcon(QIcon(":/imagenes/btn_signo_Menos.png"));
+    break;
+case 4:
+    ui->menos_min_spo2->setIcon(QIcon(":/imagenes/btn_signo_MenosV.png"));
+    ui->mas_max_ecg->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+    ui->mas_min_spo2->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+    break;
+case 5:
+    ui->mas_min_spo2->setIcon(QIcon(":/imagenes/btn_signo_,MasV.png"));
+    ui->menos_min_spo2->setIcon(QIcon(":/imagenes/btn_signo_Menos.png"));
+    ui->menos_max_spo2->setIcon(QIcon(":/imagenes/btn_signo_Menos.png"));
+    break;
+case 6:
+    ui->menos_max_spo2->setIcon(QIcon(":/imagenes/btn_signo_MenosV.png"));
+    ui->mas_min_spo2->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+    ui->mas_max_spo2->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+    break;
+case 7:
+    ui->mas_max_spo2->setIcon(QIcon(":/imagenes/btn_signo_,MasV.png"));
+    ui->menos_max_spo2->setIcon(QIcon(":/imagenes/btn_signo_Menos.png"));
+    ui->menos_min_rpm->setIcon(QIcon(":/imagenes/btn_signo_Menos.png"));
+    break;
+    case 8:    ui->menos_min_rpm->setIcon(QIcon(":/imagenes/btn_signo_MenosV.png"));
+
+    ui->mas_max_spo2->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+    ui->mas_min_rpm->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+    break;
+case 9:
+    ui->mas_min_rpm->setIcon(QIcon(":/imagenes/btn_signo_,MasV.png"));
+    ui->menos_min_rpm->setIcon(QIcon(":/imagenes/btn_signo_Menos.png"));
+    ui->menos_max_rpm->setIcon(QIcon(":/imagenes/btn_signo_Menos.png"));
+    break;
+case 10:
+    ui->menos_max_rpm->setIcon(QIcon(":/imagenes/btn_signo_MenosV.png"));
+    ui->mas_min_rpm->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+    ui->mas_max_rpm->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+    break;
+case 11:
+    ui->mas_max_rpm->setIcon(QIcon(":/imagenes/btn_signo_,MasV.png"));
+    ui->menos_max_rpm->setIcon(QIcon(":/imagenes/btn_signo_Menos.png"));
+    ui->CERRAR->setIcon(QIcon(":/imagenes/btn_Cerrar.png"));
+    break;
+case 12:
+    ui->CERRAR->setIcon(QIcon(":/imagenes/btn_CerrarV.png"));
+    ui->mas_max_rpm->setIcon(QIcon(":/imagenes/btn_signo_,Mas.png"));
+   ui->OK->setIcon(QIcon(":/imagenes/btn_Ok.png"));
+    break;
+case 13:
+    ui->OK->setIcon(QIcon(":/imagenes/btn_OkV.png"));
+    ui->CERRAR->setIcon(QIcon(":/imagenes/btn_Cerrar.png"));
+    break;
     }
 }
 
