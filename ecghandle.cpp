@@ -30,6 +30,7 @@ ecghandle::ecghandle(QWidget *parent) :
     ui->plot_ecg->xAxis->setTicks(false);  //
     ui->plot_ecg->yAxis->setTicks(false);
     //nueva grafica
+    //prueba ssh
     ///ui->plot_ecg->addGraph();
     ///ui->plot_ecg->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssNone,0));
     ///ui->plot_ecg->graph(1)->setLineStyle(QCPGraph::lsLine);
