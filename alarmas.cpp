@@ -4,20 +4,22 @@
 #include <QDebug>
 
 
-alarmas::alarmas(QWidget *parent) :
+alarmas::alarmas(QWidget *parent, SerialSpo2 *serialspo2_registro) :
     QDialog(parent)
    , ui(new Ui::alarmas)
 {
     ui->setupUi(this);
-        QString nombre;
-        nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
-        db = QSqlDatabase::addDatabase("QSQLITE");
-        db.setDatabaseName(nombre);
-        if(db.open()){
-            crearTabla();
-            qDebug()<<"conexion establecida";
-        }
-        ui->tableWidget->verticalScrollBar()->setStyleSheet("QScrollBar:vertical { width: 50px; background-color: #90c6fd;}");
+    spo2serial_7 = serialspo2_registro;
+    connect(spo2serial_7, SIGNAL(boton_ajustes(QString )), this, SLOT(boton_handle_7(QString )), Qt::QueuedConnection);
+    QString nombre;
+    nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(nombre);
+    if(db.open()){
+        crearTabla();
+        qDebug()<<"conexion establecida";
+    }
+    ui->tableWidget->verticalScrollBar()->setStyleSheet("QScrollBar:vertical { width: 50px; background-color: #90c6fd;}");
 }
 
 
@@ -25,6 +27,17 @@ alarmas::~alarmas(){
     delete ui;
 }
 
+void alarmas::boton_handle_7(QString x){
+    if (x == "derecha"){
+        //bajar
+    }
+    else if(x == "izquierda"){
+        //subir
+    }
+    else if(x == "click"){
+        //tecla ok
+    }
+}
 
 void alarmas::crearTabla(){
     QString consulta;
@@ -46,11 +59,8 @@ void alarmas::crearTabla(){
         fila ++;
     }
 
+    qDebug() << "[ALARMAS]  numeor de eventos cargados: " << fila;
 }
-
-
-
-
 
 void alarmas::on_pushButton_pressed()
 {
