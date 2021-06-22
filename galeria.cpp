@@ -58,7 +58,7 @@ void galeria::boton_handle(QString p){
             if(contpos_list_images > list_size){
                 contpos_list_images = list_size;
             }
-            //opciones_galeria();
+            //opciones_galeriaQString();
             ui->comboBox->setCurrentIndex(contpos_list_images);
             ui->comboBox->setStyleSheet("QComboBox::item:active{background-color:red;}");
 
@@ -133,35 +133,43 @@ void galeria:: on_oka_clicked(){
 }
 
 void galeria:: opciones_galeria(){
+
+
+
     switch(contpos_3)
     {
     case 0:
-        ui->comboBox->setStyleSheet("border-color:red;");
-        ui->min1_boton->setStyleSheet("");
+        ui->comboBox->setStyleSheet("background-color:red;");
+        ui->min1_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);background-repeat:none;border:none;");
         break;
     case 1:
-        ui->min1_boton->setStyleSheet("border-color:red;");
-        ui->comboBox->setStyleSheet("");
-        ui->min2_boton->setStyleSheet("");
+        ui->min1_boton->setStyleSheet("border: 2px solid red; ");
+        ui->comboBox->setStyleSheet("background-color: rgba(191, 64, 64, 0);background-repeat:none;border:none;");
+        ui->min2_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);background-repeat:none;border:none;");
         break;
     case 2:
-        ui->min2_boton->setStyleSheet("border-color:red;");
-        ui->min1_boton->setStyleSheet("");
-        ui->min3_boton->setStyleSheet("");
+        ui->min2_boton->setStyleSheet("border: 2px solid red;");
+        ui->min1_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);background-repeat:none;border:none;");
+        ui->min3_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);background-repeat:none;border:none;");
         break;
     case 3:
-        ui->min3_boton->setStyleSheet("border-color:red;");
-        ui->min2_boton->setStyleSheet("");
-        ui->trash->setStyleSheet("");
+        ui->min3_boton->setStyleSheet("border: 2px solid red;");
+        ui->min2_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);background-repeat:none;border:none;");
+        ui->trash->setIcon(QIcon(":/imagenes/btn_Eliminar.png"));
+        ui->trash->setStyleSheet("border:none");
         break;
     case 4:
-        ui->trash->setStyleSheet("border-color:red;");
-        ui->min3_boton->setStyleSheet("");
-        ui->toolButton->setStyleSheet("");
+        ui->trash->setIcon(QIcon(":/imagenes/btn_EliminarV.png"));
+        ui->trash->setStyleSheet("border:none");
+        ui->min3_boton->setStyleSheet("background-color: rgba(191, 64, 64, 0);background-repeat:none;border:none;");
+        ui->toolButton->setIcon(QIcon(":/imagenes/btn_Cerrar.png"));
+        ui->toolButton->setStyleSheet("border:none");
+
         break;
     case 5:
-        ui->toolButton->setStyleSheet("border-color:red;");
-        ui->trash->setStyleSheet("");
+        ui->toolButton->setIcon(QIcon(":/imagenes/btn_CerrarV.png"));
+        ui->trash->setIcon(QIcon(":/imagenes/btn_Eliminar.png"));
+        ui->trash->setStyleSheet("border:none");
         break;
     }
 }

@@ -85,10 +85,10 @@
   <widget class="QLabel" name="min1">
    <property name="geometry">
     <rect>
-     <x>1080</x>
+     <x>1040</x>
      <y>125</y>
-     <width>101</width>
-     <height>81</height>
+     <width>180</width>
+     <height>120</height>
     </rect>
    </property>
    <property name="cursor">
@@ -104,10 +104,10 @@
   <widget class="QLabel" name="min2">
    <property name="geometry">
     <rect>
-     <x>1080</x>
-     <y>230</y>
-     <width>101</width>
-     <height>81</height>
+     <x>1040</x>
+     <y>260</y>
+     <width>180</width>
+     <height>120</height>
     </rect>
    </property>
    <property name="cursor">
@@ -123,10 +123,10 @@
   <widget class="QLabel" name="min3">
    <property name="geometry">
     <rect>
-     <x>1080</x>
-     <y>335</y>
-     <width>101</width>
-     <height>81</height>
+     <x>1040</x>
+     <y>390</y>
+     <width>180</width>
+     <height>120</height>
     </rect>
    </property>
    <property name="cursor">
@@ -142,10 +142,10 @@
   <widget class="QToolButton" name="min1_boton">
    <property name="geometry">
     <rect>
-     <x>1080</x>
+     <x>1040</x>
      <y>125</y>
-     <width>101</width>
-     <height>81</height>
+     <width>180</width>
+     <height>120</height>
     </rect>
    </property>
    <property name="cursor">
@@ -165,10 +165,10 @@ border:none;
   <widget class="QToolButton" name="min2_boton">
    <property name="geometry">
     <rect>
-     <x>1080</x>
-     <y>230</y>
-     <width>101</width>
-     <height>81</height>
+     <x>1040</x>
+     <y>260</y>
+     <width>180</width>
+     <height>120</height>
     </rect>
    </property>
    <property name="cursor">
@@ -188,10 +188,10 @@ border:none;
   <widget class="QToolButton" name="min3_boton">
    <property name="geometry">
     <rect>
-     <x>1080</x>
-     <y>335</y>
-     <width>101</width>
-     <height>81</height>
+     <x>1040</x>
+     <y>390</y>
+     <width>180</width>
+     <height>120</height>
     </rect>
    </property>
    <property name="cursor">
