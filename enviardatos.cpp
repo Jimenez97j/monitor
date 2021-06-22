@@ -18,6 +18,13 @@ enviardatos::~enviardatos()
     delete ui;
 }
 
+void enviardatos::closeEvent(QCloseEvent*){
+    emit bandera_perilla_9();
+    this->close();
+    contpos_9 = 0;
+    delete this;
+}
+
 void enviardatos::boton_handle_9(QString x){
 
     if (x == "derecha"){

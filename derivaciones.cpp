@@ -62,6 +62,13 @@ derivaciones::~derivaciones(){
     delete ui;
 }
 
+void derivaciones::closeEvent(QCloseEvent*){
+    emit habilitar_perilla_4();
+//    this->close();
+   contpos_5 = 0;
+//    delete this;
+}
+
 void derivaciones::boton_handle_5(QString k){
 
 
@@ -247,10 +254,10 @@ void derivaciones::on_d2_pressed(){
     emit sonido_click();
     emit der2();
     emit bandera_perilla_4();
-        changebutton();
-        this->close();
-        contpos_5 = 0;
-        delete this;
+    changebutton();
+    this->close();
+    contpos_5 = 0;
+    delete this;
 }
 
 

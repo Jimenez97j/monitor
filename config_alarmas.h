@@ -22,7 +22,7 @@ public:
 signals:
     void sonido_click();
     void alarms_change();
-    void bandera_perilla_3();
+    void habilitar_barra_desde_alarmas();
 
 private slots:
     void on_menos_min_ecg_pressed();
