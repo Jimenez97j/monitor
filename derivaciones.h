@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <serialspo2.h>
+#include <QCloseEvent>
 
 namespace Ui {
 class derivaciones;
@@ -33,6 +34,8 @@ signals:
     void der11();
     void der12();
     void bandera_perilla_4();
+    void habilitar_perilla_4();
+
 
 private slots:
     void on_d1_pressed();
@@ -50,6 +53,7 @@ private slots:
     void boton_handle_5(QString k);
     void opciones_derivaciones();
     void on_okay_clicked();
+    void closeEvent(QCloseEvent*);
 
 private:
     Ui::derivaciones *ui;

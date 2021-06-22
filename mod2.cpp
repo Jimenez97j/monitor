@@ -91,8 +91,8 @@ void MOD2::boton_handle_8(QString y){
 if (bandera_3 == true){
     if (y == "derecha"){
     contpos_8 = contpos_8 + 1;
-    if(contpos_8 > 11){
-        contpos_8 = 11;
+    if(contpos_8 > 10){
+        contpos_8 = 10;
     }
         opciones_mod2();
     }
@@ -138,42 +138,36 @@ void MOD2:: opciones_mod2(){
     case 4:
         ui->pani->setStyleSheet("background-color:red;");
         ui->alarmas->setStyleSheet("");
-        ui->derivaciones->setStyleSheet("");
-        break;
-    case 5:
-        ui->derivaciones->setStyleSheet("background-color:red;");
-        ui->pani->setStyleSheet("");
         ui->registro->setStyleSheet("");
         break;
-    case 6:
+    case 5:
         ui->registro->setStyleSheet("background-color:red;");
-        ui->derivaciones->setStyleSheet("");
+        ui->pani->setStyleSheet("");
         ui->paciente->setStyleSheet("");
         break;
-    case 7:
+    case 6:
         ui->paciente->setStyleSheet("background-color:red;");
         ui->registro->setStyleSheet("");
         ui->close->setStyleSheet("");
         break;
-    case 8:
+    case 7:
         ui->close->setStyleSheet("background-color:red;");
         ui->paciente->setStyleSheet("");
         ui->sound->setStyleSheet("");
         break;
-    case 9:
+    case 8:
         ui->sound->setStyleSheet("background-color:red;");
         ui->close->setStyleSheet("");
         ui->ajustes->setStyleSheet("");
         break;
-    case 10:
+    case 9:
         ui->ajustes->setStyleSheet("background-color:red;");
         ui->sound->setStyleSheet("");
         ui->internet->setStyleSheet("");
         break;
-    case 11:
+    case 10:
         ui->internet->setStyleSheet("background-color:red;");
         ui->ajustes->setStyleSheet("");
-        break;
         break;
     }
 }
@@ -199,24 +193,22 @@ void MOD2:: on_okay_clicked(){
         break;
     case 5:
         //on_derivaciones_pressed();
-        break;
-    case 6:
         on_registro_pressed();
         break;
-    case 7:
-        on_paciente_pressed();
+    case 6:
+       on_paciente_pressed();
         break;
-    case 8:
+    case 7:
         on_close_pressed();
         break;
-    case 9:
+    case 8:
         on_sound_pressed();
         break;
-    case 10:
+    case 9:
         on_ajustes_pressed();
         break;
-    case 11:
-        on_internet_clicked();
+    case 10:
+       on_internet_clicked();
         break;
     }
 
@@ -499,17 +491,19 @@ void MOD2::on_captura_pressed()
 
 void MOD2::on_internet_clicked(){
     bandera_3 = false;
-    envdat = new enviardatos;
+    envdat = new enviardatos(0, spo2serial_8);
     //enviardatosw = new enviardatos;
     envdat->setWindowFlags(Qt::FramelessWindowHint);
     envdat->setWindowFlags(Qt::Popup);
     QObject::connect(envdat, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(envdat, SIGNAL(send_data(int)), this, SLOT(enviar_datos(int)));
+    QObject::connect(envdat, SIGNAL(bandera_perilla_9()), this, SLOT(cambiar_bandera_barra()));
     //enviardatosw->setGeometry(87, 10, 510, 70);
     envdat->setGeometry(0, 10, 602, 110);
     envdat->exec();
     show();
 }
+
 
 void MOD2::on_registro_pressed()
 {

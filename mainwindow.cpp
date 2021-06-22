@@ -356,8 +356,8 @@ void MainWindow::boton_ajustes2(QString h)
     qDebug()<< "llegando";
     if (h == "derecha"){
     contpos = contpos + 1;
-    if(contpos > 10){
-        contpos = 10;
+    if(contpos > 11){
+        contpos = 11;
     }
     opciones();
     }
@@ -427,6 +427,9 @@ void MainWindow:: on_ok_clicked(){
         break;
     case 10:
         on_ajustes_pressed();
+        break;
+    case 11:
+        on_toolButton_2_clicked();
         break;
     }
 
@@ -784,6 +787,7 @@ void MainWindow::on_toolButton_2_clicked(){
     enviardatosw->setWindowFlags(Qt::Popup);
     QObject::connect(enviardatosw, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(enviardatosw, SIGNAL(send_data(int)), this, SLOT(enviar_datos(int)));
+    QObject::connect(enviardatosw, SIGNAL(bandera_perilla_9()), this, SLOT(cambiar_bandera()));
     //enviardatosw->setGeometry(87, 10, 510, 70);
     enviardatosw->setGeometry(0, 10, 602, 110);
     enviardatosw->exec();
@@ -981,7 +985,7 @@ void MainWindow::on_alarmas_pressed(){
     alarma->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(alarma, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(alarma, SIGNAL(alarms_change()), this, SLOT(alarms_change()));
-    QObject::connect(alarma, SIGNAL(bandera_perilla_3()), this, SLOT(cambiar_bandera()));
+    QObject::connect(alarma, SIGNAL(habilitar_barra_desde_alarmas()), this, SLOT(cambiar_bandera()));
     alarma->exec();
     show();
 }
@@ -1391,6 +1395,7 @@ void MainWindow::on_derivaciones_pressed(){
     QObject::connect(selection, SIGNAL(der12()), this, SLOT(der12()));
     QObject::connect(selection, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(selection, SIGNAL(bandera_perilla_4()), this, SLOT(cambiar_bandera()));
+    QObject::connect(selection, SIGNAL(habilitar_perilla_4()), this, SLOT(cambiar_bandera()));
 
     selection->exec();
     show();

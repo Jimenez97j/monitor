@@ -195,7 +195,7 @@ void config_alarmas:: opciones_alarmas(){
 void config_alarmas::on_CERRAR_pressed()
 {
     emit sonido_click();
-    emit bandera_perilla_3();
+    emit habilitar_barra_desde_alarmas();
     this->close();
     contpos_4 = 0;
     delete this;
@@ -223,7 +223,7 @@ void config_alarmas::on_OK_pressed()
     crear.prepare(consulta);
     crear.exec();
     emit alarms_change();
-    emit bandera_perilla_3();
+    emit habilitar_barra_desde_alarmas();
     this->close();
     contpos_4 = 0;
     delete this;

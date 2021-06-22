@@ -35,6 +35,7 @@ signals:
     void iniciarpani_2();
     void time_check_alarms();
 
+
 public:
     explicit MOD2(QWidget *parent = nullptr, SerialSpo2 *serialspo2_modelo_2 = NULL );
     ~MOD2();
@@ -45,6 +46,9 @@ public:
     bool get_pani_status();
     void alarmasnumeros(QLabel *label,QString color);
     void changebackground(QString color);
+
+
+
     QString getcolor();
 
 public slots:
@@ -70,6 +74,7 @@ private slots:
     void opciones_mod2();
     void on_okay_clicked();
     void cambiar_bandera_barra();
+
 
 signals:
     void change_color();

@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include <serialspo2.h>
+#include <QCloseEvent>
+#include <QDebug>
 
 namespace Ui {
 class enviardatos;
@@ -30,8 +32,11 @@ private slots:
 
     void opciones_enviardatos();
 
+    void closeEvent(QCloseEvent*);
+
 signals:
     void send_data(int);
+    void bandera_perilla_9();
 private:
     Ui::enviardatos *ui;
     SerialSpo2 *spo2serial_9;
