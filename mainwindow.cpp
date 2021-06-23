@@ -46,6 +46,11 @@ MainWindow::MainWindow(QWidget *parent)
     mqttTimer->start();
     mqtt_cont_ecg = 0;
     mqtt_list_ecg = new QStringList;
+
+    //reconexion mqtt
+    reconexionMqtt = new QTimer;
+    connect(reconexionMqtt, SIGNAL(timeout()),this, SLOT(rec_mqtt()));
+    reconexionMqtt->setSingleShot(true);
     //
     ui->setupUi(this);
     //cambios serial
@@ -357,6 +362,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     m_client->connectToHost();
+    reconexionMqtt->start(10000);
     //connect(serial,SIGNAL(readyRead()),this , SLOT(RecibirArreglo()));
     connect(serial_ecg_data,SIGNAL(readyRead()),this , SLOT(RecibirArreglo_ECG_numerico()) );
 
@@ -373,6 +379,15 @@ MainWindow::MainWindow(QWidget *parent)
     //ui->toolButton->setIcon(QIcon(QPixmap(":/imagenes/btn_Bocina.png")));
 
     //qDebug("btn_Bocina");
+
+}
+
+void MainWindow::rec_mqtt(){
+    if(!mqtt_connected){
+        m_client->connectToHost();
+        reconexionMqtt->start(10000);
+        qDebug() << "[MQTT] Reconexion";
+    }
 
 }
 
@@ -683,8 +698,8 @@ void MainWindow::cuadronegro_spo2(int square){
 void MainWindow::bpm_count_spo2(QString bpm){
     ui->bpmsp2->setText(bpm);
     //
-    qDebug() << "bpmspo2!!!!";
-    mqtt_bpm =75;
+    //qDebug() << "bpmspo2!!!!";
+    mqtt_bpm =bpm.toInt();
 }
 
 void MainWindow::not_data(){
@@ -710,7 +725,7 @@ void MainWindow::leds_inicio(){
    // show();
     //+++++++++++++++++++++++++++++++++++++++++ REFRESH TIMER ++++++++++++++++++++++++++++++++++++++++
     connect(cronometro, SIGNAL(timeout()), this, SLOT(funcionActivacionTimer()));
-    cronometro->start(1);
+    cronometro->start(100);
     connect(spo2_refresh_chart, SIGNAL(timeout()), this, SLOT(alarm_sound()));
     //+++++++++++++++++++++++++++++++++++++ INTERFAZ IS READY +++++++++++++++++++++++++++++++++
     serial_ecg_data->write("restart\n"); //Restart all the systems
@@ -804,6 +819,7 @@ void MainWindow::brokerDisconnected()
 {
     qDebug() << "[MQTT] Desconectado";
     mqtt_connected = false;
+    reconexionMqtt->start(3000);
 }
 
 void MainWindow::get_alarms_value(){
@@ -1114,26 +1130,26 @@ void MainWindow::funcionActivacionTimer(){
     puntos=puntos+1;//Timer animacion de puntos en "Realizando Analisis
 
     //Animación de puntos en label "Realizando Analisis..."
-    if(puntos==1000 && banderapuntos){
+    if(puntos==10 && banderapuntos){
         ui->analisis->setText("Realizando Analisis");
     }
-    if(puntos==2000 && banderapuntos){
+    if(puntos==20 && banderapuntos){
         ui->analisis->setText("Realizando Analisis.");
     }
-    if(puntos==3000 && banderapuntos){
+    if(puntos==30 && banderapuntos){
         ui->analisis->setText("Realizando Analisis..");
     }
-    if(puntos==4000 && banderapuntos){
+    if(puntos==40 && banderapuntos){
         ui->analisis->setText("Realizando Analisis...");
         puntos=0;
     }
 
     //return to blank the label that appers when takes a screenshot
-    if(hora_captura>2000){
+    if(hora_captura>2){
         ui->label_6->setText("");
          hora_captura=0;
     }
-    if(check_bpm_value_time == 800){
+    if(check_bpm_value_time == 1){
         spo2serial->IsActive();
         if(save_alarm_data_bpm > alarma_max_ecg){
             ecg_in = true;
@@ -1160,14 +1176,14 @@ void MainWindow::funcionActivacionTimer(){
        save_data_db();
        reg_save_data= 0;
     }
-   if(pantalla>8300){
+   if(pantalla>80){
        ui->label_5->setText("");
         pantalla=0;
         spo2serial->bpm_flag_update();
    }
 
    //this blocks are for bliding the numbers when alarms are activated
-   if(numeros_ecg==500){
+   if(numeros_ecg==10){
        if(cambio_numeros && activated){
            QLabel *label1=ui->bpm_ecg;
            QString color="color:#880e00; border:none";
@@ -1186,7 +1202,7 @@ void MainWindow::funcionActivacionTimer(){
 
        }
    }
-   if(numeros_spo2==500){
+   if(numeros_spo2==10){
        if(cambio_numeros2 && activated2){
              QLabel *label2=ui->SPO2;
              QString color="color:#005b01;border:none";
@@ -1207,7 +1223,7 @@ void MainWindow::funcionActivacionTimer(){
 
        }
    }
-   if(numeros_temp == 500){
+   if(numeros_temp == 10){
        if(cambio_numeros3 && activated3){
            QLabel *label3=ui->temp;
            QString color="color:#003e56;border:none";
