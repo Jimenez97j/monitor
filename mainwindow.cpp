@@ -32,10 +32,32 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    // MQTT
+    mqtt_fc = 0;
+    mqtt_porce_spo2 = 0;
+    mqtt_bpm = 0;
+    mqtt_sys = 0;
+    mqtt_dia = 0;
+    mqtt_resp = 12;
+    mqtt_connected = false;
+    mqttTimer = new QTimer;
+    connect(mqttTimer, SIGNAL(timeout()),this, SLOT(envia_signos_mqtt()));
+    mqttTimer->setInterval(10000);
+    mqttTimer->start();
+    mqtt_cont_ecg = 0;
+    mqtt_list_ecg = new QStringList;
+    //
     ui->setupUi(this);
     //cambios serial
     //pequeña modificacion
     ui->ecg->iniciar_serial();
+
+
+    //ecg-mqtt-publish
+    connect(ui->ecg->local_serial, SIGNAL(envia_a_mqtt_publish(QString)), this, SLOT(publish_ecg_mqtt(QString)));
+
+    //ui->ecg_2->set_serial_name("DATOSECG"); //ECG2
+    ui->ecg_2->iniciar_serial();
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
     //
@@ -135,7 +157,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->color->setStyleSheet("background-color:" + maincolor);//background
     ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
     ui->ecg->change_square_ecg(maincolor);   //background erase rectangle
-    //ui->ecg_2->change_square_ecg(maincolor);
+    ui->ecg_2->change_square_ecg(maincolor);
 
  if(maincolor == "#326d72"){
      //for the ples graph
@@ -161,7 +183,7 @@ MainWindow::MainWindow(QWidget *parent)
 
      //for the ecg graph
      ui->ecg->change_color_chart(1);
-     //ui->ecg_2->change_color_chart(1);
+     ui->ecg_2->change_color_chart(1);
  }
  if(maincolor == "#20214f"){
      //for the ples graph
@@ -187,7 +209,7 @@ MainWindow::MainWindow(QWidget *parent)
 
      //for the ecg graph
      ui->ecg->change_color_chart(2);
-     //ui->ecg_2->change_color_chart(2);
+     ui->ecg_2->change_color_chart(2);
  }
  if(maincolor == "#ffffff"){
      //for the ples graph
@@ -213,7 +235,7 @@ MainWindow::MainWindow(QWidget *parent)
 
      //for the ecg graph
      ui->ecg->change_color_chart(3);
-     //ui->ecg_2->change_color_chart(3);
+     ui->ecg_2->change_color_chart(3);
  }
  if(maincolor == "#000000"){
      //for the ples graph
@@ -239,7 +261,7 @@ MainWindow::MainWindow(QWidget *parent)
 
      //for the ecg graph
      ui->ecg->change_color_chart(4);
-     //ui->ecg_2->change_color_chart(4);
+     ui->ecg_2->change_color_chart(4);
 
  }
  if(maincolor == "#003e6c"){
@@ -265,7 +287,7 @@ MainWindow::MainWindow(QWidget *parent)
      ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
      ui->ecg->change_color_chart(5);
-     //ui->ecg_2->change_color_chart(5);
+     ui->ecg_2->change_color_chart(5);
      //for the ecg graph
     //graficar->change_color_chart(5);
  }
@@ -286,13 +308,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(spo2serial, SIGNAL(panivalues(QString, QString, QString)), this, SLOT(panivalues(QString, QString, QString)), Qt::QueuedConnection);
     //error for pani
     connect(spo2serial, SIGNAL(errorpani()), this, SLOT(errorpani()), Qt::QueuedConnection);
+
     teclado = new SerialSpo2(nullptr,"ttyUSB10");
     connect(teclado, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
-    connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
+   connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
+   //mqtt jeru
+   connect(spo2serial, SIGNAL(spo2_plot_mqtt(double)),this, SLOT(publish_spo2_mqtt(double)));
+
 //+++++++++++++++++++++++++++++++++++++ SERIAL PORT ECG(DATOS) +++++++++++++++++++++++++++++++++++
 
     serial_ecg_data= new QSerialPort(); // Serial port for bpm, rpm
-    serial_ecg_data->setPortName("DATOSECG");
+    serial_ecg_data->setPortName("nobody"); //DATOSECG
     serial_ecg_data->setBaudRate(QSerialPort::Baud115200);
     serial_ecg_data->setReadBufferSize(5);
     serial_ecg_data->setParity(QSerialPort::NoParity);
@@ -309,8 +335,8 @@ MainWindow::MainWindow(QWidget *parent)
     //+++++++++++++++++++++++++++++++++++++++++ MQTT(ARRHYTHMIA) ++++++++++++++++++++++++++++++++++++++
 
     m_client = new QMqttClient(this);
-    m_client->setHostname("192.168.1.248");
-    m_client->setPort(1883);
+    m_client->setHostname("192.168.1.248"); //192.168.1.248
+    m_client->setPort(1883); //1883
     connect(m_client, &QMqttClient::stateChanged, this, &MainWindow::updateLogStateChange);
     connect(m_client, &QMqttClient::disconnected, this, &MainWindow::brokerDisconnected);
     connect(m_client, &QMqttClient::connected, this, &MainWindow::brokerConnected);
@@ -348,6 +374,45 @@ MainWindow::MainWindow(QWidget *parent)
 
     //qDebug("btn_Bocina");
 
+}
+
+void MainWindow::envia_signos_mqtt(){
+    if(mqtt_connected){
+        /*mqtt_fc = 0;
+        mqtt_porce_spo2 = 0;
+        mqtt_bpm = 0;
+        mqtt_sys = 0;
+        mqtt_dia = 0;
+        mqtt_resp = 12;*/
+        QString temp = QString::number(mqtt_fc) + "," + QString::number(mqtt_porce_spo2) + ","  + QString::number(mqtt_bpm) + "," + QString::number(mqtt_sys) + "," + QString::number(mqtt_dia) + "," + QString::number(mqtt_resp);
+        m_client->publish(QMqttTopicName("monitor/signos"), temp.toUtf8());
+        //qDebug() << "[MQTT] Envia signos";
+    }
+}
+
+void MainWindow::publish_spo2_mqtt(double data){
+    if(mqtt_connected){
+        QString temp = QString::number(data, 'f', 3);
+        m_client->publish(QMqttTopicName("monitor/pleth"), temp.toUtf8());
+        //qDebug() << "[MQTT] Envia pleth spo2";
+    }
+}
+
+void MainWindow::publish_ecg_mqtt(QString data){
+    if(mqtt_connected){
+        //agregar contador
+        if(mqtt_cont_ecg < 20){
+            mqtt_list_ecg->append(data);
+            mqtt_cont_ecg++;
+        }
+        else{
+            mqtt_cont_ecg = 0;
+            QString temp = mqtt_list_ecg->join(",");
+            mqtt_list_ecg->clear();
+            m_client->publish(QMqttTopicName("monitor/ecg"), temp.toUtf8());
+            //qDebug() << "[MQTT] Envia ecg";
+        }
+    }
 }
 
 void MainWindow::boton_ajustes2(QString h)
@@ -562,11 +627,13 @@ void MainWindow::panivalues(QString s, QString d, QString m){
     ps_save_reg = s; //value to save into database
     ui->pres_sis->setText(s);
     sys_mod2 = s;
+    mqtt_sys = s.toInt();
 
 //*****************************Dystolic**************************************************
     px_save_reg = d; //value to save into database
     ui->pres_sis_2->setText(d);
     dia_mod2 = d;
+    mqtt_dia = d.toInt();
 //****************************MEDIA********************************************************
     ui->rpm->setText(m);
     if(m.toFloat()>0 || s.toFloat() > 30){
@@ -598,6 +665,7 @@ void MainWindow::porcentualspo2(QString spo2value){
         sop2_mod2 = spo2value;
         savespo2 = spo2value.toDouble();
         spo2_save_reg = spo2value + " " + "%";
+        mqtt_porce_spo2 = savespo2;
         if(savespo2<70){
             is_spo2_ready = false;
         }
@@ -614,6 +682,9 @@ void MainWindow::cuadronegro_spo2(int square){
 
 void MainWindow::bpm_count_spo2(QString bpm){
     ui->bpmsp2->setText(bpm);
+    //
+    qDebug() << "bpmspo2!!!!";
+    mqtt_bpm =75;
 }
 
 void MainWindow::not_data(){
@@ -718,18 +789,21 @@ void MainWindow::updateLogStateChange(){
 }
 
 void MainWindow::brokerConnected(){
+    qDebug() << "[MQTT] Conectado";
     const QString topic = "ecg";
+    mqtt_connected = true;
     auto subscription = m_client->subscribe(topic);
     if (!subscription)
     {
         return;
     }
-    qDebug()<<"holi";
+    //qDebug()<<"holi";
 }
 
 void MainWindow::brokerDisconnected()
 {
-
+    qDebug() << "[MQTT] Desconectado";
+    mqtt_connected = false;
 }
 
 void MainWindow::get_alarms_value(){
@@ -1228,7 +1302,7 @@ void MainWindow::change_color_once(){
         ui->color->setStyleSheet("background-color:" + maincolor);//background
         ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
         ui->ecg->change_square_ecg(maincolor);
-        //ui->ecg_2->change_square_ecg(maincolor);
+        ui->ecg_2->change_square_ecg(maincolor);
         //ui->borrargraph_ecg->setStyleSheet("background-color:" + maincolor);//background erase rectangle
 
      if(maincolor == "#326d72"){
@@ -1255,7 +1329,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(1);
-         //ui->ecg_2->change_color_chart(1);
+         ui->ecg_2->change_color_chart(1);
 
      }
      if(maincolor == "#20214f"){
@@ -1282,7 +1356,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(2);
-         //ui->ecg_2->change_color_chart(2);
+         ui->ecg_2->change_color_chart(2);
 
      }
      if(maincolor == "#ffffff"){
@@ -1309,7 +1383,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(3);
-         //ui->ecg_2->change_color_chart(3);
+         ui->ecg_2->change_color_chart(3);
 
 
      }
@@ -1337,7 +1411,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(4);
-         //ui->ecg_2->change_color_chart(4);
+         ui->ecg_2->change_color_chart(4);
 
 
      }
@@ -1365,7 +1439,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(5);
-         //ui->ecg_2->change_color_chart(5);
+         ui->ecg_2->change_color_chart(5);
 
      }
 }

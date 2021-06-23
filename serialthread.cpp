@@ -12,7 +12,7 @@ SerialThread::SerialThread(QObject *parent) : QObject(parent)
 {
     my_thread = new QThread();
     ecg_port = new QSerialPort();
-    init_port();
+    init_port(); //name
     this->moveToThread(my_thread);
     ecg_port->moveToThread(my_thread);
     my_thread->start(); //start thread
@@ -33,7 +33,7 @@ SerialThread::~SerialThread()
 void SerialThread::init_port()
 {
     ecg_port = new QSerialPort();
-    ecg_port ->setPortName("ECG");
+    ecg_port ->setPortName("ECG"); //"ECG"
     ecg_port ->setBaudRate(QSerialPort::Baud115200);
     ecg_port ->setReadBufferSize(1);
     ecg_port ->setParity(QSerialPort::NoParity);
@@ -50,28 +50,17 @@ void SerialThread::handle_data()
     int aux = 0; //Como limpiaremos el buffer es necesesario comprobar que nuestro dato continuo venga completo, esta variable ayudará a ese proposito
     arreglo.append(ecg_port->readLine());
     //port->clear();
+    //Jeru
     cadena2.append(arreglo);
     int got = cadena2.indexOf('\n');
         if(got >= 0){
-          //  QStringList list2 = cadena2.split(QLatin1Char('\n'));
-            //foreach(QString resultado, list2){
-            //dato,dato
-            QStringList temp = cadena2.split(",");
-            //qDebug() << "SERIAL " << temp;
-            double grafica;
-            double grafica_2;
-            if(temp.size() == 2){
-                //qDebug() << "ENTRA SERIAL";
-                grafica = temp.at(0).toDouble();
-                grafica_2 = temp.at(1).toDouble();
-                //qDebug() << grafica;
-                //qDebug() << grafica_2;
-
-            }
+            //qDebug() <<"serialThread: " << cadena2;
+            double grafica = cadena2.toDouble();
             aux = cadena2.length();
                if(aux>8){ // Para el ECG esperamos un dato similar a -xxx.x- de un total de 7 espacios, por lo que con 6, es considerado dato completo
                    if(true){
                        //qDebug()<< "grafica";
+                       emit envia_a_mqtt_publish(cadena2);
                        datos_en_pantalla_ECG = datos_en_pantalla_ECG + 1; //Incrementamos en 1 el eje inferior (x) de nuestra grafica
                        addPoint_ECG(datos_en_pantalla_ECG,  grafica); //Se prepara el punto convirtiendo la variable data (string) a double ( numero)
                        ///datos_en_pantalla_ECG_2 = datos_en_pantalla_ECG_2 + 1; //Incrementamos en 1 el eje inferior (x) de nuestra grafica

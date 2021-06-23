@@ -38,6 +38,7 @@ signals:
   void errorpani();
   void panivalues(QString, QString, QString);
   void escribe(QByteArray);
+  void spo2_plot_mqtt(double data);
 private:
   QThread *my_thread2;
   QByteArray bufer;

@@ -1,39 +1,36 @@
-#ifndef ECGHANDLE_H
-#define ECGHANDLE_H
+#ifndef GRAFICAECG_H
+#define GRAFICAECG_H
 
 #include <QWidget>
 #include <QQueue>
 #include <QThread>
-#include <serialthread.h>
+#include <serialthread2.h>
 
 namespace Ui {
-class ecghandle;
+class GraficaEcg;
 }
 
-class ecghandle : public QWidget
+class GraficaEcg : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit ecghandle(QWidget *parent = nullptr);
-    ~ecghandle();
+    explicit GraficaEcg(QWidget *parent = nullptr);
+    ~GraficaEcg();
     void change_color_chart(int what_style);
     void change_square_ecg(QString color_square);
     void iniciar_serial();
     void set_serial_name(QString name);
     QString serial_name;
-    SerialThread *local_serial;
 private slots:
     void plot_ECG(QVector<double> x , QVector<double> y , int square, double max, double minrangeLine, double maxrangeLine);
     void plot_ECG_2(QVector<double> x , QVector<double> y , int square, double max, double minrangeLine, double maxrangeLine);
     void funcionActivacionTimer();
 signals:
     void compartir_dato(QVector<double> x , QVector<double> y , int square, double max, double minrangeLine, double maxrangeLine);
-    void envia_mqtt(QString data);
 private:
-    Ui::ecghandle *ui;
-
-
+    Ui::GraficaEcg *ui;
+    SerialThread2 *local_serial;
 };
 
-#endif // ECGHANDLE_H
+#endif // GRAFICAECG_H

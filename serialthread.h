@@ -18,6 +18,8 @@ public:
     void addPoint_ECG(double x, double y);
     void addPoint_ECG_2(double x, double y);
     bool is_available();
+    //void set_name(QString name);
+    //void iniciar();
   void init_port(); //Initialize the serial port
   QSerialPort *ecg_port;
 public slots:
@@ -27,6 +29,7 @@ private slots:
 signals:
   void receive_data(QVector<double>, QVector<double>, int, double, double, double);
   void receive_data_2(QVector<double>, QVector<double>, int, double, double, double);
+  void envia_a_mqtt_publish(QString data);
 
 private:
   QThread *my_thread;

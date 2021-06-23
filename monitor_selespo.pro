@@ -15,6 +15,7 @@ SOURCES += \
     enviardatos.cpp \
     error.cpp \
     galeria.cpp \
+    graficaecg.cpp \
     main.cpp \
     mainwindow.cpp \
     paciente.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
     guiausuario.cpp \
     serialspo2.cpp \
     serialthread.cpp \
+    serialthread2.cpp \
     teclado.cpp
 
 HEADERS += \
@@ -37,6 +39,7 @@ HEADERS += \
     error.h \
     funciones.h \
     galeria.h \
+    graficaecg.h \
     mainwindow.h \
     paciente.h \
     pantallacarga.h \
@@ -48,6 +51,7 @@ HEADERS += \
     guiausuario.h \
     serialspo2.h \
     serialthread.h \
+    serialthread2.h \
     teclado.h
 
 FORMS += \
@@ -57,6 +61,7 @@ FORMS += \
     enviardatos.ui \
     error.ui \
     galeria.ui \
+    graficaecg.ui \
     mainwindow.ui \
     config_alarmas.ui \
     ajustes.ui \
