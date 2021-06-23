@@ -272,7 +272,7 @@ void MainWindow::RecibirArreglo_ECG_numerico(){
    QString checkbeats;
 
    arreglo=serial_ecg_data->readLine();
-   qDebug()<<"comando recibido:"+arreglo;
+  // qDebug()<<"comando recibido:"+arreglo;
    cadena=arreglo; // convert array into string in order to use string functions
    length = cadena.length()-1;
    if(cadena[0] == 'A'){
