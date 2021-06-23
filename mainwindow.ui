@@ -644,7 +644,7 @@
      <property name="geometry">
       <rect>
        <x>1120</x>
-       <y>20</y>
+       <y>60</y>
        <width>151</width>
        <height>91</height>
       </rect>
@@ -1658,6 +1658,11 @@ border-color: white;
        <string>Fuente</string>
       </property>
      </widget>
+     <zorder>bpmsp2_3</zorder>
+     <zorder>bpm_label_spo2_2</zorder>
+     <zorder>bpmsp2</zorder>
+     <zorder>bpm_label_spo2</zorder>
+     <zorder>bpm_ecg</zorder>
     </widget>
     <widget class="QWidget" name="OXBLOCK" native="true">
      <property name="geometry">
@@ -4880,8 +4885,9 @@ border-color: white;</string>
      <bool>false</bool>
     </property>
    </widget>
-   <zorder>color</zorder>
    <zorder>plot</zorder>
+   <zorder>color</zorder>
+   <zorder>ecg</zorder>
    <zorder>label_2</zorder>
    <zorder>label_3</zorder>
    <zorder>bpmsp2_5</zorder>
@@ -4891,7 +4897,6 @@ border-color: white;</string>
    <zorder>label_7</zorder>
    <zorder>Barra</zorder>
    <zorder>borrargraph</zorder>
-   <zorder>ecg</zorder>
    <zorder>label_4</zorder>
    <zorder>ecg_2</zorder>
   </widget>

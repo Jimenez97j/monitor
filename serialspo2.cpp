@@ -59,7 +59,7 @@ void SerialSpo2::init_port()
 {
     //++++++++++++++++++++++++++++++ SERIAL PORT SPO2/TEMPERATURE/WARNINGS +++++++++++++++++++++++++++
     spo2_port= new QSerialPort();
-    spo2_port->setPortName("ttyUSB0"); //ttyUSB1
+    spo2_port->setPortName("SPO2"); //ttyUSB1
     spo2_port->setBaudRate(QSerialPort::Baud115200);
     spo2_port->setReadBufferSize(10);
     spo2_port->setParity(QSerialPort::NoParity);
@@ -80,22 +80,22 @@ void SerialSpo2::handle_data()
     cadena.append(arreglo); //transform the array into a string for using string methods.
        length = cadena.length();
        int got = cadena.indexOf('\n');
-       qDebug()<<cadena;
+       //qDebug()<<cadena;
 
        if(cadena[0] == 'J'){
-           qDebug()<<"emitir";
+           //qDebug()<<"emitir";
            emit boton_ajustes("derecha");
            cadena.clear();
        }
 
        if(cadena[0] == 'L'){
-           qDebug()<<"emitir izquierda";
+           //qDebug()<<"emitir izquierda";
            emit boton_ajustes("izquierda");
            cadena.clear();
        }
 
        if(cadena[0] == 'O'){
-           qDebug()<<"em";
+           //qDebug()<<"em";
            emit boton_ajustes("click");
            cadena.clear();
        }
@@ -206,7 +206,7 @@ void SerialSpo2::handle_data()
                                          //first_save_ir = true;
                                          //first_save_red = true;
                                        spo2_new_value = R_ir / R_red;
-                                       qDebug()<< spo2_new_value;
+                                       //qDebug()<< spo2_new_value;
                                        if(( min_spo2_red>13000) && spo2_new_value>0.60){
                                            finger_out = true;
                                        }
@@ -261,9 +261,9 @@ void SerialSpo2::handle_data()
                                                    if(finger_out){
                                                        emit porcentualspo2(output_spo2);
                                                    }
-                                                  qDebug()<<partial_result_ir;
-                                                  qDebug()<<"minR:"<<min_spo2_red<<"max:"<<max_spo2_red;
-                                                  qDebug()<<"minIR:"<<min_spo2_ir<<"max:"<<max_spo2_ir;
+                                                  //qDebug()<<partial_result_ir;
+                                                  //qDebug()<<"minR:"<<min_spo2_red<<"max:"<<max_spo2_red;
+                                                  //qDebug()<<"minIR:"<<min_spo2_ir<<"max:"<<max_spo2_ir;
                                                   partial_result_red = 0;
                                                   save_spo2_for_output= 0;
                                                   contador_output_spo2 = 0;
@@ -345,7 +345,7 @@ void SerialSpo2::handle_data()
 //*****************************FOR PANI *****************************************
 //*************************** HERE WE NEED TO CAST FOR EVERY VALUE ***********************************
                 if(cadena[0] == 'S'){
-                    qDebug()<<cadena;
+                    //qDebug()<<cadena;
                     QString data_s;   // variable donde guardaremos el valor numerico sin la letra B
                     for (int i = 1; i<12;i++ ) { //recorremos la cadena bida por serial desde una posición después de la letra B hasta el final de la misma
                         data_s.append(cadena[i]);
@@ -383,9 +383,12 @@ void SerialSpo2::IsActive(){
 
 
 void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point to the array for graph
-   if(y < 100){
+    //qDebug() << "SPO2 b emit: " << y;
+
+    if(y < 100){
 
    }else{
+        emit spo2_plot_mqtt(y);
 
    if(qv_x_spo2.length() == datos_grafica_max){ // create a 300 data vector
 
@@ -410,7 +413,7 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
        qv_x_spo2.append(x);
        qv_y_spo2.append(y);
        //Jeru MQTT emit data y
-       emit spo2_plot_mqtt(y);
+
        //qDebug()<< qv_x_spo2;
    }
    if(qv_y_spo2_reescale.length()>75){
@@ -465,6 +468,7 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
            bpm_send_data = false;;
            bpm_pulse = bpm_pulse * 4;
            QString s = QString::number(bpm_pulse);
+           qDebug()<<"holi";
            emit bpm_count(s);
            bpm_pulse = 0;
            bpm_counting_pulse = 0;

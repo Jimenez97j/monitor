@@ -382,7 +382,7 @@ void MainWindow::envia_signos_mqtt(){
         mqtt_resp = 12;*/
         QString temp = QString::number(mqtt_fc) + "," + QString::number(mqtt_porce_spo2) + ","  + QString::number(mqtt_bpm) + "," + QString::number(mqtt_sys) + "," + QString::number(mqtt_dia) + "," + QString::number(mqtt_resp);
         m_client->publish(QMqttTopicName("monitor/signos"), temp.toUtf8());
-        qDebug() << "[MQTT] Envia signos";
+        //qDebug() << "[MQTT] Envia signos";
     }
 }
 
@@ -390,7 +390,7 @@ void MainWindow::publish_spo2_mqtt(double data){
     if(mqtt_connected){
         QString temp = QString::number(data, 'f', 3);
         m_client->publish(QMqttTopicName("monitor/pleth"), temp.toUtf8());
-        qDebug() << "[MQTT] Envia pleth spo2";
+        //qDebug() << "[MQTT] Envia pleth spo2";
     }
 }
 
@@ -406,7 +406,7 @@ void MainWindow::publish_ecg_mqtt(QString data){
             QString temp = mqtt_list_ecg->join(",");
             mqtt_list_ecg->clear();
             m_client->publish(QMqttTopicName("monitor/ecg"), temp.toUtf8());
-            qDebug() << "[MQTT] Envia ecg";
+            //qDebug() << "[MQTT] Envia ecg";
         }
     }
 }
@@ -670,7 +670,9 @@ void MainWindow::cuadronegro_spo2(int square){
 
 void MainWindow::bpm_count_spo2(QString bpm){
     ui->bpmsp2->setText(bpm);
-    mqtt_bpm = bpm.toInt();
+    //
+    qDebug() << "bpmspo2!!!!";
+    mqtt_bpm =75;
 }
 
 void MainWindow::not_data(){
