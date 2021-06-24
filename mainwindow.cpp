@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
         }*/
     //name of the data base for this proyect
     QString nombre;
-    nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
+    nombre.append("/opt/monitor_selespo/bin/prueba.sqlite");
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(nombre);
     if(db.open()){
@@ -273,7 +273,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 //+++++++++++++++++++++++++++++++++++++ SERIAL PORT SPO2 +++++++++++++++++++++++++++++++++++
 
-    spo2serial = new SerialSpo2();
+    spo2serial = new SerialSpo2(nullptr, "SPO2");
     connect(spo2serial, SIGNAL(pleth(QVector<double>, QVector<double>, int, double, double, double)), this, SLOT(plot_spo2(QVector<double>, QVector<double>, int, double, double, double)), Qt::QueuedConnection);
     connect(spo2serial, SIGNAL(cuadronegro(int)), this, SLOT(cuadronegro_spo2(int)), Qt::QueuedConnection);
     connect(spo2serial, SIGNAL(bpm_count(QString)), this, SLOT(bpm_count_spo2(QString)), Qt::QueuedConnection);
@@ -286,7 +286,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(spo2serial, SIGNAL(panivalues(QString, QString, QString)), this, SLOT(panivalues(QString, QString, QString)), Qt::QueuedConnection);
     //error for pani
     connect(spo2serial, SIGNAL(errorpani()), this, SLOT(errorpani()), Qt::QueuedConnection);
-    teclado = new SerialSpo2(0,"ttyUSB0");
+    teclado = new SerialSpo2(nullptr,"ttyUSB10");
     connect(teclado, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
     connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
 //+++++++++++++++++++++++++++++++++++++ SERIAL PORT ECG(DATOS) +++++++++++++++++++++++++++++++++++
@@ -789,7 +789,7 @@ void MainWindow::on_screenshot_pressed(){
 void MainWindow::on_toolButton_2_clicked(){
     bandera_2 = false;
     qDebug("ON TOOL BUTTON");
-    enviardatosw = new enviardatos(this, teclado);
+    enviardatosw = new enviardatos(nullptr, teclado);
     enviardatosw->setWindowFlags(Qt::FramelessWindowHint);
     enviardatosw->setWindowFlags(Qt::Popup);
     QObject::connect(enviardatosw, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
@@ -848,7 +848,7 @@ void MainWindow::on_iniciarpani_pressed(){
 void MainWindow::on_open_records_pressed(){
     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    records = new alarmas(0, teclado);
+    records = new alarmas(nullptr, teclado);
     records->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(records, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(records, SIGNAL(habilitar_barra_desde_basedatos()), this, SLOT(cambiar_bandera()));
@@ -860,7 +860,7 @@ void MainWindow::on_open_records_pressed(){
 void MainWindow::on_Paciente_pressed(){
     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    paciente = new Paciente(this, teclado);
+    paciente = new Paciente(nullptr, teclado);
     paciente->setWindowFlags(Qt::FramelessWindowHint);
     paciente->setWindowFlags(Qt::Popup);
     paciente->setGeometry(701, 105, 340, 588);
@@ -873,7 +873,7 @@ void MainWindow::on_Paciente_pressed(){
 void MainWindow::on_registro_usuario_pressed(){
      bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    registros = new Registro(this, teclado);
+    registros = new Registro(nullptr, teclado);
     registros->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(registros, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(registros, SIGNAL(bandera_perilla_6()), this, SLOT(cambiar_bandera()));
@@ -990,7 +990,7 @@ void MainWindow::enviar_datos(int valor){
 void MainWindow::on_alarmas_pressed(){
     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    alarma = new config_alarmas(this, teclado);
+    alarma = new config_alarmas(nullptr, teclado);
     alarma->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(alarma, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(alarma, SIGNAL(alarms_change()), this, SLOT(alarms_change()));
@@ -1164,7 +1164,7 @@ void MainWindow::funcionActivacionTimer(){
 void MainWindow::on_galeria_open_pressed(){
     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    galeria1 = new galeria(0, teclado);
+    galeria1 = new galeria(nullptr, teclado);
     galeria1->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(galeria1, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(galeria1, SIGNAL(sonido_basura()), this, SLOT(sonido_basura()));
@@ -1179,7 +1179,7 @@ void MainWindow::on_galeria_open_pressed(){
 void MainWindow::on_ajustes_pressed(){
     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    settings = new ajustes(this, teclado);
+    settings = new ajustes(nullptr, teclado);
     settings->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(settings, SIGNAL(change_color_click()), this, SLOT(change_color_once()));
     QObject::connect(settings, SIGNAL(detection_change()), this, SLOT(detection_toggle()));
@@ -1384,7 +1384,7 @@ void MainWindow::on_derivaciones_pressed(){
     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
 
-    selection = new derivaciones(this, teclado);
+    selection = new derivaciones(nullptr, teclado);
     selection->setWindowFlags(Qt::FramelessWindowHint);
     selection->setWindowFlags(Qt::Popup);
     //selection->setGeometry(0,378,721,61);
@@ -1469,7 +1469,7 @@ void MainWindow::on_modelo2_pressed(){
       cronometro->stop();
      //  is_graph_ples_activated = false;
       //serial_ecg->close(); //verificar si este metodo funciona o si es mejor una variable booleana y seguir recibiendo datos
-      numerico = new MOD2(0, teclado);
+      numerico = new MOD2(nullptr, teclado);
       numerico->setWindowFlags(Qt::FramelessWindowHint);
       sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
       QObject::connect(this, SIGNAL(cambiar_estado_bandera_3()), numerico, SLOT(cambiar_bandera_barra()));

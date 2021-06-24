@@ -31,7 +31,6 @@ int reescale_config = 0, countingdata = 0, cuadronegro_value = 0;
 //variables for pestimographic graph
 double datos_en_pantalla = 0, datos_grafica_max = 120, upset= 0, rango_max, rango_min, rescale_value=200, data_save = 0;
 
-
 SerialSpo2::SerialSpo2(QObject *parent, QString port) : QObject(parent)
 {
     my_thread2 = new QThread();
@@ -56,6 +55,7 @@ SerialSpo2::~SerialSpo2()
 }
 
 void SerialSpo2::init_port(QString port)
+
 {
     //++++++++++++++++++++++++++++++ SERIAL PORT SPO2/TEMPERATURE/WARNINGS +++++++++++++++++++++++++++
     spo2_port= new QSerialPort();
@@ -68,8 +68,11 @@ void SerialSpo2::init_port(QString port)
     spo2_port->setStopBits(QSerialPort::OneStop);
     spo2_port->open(QIODevice::ReadWrite);
     connect(spo2_port, SIGNAL(readyRead()), this, SLOT(handle_data()), Qt::QueuedConnection); //Qt::DirectConnection
-
-
+    if(spo2_port->isOpen()){
+        qDebug()<< "abieerto";
+    }else{
+        qDebug() << "no jala" + port;
+    }
 }
 
 
@@ -124,262 +127,262 @@ void SerialSpo2::handle_data()
                     search_confirm = false;
                     pani_activated = false;
 
-                }
-                else{
-                    procesaDato(confirm_command);
-                    }
-                }
-            }
-
-            if(cadena[0] == 'R'){
-                               QString data;
-                               for (int i = 2; i<length;i++ ) {
-                                   data.append(cadena[i]);
-                               }
-                               QStringList list2 = data.split(QLatin1Char(','));
-                               //calculamos el spo2 a partir del valor de los R e IR
-                               if(search_down_red){
-                                   if(save_bpm_once_red){
-                                       bpm_data_compare_red = list2[0].toFloat();
-                                       save_bpm_once_red = false;
-                                   }else{
-                                       if( list2[0].toFloat()>bpm_data_compare_red){
-                                           bpm_counting_pulse_red = 0;
-                                           bpm_data_compare_red = list2[0].toFloat();
-                                           if(save_posible){
-                                               search_down_red = false;
-                                               save_bpm_once_red = true;
-                                               save_posible = false;
-                                               qv_red.append(list2[0].toFloat());
-                                               qv_ir.append(list2[1].toFloat());
-                                           }
-                                       }else{
-                                           if(save_posible){
-                                               qv_red.append(list2[0].toFloat());
-                                               qv_ir.append(list2[1].toFloat());
-                                           }
-                                           bpm_counting_pulse_red = bpm_counting_pulse_red + 1;
-                                           bpm_data_compare_red =  list2[0].toFloat();
-                                       }
-                                       if(bpm_counting_pulse_red==2){
-                                               bpm_counting_pulse_red = 0;
-                                               save_posible = true;
-                                       }
-                                   }
-                               }else{
-                                   if(save_bpm_once_red){
-                                       bpm_data_compare_red = list2[0].toFloat();
-                                       save_bpm_once_red = false;
-                                   }else{
-                                           if( list2[0].toFloat() < bpm_data_compare_red){
-                                               bpm_counting_pulse_red = 0;
-                                               bpm_data_compare_red =  list2[0].toFloat();
-                                               if(save_posible){
-                                                   search_down_red = true;
-                                                   save_bpm_once_red = true;
-                                                   values_ready = true;
-                                                   save_posible = false;
-                                                   qv_red.append(list2[0].toFloat());
-                                                   qv_ir.append(list2[1].toFloat());
-                                               }
-                                           }else{
-                                               bpm_counting_pulse_red = bpm_counting_pulse_red + 1;
-                                               bpm_data_compare_red =  list2[0].toFloat();
-                                               if(save_posible){
-                                                   qv_red.append(list2[0].toFloat());
-                                                   qv_ir.append(list2[1].toFloat());
-                                               }
-                                           }
-                                           if(bpm_counting_pulse_red==2){
-                                                   bpm_counting_pulse_red = 0;
-                                                   save_posible = true;
-                                           }
-                                        }
-                                   }
-
-                             if(values_ready){
-                                 min_spo2_red = *std::min_element(qv_red.begin(),qv_red.end());
-                                 max_spo2_red = *std::max_element(qv_red.begin(),qv_red.end());
-                                 min_spo2_ir  = *std::min_element(qv_ir.begin(),qv_ir.end());
-                                 max_spo2_ir  = *std::max_element(qv_ir.begin(),qv_ir.end());
-                                 qv_ir.clear();
-                                 qv_red.clear();
-                                 values_ready  = false;
-                                 if(!(spo2_string == "nan")){
-                                        R_red = qLn(min_spo2_red/max_spo2_red);
-                                        R_ir = qLn(min_spo2_ir/max_spo2_ir);
-
-                                        /* max_spo2_ir = 0;
-                                         max_spo2_red = 0;
-                                         min_spo2_ir = 0;
-                                         min_spo2_red  = 0;*/
-                                         //first_save_ir = true;
-                                         //first_save_red = true;
-                                       spo2_new_value = R_ir / R_red;
-                                       qDebug()<< spo2_new_value;
-                                       if(( min_spo2_red>13000) && spo2_new_value>0.60){
-                                           finger_out = true;
-                                       }
-                                       if((spo2_new_value <0.45 )){
-                                           finger_out = false;
-                                           contador_output_spo2 = 0;
-                                           qv_red.clear();
-                                           qv_ir.clear();
-                                       }
-
-
-                                      // R_red = (R_red * spo2_new_value) + R_red * (1- spo2_new_value);
-                                      // R_ir = (R_ir * spo2_new_value) + R_ir * (1- spo2_new_value);
-                                      // partial_result_red = R_ir / R_red;
-                                      // spo2_new_value = partial_result_red * 30 ;
-                                        //  spo2_new_value = spo2_new_value + 47;
-                                        // contador_max_min = 0;
-
-                                         if(spo2_string == "nan"){
-                                             first_save_ir = true;
-                                             first_save_red = true;
-                                             values_ready  = false;
-                                             contador_max_min = 0;
-                                             spo2_string = "--";
-                                         }
-                                         else{
-                                             save_spo2_for_output = save_spo2_for_output + spo2_new_value;
-                                             contador_output_spo2 += 1;
-                                              //contador_output_spo2 = 0;
-                                              if(contador_output_spo2>30){
-                                                  partial_result_ir = save_spo2_for_output/contador_output_spo2;
-                                                  if(partial_result_ir<0.73){
-                                                      x_compen = 5.9263;
-                                                      y_compen = 31.1111;
-                                                  }else{
-                                                      x_compen=0.2494;
-                                                      y_compen = -3.1111;
-                                                  }
-
-
-                                                  spo2_new_value = 25*(partial_result_ir*y_compen);
-                                                  spo2_new_value = (110*x_compen) - spo2_new_value;
-                                                  //out_spo2 = save_spo2_for_output/contador_output_spo2;
-                                                  //partial_result_red = partial_result_red + spo2_new_value;
-                                                  out_spo2 = qRound(spo2_new_value);
-                                                  if(out_spo2>99){
-                                                      out_spo2 = 99;
-                                                  }
-                                                   QString output_spo2;
-                                                   output_spo2 = QString::number(out_spo2, 'g', 3);
-                                                   savespo2_thread=output_spo2;
-                                                   if(finger_out){
-                                                       emit porcentualspo2(output_spo2);
-                                                   }
-                                                  qDebug()<<partial_result_ir;
-                                                  qDebug()<<"minR:"<<min_spo2_red<<"max:"<<max_spo2_red;
-                                                  qDebug()<<"minIR:"<<min_spo2_ir<<"max:"<<max_spo2_ir;
-                                                  partial_result_red = 0;
-                                                  save_spo2_for_output= 0;
-                                                  contador_output_spo2 = 0;
-                                                  qv_red.clear();
-                                                  qv_ir.clear();
-                                              }
-                                         }
-                                 }else{
-                                     contador_max_min = 0;
-                                     partial_result_red = 0;
-                                     save_spo2_for_output = 0;
-                                     contador_output_spo2 = 0;
-                                     first_save_ir = true;
-                                     first_save_red = true;
-                                     values_ready  = false;
-                                     spo2_string = "--";
-
-                                 }
-                             }
-
-                               data.clear();
-            }
-
-
-
- //++++++++++++++++++++++++++++++++++ TEMPERATURE ++++++++++++++++++++++++++++++++++++++++
-
-            if(cadena[0] == 'K'){
-                QString datat;
-
-               for (int i = 2; i<cadena.length()-1; i++ ) {
-                       datat.append(cadena[i]);
-                }
-                if( datat.toDouble()<5){
-                 promedio = promedio - 1 ;
-                }else{
-                    saving_temperature_spo2 = saving_temperature_spo2 + datat.toDouble();
                    }
-                   if(promedio>99){
-                   saving_temperature_spo2 =  saving_temperature_spo2/100;
-                   saving_temperature_spo2 = saving_temperature_spo2 + 1.21;
-                   QString valueAsString = QString::number(saving_temperature_spo2, 'g', 3);
-                   emit   updatetemperature(valueAsString, saving_temperature_spo2);
-                   promedio = 0;
-                   valueAsString.clear();
-                   saving_temperature_spo2 = 0;
+                   else{
+                       procesaDato(confirm_command);
+                       }
+                   }
                }
-                   promedio = promedio + 1;
-                   datat.clear();
-            }
- //+++++++++++++++++++++++++++++++++++++ PLETH +++++++++++++++++++++++++++++++++++++++++
 
-                if(cadena[0] == 'B'){ //Search for the specific data simbol
-                QString data;   // variable donde guardaremos el valor numerico sin la letra B
-                for (int i = 2; i<length ;i++ ) { //recorremos la cadena bida por serial desde una posición después de la letra B hasta el final de la misma
-                    data.append(cadena[i]);
-                }
-                   // qDebug()<<data;
-                if(finger_out){
+               if(cadena[0] == 'R'){
+                                  QString data;
+                                  for (int i = 2; i<length;i++ ) {
+                                      data.append(cadena[i]);
+                                  }
+                                  QStringList list2 = data.split(QLatin1Char(','));
+                                  //calculamos el spo2 a partir del valor de los R e IR
+                                  if(search_down_red){
+                                      if(save_bpm_once_red){
+                                          bpm_data_compare_red = list2[0].toFloat();
+                                          save_bpm_once_red = false;
+                                      }else{
+                                          if( list2[0].toFloat()>bpm_data_compare_red){
+                                              bpm_counting_pulse_red = 0;
+                                              bpm_data_compare_red = list2[0].toFloat();
+                                              if(save_posible){
+                                                  search_down_red = false;
+                                                  save_bpm_once_red = true;
+                                                  save_posible = false;
+                                                  qv_red.append(list2[0].toFloat());
+                                                  qv_ir.append(list2[1].toFloat());
+                                              }
+                                          }else{
+                                              if(save_posible){
+                                                  qv_red.append(list2[0].toFloat());
+                                                  qv_ir.append(list2[1].toFloat());
+                                              }
+                                              bpm_counting_pulse_red = bpm_counting_pulse_red + 1;
+                                              bpm_data_compare_red =  list2[0].toFloat();
+                                          }
+                                          if(bpm_counting_pulse_red==2){
+                                                  bpm_counting_pulse_red = 0;
+                                                  save_posible = true;
+                                          }
+                                      }
+                                  }else{
+                                      if(save_bpm_once_red){
+                                          bpm_data_compare_red = list2[0].toFloat();
+                                          save_bpm_once_red = false;
+                                      }else{
+                                              if( list2[0].toFloat() < bpm_data_compare_red){
+                                                  bpm_counting_pulse_red = 0;
+                                                  bpm_data_compare_red =  list2[0].toFloat();
+                                                  if(save_posible){
+                                                      search_down_red = true;
+                                                      save_bpm_once_red = true;
+                                                      values_ready = true;
+                                                      save_posible = false;
+                                                      qv_red.append(list2[0].toFloat());
+                                                      qv_ir.append(list2[1].toFloat());
+                                                  }
+                                              }else{
+                                                  bpm_counting_pulse_red = bpm_counting_pulse_red + 1;
+                                                  bpm_data_compare_red =  list2[0].toFloat();
+                                                  if(save_posible){
+                                                      qv_red.append(list2[0].toFloat());
+                                                      qv_ir.append(list2[1].toFloat());
+                                                  }
+                                              }
+                                              if(bpm_counting_pulse_red==2){
+                                                      bpm_counting_pulse_red = 0;
+                                                      save_posible = true;
+                                              }
+                                           }
+                                      }
 
-                 datos_en_pantalla = datos_en_pantalla + 1; //Incrementamos en 1 el eje inferior (x) de nuestra grafica
-                 addPoint_spo2(datos_en_pantalla,  data.toDouble()); //Se prepara el punto convirtiendo la variable data (string) a double ( numero)
+                                if(values_ready){
+                                    min_spo2_red = *std::min_element(qv_red.begin(),qv_red.end());
+                                    max_spo2_red = *std::max_element(qv_red.begin(),qv_red.end());
+                                    min_spo2_ir  = *std::min_element(qv_ir.begin(),qv_ir.end());
+                                    max_spo2_ir  = *std::max_element(qv_ir.begin(),qv_ir.end());
+                                    qv_ir.clear();
+                                    qv_red.clear();
+                                    values_ready  = false;
+                                    if(!(spo2_string == "nan")){
+                                           R_red = qLn(min_spo2_red/max_spo2_red);
+                                           R_ir = qLn(min_spo2_ir/max_spo2_ir);
 
-                 }
-                 else {
-                    qv_x_spo2.clear();
-                    qv_y_spo2.clear();
-                    qv_y_spo2_reescale.clear();
-                    bpm_counting_pulse = 0;
-                    bpm_pulse = 0;
-                    countingdata = 0;
-                    reescale_config = 0;
-                    datos_en_pantalla = 0;
-                    emit not_data();
-                 }
-                data.clear();
-            }
+                                           /* max_spo2_ir = 0;
+                                            max_spo2_red = 0;
+                                            min_spo2_ir = 0;
+                                            min_spo2_red  = 0;*/
+                                            //first_save_ir = true;
+                                            //first_save_red = true;
+                                          spo2_new_value = R_ir / R_red;
+                                          qDebug()<< spo2_new_value;
+                                          if(( min_spo2_red>13000) && spo2_new_value>0.60){
+                                              finger_out = true;
+                                          }
+                                          if((spo2_new_value <0.45 )){
+                                              finger_out = false;
+                                              contador_output_spo2 = 0;
+                                              qv_red.clear();
+                                              qv_ir.clear();
+                                          }
 
-//*****************************FOR PANI *****************************************
-//*************************** HERE WE NEED TO CAST FOR EVERY VALUE ***********************************
-                if(cadena[0] == 'S'){
-                    qDebug()<<cadena;
-                    QString data_s;   // variable donde guardaremos el valor numerico sin la letra B
-                    for (int i = 1; i<12;i++ ) { //recorremos la cadena bida por serial desde una posición después de la letra B hasta el final de la misma
-                        data_s.append(cadena[i]);
-                    }
-                      QStringList list2 = data_s.split(QLatin1Char(','));
-                      if(list2.length()>2){
-                       emit panivalues(list2[0], list2[1], list2[2]);
+
+                                         // R_red = (R_red * spo2_new_value) + R_red * (1- spo2_new_value);
+                                         // R_ir = (R_ir * spo2_new_value) + R_ir * (1- spo2_new_value);
+                                         // partial_result_red = R_ir / R_red;
+                                         // spo2_new_value = partial_result_red * 30 ;
+                                           //  spo2_new_value = spo2_new_value + 47;
+                                           // contador_max_min = 0;
+
+                                            if(spo2_string == "nan"){
+                                                first_save_ir = true;
+                                                first_save_red = true;
+                                                values_ready  = false;
+                                                contador_max_min = 0;
+                                                spo2_string = "--";
+                                            }
+                                            else{
+                                                save_spo2_for_output = save_spo2_for_output + spo2_new_value;
+                                                contador_output_spo2 += 1;
+                                                 //contador_output_spo2 = 0;
+                                                 if(contador_output_spo2>30){
+                                                     partial_result_ir = save_spo2_for_output/contador_output_spo2;
+                                                     if(partial_result_ir<0.73){
+                                                         x_compen = 5.9263;
+                                                         y_compen = 31.1111;
+                                                     }else{
+                                                         x_compen=0.2494;
+                                                         y_compen = -3.1111;
+                                                     }
+
+
+                                                     spo2_new_value = 25*(partial_result_ir*y_compen);
+                                                     spo2_new_value = (110*x_compen) - spo2_new_value;
+                                                     //out_spo2 = save_spo2_for_output/contador_output_spo2;
+                                                     //partial_result_red = partial_result_red + spo2_new_value;
+                                                     out_spo2 = qRound(spo2_new_value);
+                                                     if(out_spo2>99){
+                                                         out_spo2 = 99;
+                                                     }
+                                                      QString output_spo2;
+                                                      output_spo2 = QString::number(out_spo2, 'g', 3);
+                                                      savespo2_thread=output_spo2;
+                                                      if(finger_out){
+                                                          emit porcentualspo2(output_spo2);
+                                                      }
+                                                     qDebug()<<partial_result_ir;
+                                                     qDebug()<<"minR:"<<min_spo2_red<<"max:"<<max_spo2_red;
+                                                     qDebug()<<"minIR:"<<min_spo2_ir<<"max:"<<max_spo2_ir;
+                                                     partial_result_red = 0;
+                                                     save_spo2_for_output= 0;
+                                                     contador_output_spo2 = 0;
+                                                     qv_red.clear();
+                                                     qv_ir.clear();
+                                                 }
+                                            }
+                                    }else{
+                                        contador_max_min = 0;
+                                        partial_result_red = 0;
+                                        save_spo2_for_output = 0;
+                                        contador_output_spo2 = 0;
+                                        first_save_ir = true;
+                                        first_save_red = true;
+                                        values_ready  = false;
+                                        spo2_string = "--";
+
+                                    }
+                                }
+
+                                  data.clear();
+               }
+
+
+
+    //++++++++++++++++++++++++++++++++++ TEMPERATURE ++++++++++++++++++++++++++++++++++++++++
+
+               if(cadena[0] == 'K'){
+                   QString datat;
+
+                  for (int i = 2; i<cadena.length()-1; i++ ) {
+                          datat.append(cadena[i]);
+                   }
+                   if( datat.toDouble()<5){
+                    promedio = promedio - 1 ;
+                   }else{
+                       saving_temperature_spo2 = saving_temperature_spo2 + datat.toDouble();
                       }
-                }
+                      if(promedio>99){
+                      saving_temperature_spo2 =  saving_temperature_spo2/100;
+                      saving_temperature_spo2 = saving_temperature_spo2 + 1.21;
+                      QString valueAsString = QString::number(saving_temperature_spo2, 'g', 3);
+                      emit   updatetemperature(valueAsString, saving_temperature_spo2);
+                      promedio = 0;
+                      valueAsString.clear();
+                      saving_temperature_spo2 = 0;
+                  }
+                      promedio = promedio + 1;
+                      datat.clear();
+               }
+    //+++++++++++++++++++++++++++++++++++++ PLETH +++++++++++++++++++++++++++++++++++++++++
 
- //++++++++++++++++++++++++++++++++ PANI ERROR ++++++++++++++++++++++++++++++++++++++++
+                   if(cadena[0] == 'B'){ //Search for the specific data simbol
+                   QString data;   // variable donde guardaremos el valor numerico sin la letra B
+                   for (int i = 2; i<length ;i++ ) { //recorremos la cadena bida por serial desde una posición después de la letra B hasta el final de la misma
+                       data.append(cadena[i]);
+                   }
+                      // qDebug()<<data;
+                   if(finger_out){
 
-                if(cadena[0] == 'E'){
-                    emit errorpani();
-                }
-        //when all finish arrys need to be cleaned
-            cadena.clear();
-        }
+                    datos_en_pantalla = datos_en_pantalla + 1; //Incrementamos en 1 el eje inferior (x) de nuestra grafica
+                    addPoint_spo2(datos_en_pantalla,  data.toDouble()); //Se prepara el punto convirtiendo la variable data (string) a double ( numero)
+
+                    }
+                    else {
+                       qv_x_spo2.clear();
+                       qv_y_spo2.clear();
+                       qv_y_spo2_reescale.clear();
+                       bpm_counting_pulse = 0;
+                       bpm_pulse = 0;
+                       countingdata = 0;
+                       reescale_config = 0;
+                       datos_en_pantalla = 0;
+                       emit not_data();
+                    }
+                   data.clear();
+               }
+
+   //*****************************FOR PANI *****************************************
+   //*************************** HERE WE NEED TO CAST FOR EVERY VALUE ***********************************
+                   if(cadena[0] == 'S'){
+                       qDebug()<<cadena;
+                       QString data_s;   // variable donde guardaremos el valor numerico sin la letra B
+                       for (int i = 1; i<12;i++ ) { //recorremos la cadena bida por serial desde una posición después de la letra B hasta el final de la misma
+                           data_s.append(cadena[i]);
+                       }
+                         QStringList list2 = data_s.split(QLatin1Char(','));
+                         if(list2.length()>2){
+                          emit panivalues(list2[0], list2[1], list2[2]);
+                         }
+                   }
+
+    //++++++++++++++++++++++++++++++++ PANI ERROR ++++++++++++++++++++++++++++++++++++++++
+
+                   if(cadena[0] == 'E'){
+                       emit errorpani();
+                   }
+           //when all finish arrys need to be cleaned
+               cadena.clear();
+           }
 }
 
 void SerialSpo2::IsActive(){
     if(!(spo2_port->isReadable())){
         spo2_port->close();
-        spo2_port->setPortName("ttyUSB0"); //ttyUSB1
+        spo2_port->setPortName("SPO2"); //ttyUSB1
         spo2_port->setBaudRate(QSerialPort::Baud115200);
         spo2_port->setReadBufferSize(10);
         spo2_port->setParity(QSerialPort::NoParity);
@@ -488,12 +491,12 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
 void SerialSpo2::procesaDato(QByteArray value_write)
 {
     if(value_write == "B"){
-      //  spo2_port->write(value_write);
+        spo2_port->write(value_write);
         pani_activated = true;
         confirm_command = "B";
     }
     if(value_write == "U"){
-       // spo2_port->write(value_write);
+        spo2_port->write(value_write);
         pani_activated = false;
         confirm_command = "U";
     }
@@ -501,7 +504,7 @@ void SerialSpo2::procesaDato(QByteArray value_write)
        search_confirm = true;
     }
     else{
-       // spo2_port->write(value_write);
+        spo2_port->write(value_write);
         confirm_command = value_write;
         search_confirm = true;
     }
