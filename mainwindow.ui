@@ -4925,6 +4925,9 @@
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border:none;</string>
+    </property>
    </widget>
    <zorder>plot</zorder>
    <zorder>color</zorder>

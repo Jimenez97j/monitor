@@ -78,7 +78,8 @@ MainWindow::MainWindow(QWidget *parent)
         for (auto &x : netcfgList)
         {
 
-                if(x.name() == "")
+                if(x.name() =!";
+    mqtt_bpm =75;= "")
                     WiFisList << "Unknown(Other Network)";
                 else
                     WiFisList << x.name();
@@ -162,7 +163,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->color->setStyleSheet("background-color:" + maincolor);//background
     ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
     ui->ecg->change_square_ecg(maincolor);   //background erase rectangle
-    ui->ecg_2->change_square_ecg(maincolor);
+  //  ui->ecg_2->change_square_ecg(maincolor);
 
  if(maincolor == "#326d72"){
      //for the ples graph
@@ -734,6 +735,7 @@ void MainWindow::leds_inicio(){
    // show();
     //+++++++++++++++++++++++++++++++++++++++++ REFRESH TIMER ++++++++++++++++++++++++++++++++++++++++
     connect(cronometro, SIGNAL(timeout()), this, SLOT(funcionActivacionTimer()));
+
     cronometro->start(100);
     connect(spo2_refresh_chart, SIGNAL(timeout()), this, SLOT(alarm_sound()));
     //+++++++++++++++++++++++++++++++++++++ INTERFAZ IS READY +++++++++++++++++++++++++++++++++
@@ -1141,6 +1143,8 @@ void MainWindow::funcionActivacionTimer(){
     puntos=puntos+1;//Timer animacion de puntos en "Realizando Analisis
 
     //Animación de puntos en label "Realizando Analisis..."
+
+
     if(puntos==10 && banderapuntos){
         ui->analisis->setText("Realizando Analisis");
     }
@@ -1187,6 +1191,7 @@ void MainWindow::funcionActivacionTimer(){
        save_data_db();
        reg_save_data= 0;
     }
+
    if(pantalla>80){
        ui->label_5->setText("");
         pantalla=0;
@@ -1194,6 +1199,7 @@ void MainWindow::funcionActivacionTimer(){
    }
 
    //this blocks are for bliding the numbers when alarms are activated
+
    if(numeros_ecg==10){
        if(cambio_numeros && activated){
            QLabel *label1=ui->bpm_ecg;
@@ -1213,6 +1219,7 @@ void MainWindow::funcionActivacionTimer(){
 
        }
    }
+
    if(numeros_spo2==10){
        if(cambio_numeros2 && activated2){
              QLabel *label2=ui->SPO2;
@@ -1234,6 +1241,7 @@ void MainWindow::funcionActivacionTimer(){
 
        }
    }
+
    if(numeros_temp == 10){
        if(cambio_numeros3 && activated3){
            QLabel *label3=ui->temp;
@@ -1329,7 +1337,7 @@ void MainWindow::change_color_once(){
         ui->color->setStyleSheet("background-color:" + maincolor);//background
         ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
         ui->ecg->change_square_ecg(maincolor);
-        ui->ecg_2->change_square_ecg(maincolor);
+      //  ui->ecg_2->change_square_ecg(maincolor);
         //ui->borrargraph_ecg->setStyleSheet("background-color:" + maincolor);//background erase rectangle
 
      if(maincolor == "#326d72"){
@@ -1438,7 +1446,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(4);
-         ui->ecg_2->change_color_chart(4);
+         //ui->ecg_2->change_color_chart(4);
 
 
      }

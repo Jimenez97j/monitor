@@ -24,6 +24,7 @@ GraficaEcg::GraficaEcg(QWidget *parent) :
     ui->plot_ecg->yAxis->grid()->setPen(QPen(Qt::black, Qt::SolidLine));
     //ui->plot_ecg->setBackground(Qt::red);
     ui->plot_ecg->graph(0)->rescaleAxes(true);
+
     ui->plot_ecg->xAxis->setTicks(false);  //
     ui->plot_ecg->yAxis->setTicks(false);
     //nueva grafica
@@ -59,6 +60,7 @@ void GraficaEcg::iniciar_serial(){
 }
 
 void GraficaEcg::funcionActivacionTimer(){
+    ui->plot_ecg->yAxis->rescale();
 
    ui->plot_ecg->replot(); //se vuelven a dibujar los valores
    ui->plot_ecg->update(); // se actualiza la gráfica
@@ -129,13 +131,13 @@ void GraficaEcg::change_color_chart(int what_style){
     if(what_style == 4){
            ui->plot_ecg->graph(0)->setPen(QPen(Qt::red, 1)); //color and width of the line
            //ui->plot_ecg->graph(1)->setPen(QPen(Qt::red, 1));
-           ui->plot_ecg->axisRect()->setBackground(QColor(0, 0, 0)); //background of the graph
-           ui->plot_ecg->xAxis->grid()->setPen(QPen(QColor(0, 0, 0), Qt::SolidLine)); //x axis color
-           ui->plot_ecg->yAxis->grid()->setPen(QPen(QColor(0, 0, 0), Qt::SolidLine)); //y axis color
-           ui->plot_ecg->xAxis->setBasePen(QPen(QColor(0, 0, 0)));
-           ui->plot_ecg->yAxis->setBasePen(QPen(QColor(0, 0, 0)));
-           ui->plot_ecg->setBackground(QColor(0, 0, 0));
-       qDebug()<<"hi4";
+        //   ui->plot_ecg->axisRect()->setBackground(QColor(0, 0, 0)); //background of the graph
+       //    ui->plot_ecg->xAxis->grid()->setPen(QPen(QColor(0, 0, 0), Qt::SolidLine)); //x axis color
+      //     ui->plot_ecg->yAxis->grid()->setPen(QPen(QColor(0, 0, 0), Qt::SolidLine)); //y axis color
+    //       ui->plot_ecg->xAxis->setBasePen(QPen(QColor(0, 0, 0)));
+     //      ui->plot_ecg->yAxis->setBasePen(QPen(QColor(0, 0, 0)));
+     //      ui->plot_ecg->setBackground(QColor(0, 0, 0));
+     //  qDebug()<<"hi4";
     }
     if(what_style == 5){
          ui->plot_ecg->graph(0)->setPen(QPen(Qt::red, 1)); //color and width of the line

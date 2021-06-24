@@ -2,7 +2,7 @@
 #include "ui_registro.h"
 #include <qdebug.h>
 int contpos_6 = 0, list_size_registro = 0;
-bool status_list = true;
+bool status_list = false;
 
 Registro::Registro(QWidget *parent, SerialSpo2 *serialspo2_registro) :
     QDialog(parent),
@@ -57,7 +57,7 @@ Registro::~Registro(){
 
 void Registro::boton_handle_6(QString x){
 
-    if(status_list){
+    if(!status_list){
         if (x == "derecha"){
         contpos_6 = contpos_6 + 1;
         if(contpos_6 > 10){
@@ -77,6 +77,9 @@ void Registro::boton_handle_6(QString x){
             on_okay_clicked();
 
         }
+    }
+    else{
+
     }
 }
 
@@ -101,6 +104,8 @@ void Registro:: on_okay_clicked(){
 
             if(status_list){
                 ui->blood_type->showPopup();
+                list_size_registro = ui->blood_type->count();
+                qDebug() << list_size_registro;
             }else{
                 ui->blood_type->hidePopup();
             }

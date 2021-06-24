@@ -217,7 +217,8 @@ void SerialSpo2::handle_data()
                                             //first_save_ir = true;
                                             //first_save_red = true;
                                           spo2_new_value = R_ir / R_red;
-                                          //qDebug()<< spo2_new_value;
+                                          //////qDebug()<< spo2_new_value;
+
                                           if(( min_spo2_red>13000) && spo2_new_value>0.60){
                                               finger_out = true;
                                           }
@@ -272,9 +273,10 @@ void SerialSpo2::handle_data()
                                                       if(finger_out){
                                                           emit porcentualspo2(output_spo2);
                                                       }
-                                                     //qDebug()<<partial_result_ir;
-                                                     //qDebug()<<"minR:"<<min_spo2_red<<"max:"<<max_spo2_red;
-                                                     //qDebug()<<"minIR:"<<min_spo2_ir<<"max:"<<max_spo2_ir;
+                                                     ////qDebug()<<partial_result_ir;
+                                                     ////qDebug()<<"minR:"<<min_spo2_red<<"max:"<<max_spo2_red;
+                                                     ////qDebug()<<"minIR:"<<min_spo2_ir<<"max:"<<max_spo2_ir;
+
                                                      partial_result_red = 0;
                                                      save_spo2_for_output= 0;
                                                      contador_output_spo2 = 0;
@@ -332,7 +334,8 @@ void SerialSpo2::handle_data()
                    for (int i = 2; i<length ;i++ ) { //recorremos la cadena bida por serial desde una posición después de la letra B hasta el final de la misma
                        data.append(cadena[i]);
                    }
-                      // //qDebug()<<data;
+                      // ////qDebug()<<data;
+
                    if(finger_out){
 
                     datos_en_pantalla = datos_en_pantalla + 1; //Incrementamos en 1 el eje inferior (x) de nuestra grafica
@@ -356,7 +359,8 @@ void SerialSpo2::handle_data()
    //*****************************FOR PANI *****************************************
    //*************************** HERE WE NEED TO CAST FOR EVERY VALUE ***********************************
                    if(cadena[0] == 'S'){
-                       //qDebug()<<cadena;
+                       ////qDebug()<<cadena;
+
                        QString data_s;   // variable donde guardaremos el valor numerico sin la letra B
                        for (int i = 1; i<12;i++ ) { //recorremos la cadena bida por serial desde una posición después de la letra B hasta el final de la misma
                            data_s.append(cadena[i]);
@@ -420,8 +424,9 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
    }else{
        qv_x_spo2.append(x);
        qv_y_spo2.append(y);
-       ////qDebug()<< qv_x_spo2;
+       //////qDebug()<< qv_x_spo2;
    }
+
    if(qv_y_spo2_reescale.length()>75){
        qv_y_spo2_reescale[reescale_config] = y;
        reescale_config = reescale_config + 1;
@@ -470,12 +475,15 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
                 }
              }
         }
+    qDebug()<<bpm_pulse;
        if(bpm_send_data){
            bpm_send_data = false;;
            bpm_pulse = bpm_pulse * 4;
            QString s = QString::number(bpm_pulse);
-           qDebug() << "[BPM] " << s;
+           //qDebug()<< bpm_pulse;
+
            emit bpm_count(s);
+
            bpm_pulse = 0;
            bpm_counting_pulse = 0;
          }
