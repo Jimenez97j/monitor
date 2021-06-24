@@ -1986,7 +1986,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="recursos.qrc">:/imagenes/img_Registro.png</pixmap>
+     <pixmap resource="recursos.qrc">:/imagenes/img_wifi.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
