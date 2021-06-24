@@ -73,7 +73,8 @@ MainWindow::MainWindow(QWidget *parent)
         for (auto &x : netcfgList)
         {
 
-                if(x.name() == "")
+                if(x.name() =!";
+    mqtt_bpm =75;= "")
                     WiFisList << "Unknown(Other Network)";
                 else
                     WiFisList << x.name();
@@ -710,7 +711,7 @@ void MainWindow::leds_inicio(){
    // show();
     //+++++++++++++++++++++++++++++++++++++++++ REFRESH TIMER ++++++++++++++++++++++++++++++++++++++++
     connect(cronometro, SIGNAL(timeout()), this, SLOT(funcionActivacionTimer()));
-    cronometro->start(1);
+    cronometro->start(1000);
     connect(spo2_refresh_chart, SIGNAL(timeout()), this, SLOT(alarm_sound()));
     //+++++++++++++++++++++++++++++++++++++ INTERFAZ IS READY +++++++++++++++++++++++++++++++++
     serial_ecg_data->write("restart\n"); //Restart all the systems
@@ -1114,26 +1115,26 @@ void MainWindow::funcionActivacionTimer(){
     puntos=puntos+1;//Timer animacion de puntos en "Realizando Analisis
 
     //Animación de puntos en label "Realizando Analisis..."
-    if(puntos==1000 && banderapuntos){
+    if(puntos==1 && banderapuntos){
         ui->analisis->setText("Realizando Analisis");
     }
-    if(puntos==2000 && banderapuntos){
+    if(puntos==2 && banderapuntos){
         ui->analisis->setText("Realizando Analisis.");
     }
-    if(puntos==3000 && banderapuntos){
+    if(puntos==3 && banderapuntos){
         ui->analisis->setText("Realizando Analisis..");
     }
-    if(puntos==4000 && banderapuntos){
+    if(puntos==4 && banderapuntos){
         ui->analisis->setText("Realizando Analisis...");
         puntos=0;
     }
 
     //return to blank the label that appers when takes a screenshot
-    if(hora_captura>2000){
+    if(hora_captura>2){
         ui->label_6->setText("");
          hora_captura=0;
     }
-    if(check_bpm_value_time == 800){
+    if(check_bpm_value_time == 1){
         spo2serial->IsActive();
         if(save_alarm_data_bpm > alarma_max_ecg){
             ecg_in = true;
@@ -1160,14 +1161,14 @@ void MainWindow::funcionActivacionTimer(){
        save_data_db();
        reg_save_data= 0;
     }
-   if(pantalla>8300){
+   if(pantalla>1){
        ui->label_5->setText("");
         pantalla=0;
         spo2serial->bpm_flag_update();
    }
 
    //this blocks are for bliding the numbers when alarms are activated
-   if(numeros_ecg==500){
+   if(numeros_ecg==1){
        if(cambio_numeros && activated){
            QLabel *label1=ui->bpm_ecg;
            QString color="color:#880e00; border:none";
@@ -1186,7 +1187,7 @@ void MainWindow::funcionActivacionTimer(){
 
        }
    }
-   if(numeros_spo2==500){
+   if(numeros_spo2==1){
        if(cambio_numeros2 && activated2){
              QLabel *label2=ui->SPO2;
              QString color="color:#005b01;border:none";
@@ -1207,7 +1208,7 @@ void MainWindow::funcionActivacionTimer(){
 
        }
    }
-   if(numeros_temp == 500){
+   if(numeros_temp == 1){
        if(cambio_numeros3 && activated3){
            QLabel *label3=ui->temp;
            QString color="color:#003e56;border:none";
