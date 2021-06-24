@@ -36,6 +36,8 @@ private slots:
 
     void on_toolButton_2_clicked();
 
+    void on_btn_red_pressed();
+
 private:
     Ui::ajustes *ui;
 };

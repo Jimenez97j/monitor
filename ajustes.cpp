@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QDir>
 #include <guiausuario.h>
+#include <configred.h>
 
 ajustes::ajustes(QWidget *parent) :
     QDialog(parent),
@@ -201,4 +202,13 @@ void ajustes::on_toolButton_2_clicked()
     {
         qDebug()<<"Hardware clock actualizado";
     }
+}
+
+void ajustes::on_btn_red_pressed()
+{
+    emit sonido_click();
+    ConfigRed ventanaRed;
+    ventanaRed.setWindowFlags(Qt::FramelessWindowHint);
+    ventanaRed.exec();
+    show();
 }

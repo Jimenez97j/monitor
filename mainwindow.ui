@@ -4467,6 +4467,10 @@ border-color: white;</string>
      <property name="text">
       <string/>
      </property>
+     <property name="icon">
+      <iconset resource="recursos.qrc">
+       <normaloff>:/imagenes/btn_Iniciar.png</normaloff>:/imagenes/btn_Iniciar.png</iconset>
+     </property>
      <property name="iconSize">
       <size>
        <width>90</width>
@@ -4623,7 +4627,7 @@ border-color: white;</string>
      <property name="geometry">
       <rect>
        <x>1200</x>
-       <y>40</y>
+       <y>60</y>
        <width>81</width>
        <height>41</height>
       </rect>
@@ -4782,6 +4786,10 @@ border-color: white;</string>
      <property name="text">
       <string/>
      </property>
+     <property name="icon">
+      <iconset resource="recursos.qrc">
+       <normaloff>:/imagenes/btn_Bocina.png</normaloff>:/imagenes/btn_Bocina.png</iconset>
+     </property>
      <property name="iconSize">
       <size>
        <width>90</width>
@@ -4816,6 +4824,25 @@ border-color: white;</string>
        <width>90</width>
        <height>90</height>
       </size>
+     </property>
+    </widget>
+    <widget class="QLabel" name="imgBateria">
+     <property name="geometry">
+      <rect>
+       <x>1200</x>
+       <y>10</y>
+       <width>81</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="recursos.qrc">:/imagenes/bateria0.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>

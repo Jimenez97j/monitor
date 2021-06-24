@@ -10,7 +10,7 @@ alarmas::alarmas(QWidget *parent) :
 {
     ui->setupUi(this);
         QString nombre;
-        nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
+        nombre.append("/opt/monitor_selespo/bin/prueba.sqlite");
         db = QSqlDatabase::addDatabase("QSQLITE");
         db.setDatabaseName(nombre);
         if(db.open()){
@@ -47,10 +47,6 @@ void alarmas::crearTabla(){
     }
 
 }
-
-
-
-
 
 void alarmas::on_pushButton_pressed()
 {

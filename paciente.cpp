@@ -8,7 +8,7 @@ Paciente::Paciente(QWidget *parent) :
 {
     ui->setupUi(this);
     QString nombre, consulta;
-    nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
+    nombre.append("/opt/monitor_selespo/bin/prueba.sqlite");
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(nombre);
     if(db.open()){

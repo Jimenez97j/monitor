@@ -24,7 +24,7 @@ MOD2::MOD2(QWidget *parent) :
     ui->setupUi(this); QString nombre, consulta, maincolor;
     ui->sound->setCheckable(true);
     ui->pani->setCheckable(true);
-    nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
+    nombre.append("/opt/monitor_selespo/bin/prueba.sqlite");
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(nombre);
     if(db.open()){

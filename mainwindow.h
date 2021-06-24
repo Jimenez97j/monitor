@@ -22,6 +22,8 @@
 #include <QNetworkConfiguration>
 #include <QNetworkConfigurationManager>
 #include <QNetworkSession>
+#include <configred.h>
+#include <alarmasx.h>
 
 
 
@@ -97,6 +99,7 @@ public slots:
     void plot_spo2(QVector<double>, QVector<double>, int, double, double, double);
     void networkReadyRead();
     void enviar_datos(int);
+    //
 signals:
     void networkReplyReadyRead();
 private slots:
@@ -137,6 +140,8 @@ private slots:
     void cambiar_bandera_2();
     void cambiar_bandera_3();
     void cambiar_bandera_4();
+    void actualizaEdoBateria(QString dato);
+
 private:
     QNetworkSession *session;
     QNetworkAccessManager * m_networkManager;
@@ -161,6 +166,9 @@ private:
     Paciente* paciente;
     ecghandle* graficar;
     SerialSpo2 *spo2serial;
+    ConfigRed* configred1;
+    AlarmasX* alarmasx;
+
 
 };
 #endif // MAINWINDOW_H
