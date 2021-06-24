@@ -60,6 +60,8 @@ public:
     void active_timer_for_alarms(bool state);
   //  void RecibirArreglo_ECG();
     QTimer *mqttTimer;
+    //
+    QTimer *reconexionMqtt;
 public slots:
     void alarm_sound();
     void check_alarms_time_to();
@@ -102,6 +104,7 @@ public slots:
     void envia_signos_mqtt();
     void publish_spo2_mqtt(double data);
     void publish_ecg_mqtt(QString data);
+    void rec_mqtt();
 signals:
     void networkReplyReadyRead();
     void cambiar_estado_bandera_3();
