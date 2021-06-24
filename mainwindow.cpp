@@ -163,7 +163,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->color->setStyleSheet("background-color:" + maincolor);//background
     ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
     ui->ecg->change_square_ecg(maincolor);   //background erase rectangle
-    ui->ecg_2->change_square_ecg(maincolor);
+  //  ui->ecg_2->change_square_ecg(maincolor);
 
  if(maincolor == "#326d72"){
      //for the ples graph
@@ -1142,6 +1142,7 @@ void MainWindow::funcionActivacionTimer(){
 
     //Animación de puntos en label "Realizando Analisis..."
 
+
     if(puntos==10 && banderapuntos){
         ui->analisis->setText("Realizando Analisis");
     }
@@ -1334,7 +1335,7 @@ void MainWindow::change_color_once(){
         ui->color->setStyleSheet("background-color:" + maincolor);//background
         ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
         ui->ecg->change_square_ecg(maincolor);
-        ui->ecg_2->change_square_ecg(maincolor);
+      //  ui->ecg_2->change_square_ecg(maincolor);
         //ui->borrargraph_ecg->setStyleSheet("background-color:" + maincolor);//background erase rectangle
 
      if(maincolor == "#326d72"){
@@ -1443,7 +1444,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(4);
-         ui->ecg_2->change_color_chart(4);
+         //ui->ecg_2->change_color_chart(4);
 
 
      }

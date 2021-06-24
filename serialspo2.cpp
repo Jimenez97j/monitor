@@ -85,7 +85,6 @@ void SerialSpo2::handle_data()
           int got = cadena.indexOf('\n');
           //qDebug()<<cadena;
 
-
         if(got >= 0){
             //
             if(cadena[0] == 'J'){
@@ -426,8 +425,8 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
        qv_x_spo2.append(x);
        qv_y_spo2.append(y);
        //////qDebug()<< qv_x_spo2;
-
    }
+
    if(qv_y_spo2_reescale.length()>75){
        qv_y_spo2_reescale[reescale_config] = y;
        reescale_config = reescale_config + 1;
@@ -484,6 +483,7 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
            //qDebug()<< bpm_pulse;
 
            emit bpm_count(s);
+
            bpm_pulse = 0;
            bpm_counting_pulse = 0;
          }

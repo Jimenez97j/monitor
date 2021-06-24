@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1104</width>
-    <height>310</height>
+    <height>158</height>
    </rect>
   </property>
   <property name="palette">
@@ -86,7 +86,7 @@
      <x>0</x>
      <y>0</y>
      <width>1101</width>
-     <height>311</height>
+     <height>158</height>
     </rect>
    </property>
    <property name="cursor">
@@ -101,7 +101,7 @@
       <x>0</x>
       <y>0</y>
       <width>21</width>
-      <height>311</height>
+      <height>151</height>
      </rect>
     </property>
     <property name="styleSheet">
