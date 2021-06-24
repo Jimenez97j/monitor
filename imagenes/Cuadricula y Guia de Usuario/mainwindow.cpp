@@ -23,46 +23,14 @@ bool jsonrecibido = false;
 QTimer *spo2_refresh_chart = new QTimer();
 int registro_firebase = 0;
 QString *arrdata_to_send;
-int contpos = 0;
-bool bandera_2= true;
-bool bandera_barra_2= true;
-bool bandera_click = true;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    // MQTT
-    mqtt_fc = 0;
-    mqtt_porce_spo2 = 0;
-    mqtt_bpm = 0;
-    mqtt_sys = 0;
-    mqtt_dia = 0;
-    mqtt_resp = 12;
-    mqtt_connected = false;
-    mqttTimer = new QTimer;
-    connect(mqttTimer, SIGNAL(timeout()),this, SLOT(envia_signos_mqtt()));
-    mqttTimer->setInterval(10000);
-    mqttTimer->start();
-    mqtt_cont_ecg = 0;
-    mqtt_list_ecg = new QStringList;
-
-    //reconexion mqtt
-    reconexionMqtt = new QTimer;
-    connect(reconexionMqtt, SIGNAL(timeout()),this, SLOT(rec_mqtt()));
-    reconexionMqtt->setSingleShot(true);
-    //
     ui->setupUi(this);
     //cambios serial
-    //pequeña modificacion
     ui->ecg->iniciar_serial();
-
-
-    //ecg-mqtt-publish
-    connect(ui->ecg->local_serial, SIGNAL(envia_a_mqtt_publish(QString)), this, SLOT(publish_ecg_mqtt(QString)));
-
-    //ui->ecg_2->set_serial_name("DATOSECG"); //ECG2
-    ui->ecg_2->iniciar_serial();
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
     //
@@ -78,8 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
         for (auto &x : netcfgList)
         {
 
-                if(x.name() =!";
-    mqtt_bpm =75;= "")
+                if(x.name() == "")
                     WiFisList << "Unknown(Other Network)";
                 else
                     WiFisList << x.name();
@@ -90,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
         }*/
     //name of the data base for this proyect
     QString nombre;
-    nombre.append("/opt/monitor_selespo/bin/prueba.sqlite");
+    nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(nombre);
     if(db.open()){
@@ -163,7 +130,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->color->setStyleSheet("background-color:" + maincolor);//background
     ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
     ui->ecg->change_square_ecg(maincolor);   //background erase rectangle
-    ui->ecg_2->change_square_ecg(maincolor);
+    //ui->ecg_2->change_square_ecg(maincolor);
 
  if(maincolor == "#326d72"){
      //for the ples graph
@@ -177,19 +144,19 @@ MainWindow::MainWindow(QWidget *parent)
      ui->plot->replot();
 
      //to change the sidebar
-     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
      ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
      ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
      ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
      //for the ecg graph
      ui->ecg->change_color_chart(1);
-     ui->ecg_2->change_color_chart(1);
+     //ui->ecg_2->change_color_chart(1);
  }
  if(maincolor == "#20214f"){
      //for the ples graph
@@ -203,19 +170,19 @@ MainWindow::MainWindow(QWidget *parent)
      ui->plot->replot();
 
      //to change the sidebar
-     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
      ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
      ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
      ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
      //for the ecg graph
      ui->ecg->change_color_chart(2);
-     ui->ecg_2->change_color_chart(2);
+     //ui->ecg_2->change_color_chart(2);
  }
  if(maincolor == "#ffffff"){
      //for the ples graph
@@ -229,19 +196,19 @@ MainWindow::MainWindow(QWidget *parent)
      ui->plot->replot();
 
      //to change the sidebar
-     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
+     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
      ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:black; border:none");
      ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:black; border:none");
      ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:black; border:none");
 
      //for the ecg graph
      ui->ecg->change_color_chart(3);
-     ui->ecg_2->change_color_chart(3);
+     //ui->ecg_2->change_color_chart(3);
  }
  if(maincolor == "#000000"){
      //for the ples graph
@@ -255,19 +222,19 @@ MainWindow::MainWindow(QWidget *parent)
      ui->plot->replot();
 
      //to change the sidebar
-     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
      ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
      ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
      ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
      //for the ecg graph
      ui->ecg->change_color_chart(4);
-     ui->ecg_2->change_color_chart(4);
+     //ui->ecg_2->change_color_chart(4);
 
  }
  if(maincolor == "#003e6c"){
@@ -282,18 +249,18 @@ MainWindow::MainWindow(QWidget *parent)
      ui->plot->replot();
 
      //to change the sidebar
-     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
      ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
      ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
      ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
      ui->ecg->change_color_chart(5);
-     ui->ecg_2->change_color_chart(5);
+     //ui->ecg_2->change_color_chart(5);
      //for the ecg graph
     //graficar->change_color_chart(5);
  }
@@ -301,7 +268,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 //+++++++++++++++++++++++++++++++++++++ SERIAL PORT SPO2 +++++++++++++++++++++++++++++++++++
 
-    spo2serial = new SerialSpo2(nullptr, "SPO2");
+    spo2serial = new SerialSpo2();
     connect(spo2serial, SIGNAL(pleth(QVector<double>, QVector<double>, int, double, double, double)), this, SLOT(plot_spo2(QVector<double>, QVector<double>, int, double, double, double)), Qt::QueuedConnection);
     connect(spo2serial, SIGNAL(cuadronegro(int)), this, SLOT(cuadronegro_spo2(int)), Qt::QueuedConnection);
     connect(spo2serial, SIGNAL(bpm_count(QString)), this, SLOT(bpm_count_spo2(QString)), Qt::QueuedConnection);
@@ -315,16 +282,10 @@ MainWindow::MainWindow(QWidget *parent)
     //error for pani
     connect(spo2serial, SIGNAL(errorpani()), this, SLOT(errorpani()), Qt::QueuedConnection);
 
-    teclado = new SerialSpo2(nullptr,"ttyUSB0");
-    connect(teclado, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
-   connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
-   //mqtt jeru
-   connect(spo2serial, SIGNAL(spo2_plot_mqtt(double)),this, SLOT(publish_spo2_mqtt(double)));
-
 //+++++++++++++++++++++++++++++++++++++ SERIAL PORT ECG(DATOS) +++++++++++++++++++++++++++++++++++
 
     serial_ecg_data= new QSerialPort(); // Serial port for bpm, rpm
-    serial_ecg_data->setPortName("nobody"); //DATOSECG
+    serial_ecg_data->setPortName("DATOSECG");
     serial_ecg_data->setBaudRate(QSerialPort::Baud115200);
     serial_ecg_data->setReadBufferSize(5);
     serial_ecg_data->setParity(QSerialPort::NoParity);
@@ -341,15 +302,14 @@ MainWindow::MainWindow(QWidget *parent)
     //+++++++++++++++++++++++++++++++++++++++++ MQTT(ARRHYTHMIA) ++++++++++++++++++++++++++++++++++++++
 
     m_client = new QMqttClient(this);
-    m_client->setHostname("192.168.1.248"); //192.168.1.248
-    m_client->setPort(1883); //1883
+    m_client->setHostname("localhost");
+    m_client->setPort(8883);
     connect(m_client, &QMqttClient::stateChanged, this, &MainWindow::updateLogStateChange);
     connect(m_client, &QMqttClient::disconnected, this, &MainWindow::brokerDisconnected);
     connect(m_client, &QMqttClient::connected, this, &MainWindow::brokerConnected);
     connect(m_client, &QMqttClient::messageReceived, this, [this](const QByteArray &message, const QMqttTopicName &topic) {
 
-    //this block works on,ly if detection is activated
-        qDebug()<<message;
+    //this block works only if detection is activated
         if(detection){
             if (message == "NORMAL")
             {
@@ -363,7 +323,6 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     m_client->connectToHost();
-    reconexionMqtt->start(10000);
     //connect(serial,SIGNAL(readyRead()),this , SLOT(RecibirArreglo()));
     connect(serial_ecg_data,SIGNAL(readyRead()),this , SLOT(RecibirArreglo_ECG_numerico()) );
 
@@ -381,228 +340,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     //qDebug("btn_Bocina");
 
-}
-
-void MainWindow::rec_mqtt(){
-    if(!mqtt_connected){
-        m_client->connectToHost();
-        reconexionMqtt->start(10000);
-        qDebug() << "[MQTT] Reconexion";
-    }
-
-}
-
-void MainWindow::envia_signos_mqtt(){
-    if(mqtt_connected){
-        /*mqtt_fc = 0;
-        mqtt_porce_spo2 = 0;
-        mqtt_bpm = 0;
-        mqtt_sys = 0;
-        mqtt_dia = 0;
-        mqtt_resp = 12;*/
-        QString temp = QString::number(mqtt_fc) + "," + QString::number(mqtt_porce_spo2) + ","  + QString::number(mqtt_bpm) + "," + QString::number(mqtt_sys) + "," + QString::number(mqtt_dia) + "," + QString::number(mqtt_resp);
-        m_client->publish(QMqttTopicName("monitor/signos"), temp.toUtf8());
-        //qDebug() << "[MQTT] Envia signos";
-    }
-}
-
-void MainWindow::publish_spo2_mqtt(double data){
-    if(mqtt_connected){
-        QString temp = QString::number(data, 'f', 3);
-        m_client->publish(QMqttTopicName("monitor/pleth"), temp.toUtf8());
-        //qDebug() << "[MQTT] Envia pleth spo2";
-    }
-}
-
-void MainWindow::publish_ecg_mqtt(QString data){
-    if(mqtt_connected){
-        //agregar contador
-        if(mqtt_cont_ecg < 20){
-            mqtt_list_ecg->append(data);
-            mqtt_cont_ecg++;
-        }
-        else{
-            mqtt_cont_ecg = 0;
-            QString temp = mqtt_list_ecg->join(",");
-            mqtt_list_ecg->clear();
-            m_client->publish(QMqttTopicName("monitor/ecg"), temp.toUtf8());
-            //qDebug() << "[MQTT] Envia ecg";
-        }
-    }
-}
-
-void MainWindow::boton_ajustes2(QString h)
-{
-    if (bandera_2 == true){
-    qDebug()<< "llegando";
-    if (h == "derecha"){
-    contpos = contpos + 1;
-    if(contpos > 11){
-        contpos = 11;
-    }
-    opciones();
-    }
-
-    else if(h == "izquierda"){
-        contpos = contpos - 1;
-        if(contpos < 0){
-            contpos = 0;
-        }
-        opciones();
-    }
-
-    else if(h == "click"){
-        on_ok_clicked();
-    }
-
-    else if(h == "pani"){
-        on_iniciarpani_pressed();
-    }
-    else if(h == "mute"){
-        on_toolButton_pressed();
-    }
-    }
-}
-
-void MainWindow:: on_Derecha_clicked(){
-    contpos = contpos + 1;
-    if(contpos > 10){
-        contpos = 10;
-    }
-}
-
-void MainWindow:: on_Izquierda_clicked(){
-    contpos = contpos - 1;
-    if (contpos < 0){
-        contpos = 0;
-    }
-
-}
-
-void MainWindow:: on_ok_clicked(){
-
-    switch(contpos)
-    {
-    case 0:
-       on_open_records_pressed();
-        break;
-    case 1:
-        on_screenshot_pressed();
-        break;
-    case 2:
-        on_galeria_open_pressed();
-        break;
-    case 3:
-        on_alarmas_pressed();
-        break;
-    case 4:
-        on_iniciarpani_pressed();
-        break;
-    case 5:
-        on_derivaciones_pressed();
-        break;
-    case 6:
-        on_registro_usuario_pressed();
-        break;
-    case 7:
-        on_Paciente_pressed();
-        break;
-    case 8:
-        on_modelo2_pressed();
-        break;
-    case 9:
-        on_toolButton_pressed();
-        break;
-    case 10:
-        on_ajustes_pressed();
-        break;
-    case 11:
-        on_toolButton_2_clicked();
-        break;
-    }
-
-}
-
-
-void MainWindow::cambiar_bandera(){
-   if (bandera_barra_2) {
-       bandera_2 = true;
-   }
-   else{
-       emit cambiar_estado_bandera_3();
-
-   }
-}
-
-
-
-void MainWindow::cambiar_bandera_barra_2(){
-    bandera_barra_2 =true;
-    bandera_2 = true;
-}
-
-void MainWindow:: opciones(){
-    switch(contpos)
-    {
-    case 0:
-        ui->open_records->setStyleSheet("background-color:red;border-image: url(:/imagenes/datos2.png) 0 0 0 0 strech strech;");
-        ui->screenshot->setStyleSheet("border-image: url(:/imagenes/camara.png) 0 0 0 0 strech strech;");
-        break;
-    case 1:
-        ui->screenshot->setStyleSheet("background-color:red;border-image: url(:/imagenes/camara.png) 0 0 0 0 strech strech;");
-        ui->open_records->setStyleSheet("border-image: url(:/imagenes/datos2.png) 0 0 0 0 strech strech;");
-        ui->galeria_open->setStyleSheet("border-image: url(:/imagenes/Galeria.png) 0 0 0 0 strech strech;");
-        break;
-    case 2:
-        ui->galeria_open->setStyleSheet("background-color:red;border-image: url(:/imagenes/Galeria.png) 0 0 0 0 strech strech;");
-        ui->screenshot->setStyleSheet("border-image: url(:/imagenes/camara.png) 0 0 0 0 strech strech;");
-        ui->alarmas->setStyleSheet("border-image: url(:/imagenes/alarmas2.png) 0 0 0 0 strech strech;");
-        break;
-    case 3:
-        ui->alarmas->setStyleSheet("background-color:red;border-image: url(:/imagenes/alarmas2.png) 0 0 0 0 strech strech;");
-        ui->galeria_open->setStyleSheet("border-image: url(:/imagenes/Galeria.png) 0 0 0 0 strech strech;");
-        ui->iniciarpani->setStyleSheet("border-image: url(:/imagenes/inciarpani2.png);");
-        break;
-    case 4:
-        ui->iniciarpani->setStyleSheet("background-color:red;border-image: url(:/imagenes/inciarpani2.png);");
-        ui->alarmas->setStyleSheet("border-image: url(:/imagenes/alarmas2.png) 0 0 0 0 strech strech;");
-        ui->derivaciones->setStyleSheet("border-image: url(:/imagenes/DERIVACIONES.png) 0 0 0 0 stretch stretch;");
-        break;
-    case 5:
-        ui->derivaciones->setStyleSheet("background-color:red;border-image: url(:/imagenes/DERIVACIONES.png) 0 0 0 0 stretch stretch;");
-        ui->iniciarpani->setStyleSheet("border-image: url(:/imagenes/inciarpani2.png);");
-        ui->registro_usuario->setStyleSheet("border-image: url(:/imagenes/Registro.png) 0 0 0 0 stretch stretch;");
-        break;
-    case 6:
-        ui->registro_usuario->setStyleSheet("background-color:red;border-image: url(:/imagenes/Registro.png) 0 0 0 0 stretch stretch;");
-        ui->derivaciones->setStyleSheet("border-image: url(:/imagenes/DERIVACIONES.png) 0 0 0 0 stretch stretch;");
-        ui->Paciente->setStyleSheet("border-image: url(:/imagenes/Paciente.png) 0 0 0 0 stretch stretch;");
-        break;
-    case 7:
-        ui->Paciente->setStyleSheet("background-color:red;border-image: url(:/imagenes/Paciente.png) 0 0 0 0 stretch stretch;");
-        ui->registro_usuario->setStyleSheet("border-image: url(:/imagenes/Registro.png) 0 0 0 0 stretch stretch;");
-        ui->modelo2->setStyleSheet("border-image: url(:/imagenes/solonumerico.png) 0 0 0 0 stretch stretch;");
-        break;
-    case 8:
-        ui->modelo2->setStyleSheet("background-color:red;border-image: url(:/imagenes/solonumerico.png) 0 0 0 0 stretch stretch;");
-        ui->Paciente->setStyleSheet("border-image: url(:/imagenes/Paciente.png) 0 0 0 0 stretch stretch;");
-        ui->toolButton->setStyleSheet("border-image: url(:/imagenes/sonido.png) 0 0 0 0 stretch stretch;");
-        break;
-    case 9:
-        ui->toolButton->setStyleSheet("background-color:red;border-image: url(:/imagenes/sonido.png) 0 0 0 0 stretch stretch;");
-        ui->modelo2->setStyleSheet("border-image: url(:/imagenes/solonumerico.png) 0 0 0 0 stretch stretch;");
-        ui->ajustes->setStyleSheet("border-image:  url(:/imagenes/config.png) 0 0 0 0 stretch stretch;");
-        break;
-    case 10:
-        ui->ajustes->setStyleSheet("background-color:red;border-image:  url(:/imagenes/config.png) 0 0 0 0 stretch stretch;");
-        ui->toolButton->setStyleSheet("border-image: url(:/imagenes/sonido.png) 0 0 0 0 stretch stretch;");
-        ui->toolButton_2->setStyleSheet("");
-        break;
-    case 11:
-        ui->toolButton_2->setStyleSheet("background-color:red;");
-        ui->ajustes->setStyleSheet("");
-        break;
-    }
 }
 
 void MainWindow::networkReadyRead(){
@@ -650,13 +387,11 @@ void MainWindow::panivalues(QString s, QString d, QString m){
     ps_save_reg = s; //value to save into database
     ui->pres_sis->setText(s);
     sys_mod2 = s;
-    mqtt_sys = s.toInt();
 
 //*****************************Dystolic**************************************************
     px_save_reg = d; //value to save into database
     ui->pres_sis_2->setText(d);
     dia_mod2 = d;
-    mqtt_dia = d.toInt();
 //****************************MEDIA********************************************************
     ui->rpm->setText(m);
     if(m.toFloat()>0 || s.toFloat() > 30){
@@ -688,7 +423,6 @@ void MainWindow::porcentualspo2(QString spo2value){
         sop2_mod2 = spo2value;
         savespo2 = spo2value.toDouble();
         spo2_save_reg = spo2value + " " + "%";
-        mqtt_porce_spo2 = savespo2;
         if(savespo2<70){
             is_spo2_ready = false;
         }
@@ -705,9 +439,6 @@ void MainWindow::cuadronegro_spo2(int square){
 
 void MainWindow::bpm_count_spo2(QString bpm){
     ui->bpmsp2->setText(bpm);
-    //
-    //qDebug() << "bpmspo2!!!!";
-    mqtt_bpm =bpm.toInt();
 }
 
 void MainWindow::not_data(){
@@ -733,11 +464,7 @@ void MainWindow::leds_inicio(){
    // show();
     //+++++++++++++++++++++++++++++++++++++++++ REFRESH TIMER ++++++++++++++++++++++++++++++++++++++++
     connect(cronometro, SIGNAL(timeout()), this, SLOT(funcionActivacionTimer()));
-<<<<<<< HEAD
-    cronometro->start(1000);
-=======
-    cronometro->start(100);
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
+    cronometro->start(1);
     connect(spo2_refresh_chart, SIGNAL(timeout()), this, SLOT(alarm_sound()));
     //+++++++++++++++++++++++++++++++++++++ INTERFAZ IS READY +++++++++++++++++++++++++++++++++
     serial_ecg_data->write("restart\n"); //Restart all the systems
@@ -816,22 +543,17 @@ void MainWindow::updateLogStateChange(){
 }
 
 void MainWindow::brokerConnected(){
-    qDebug() << "[MQTT] Conectado";
     const QString topic = "ecg";
-    mqtt_connected = true;
     auto subscription = m_client->subscribe(topic);
     if (!subscription)
     {
         return;
     }
-    //qDebug()<<"holi";
 }
 
 void MainWindow::brokerDisconnected()
 {
-    qDebug() << "[MQTT] Desconectado";
-    mqtt_connected = false;
-    reconexionMqtt->start(3000);
+
 }
 
 void MainWindow::get_alarms_value(){
@@ -882,14 +604,12 @@ void MainWindow::on_screenshot_pressed(){
     hora_captura=0;
 }
 void MainWindow::on_toolButton_2_clicked(){
-    bandera_2 = false;
     qDebug("ON TOOL BUTTON");
-    enviardatosw = new enviardatos(nullptr, teclado);
+    enviardatosw = new enviardatos;
     enviardatosw->setWindowFlags(Qt::FramelessWindowHint);
     enviardatosw->setWindowFlags(Qt::Popup);
     QObject::connect(enviardatosw, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(enviardatosw, SIGNAL(send_data(int)), this, SLOT(enviar_datos(int)));
-    QObject::connect(enviardatosw, SIGNAL(bandera_perilla_9()), this, SLOT(cambiar_bandera()));
     //enviardatosw->setGeometry(87, 10, 510, 70);
     enviardatosw->setGeometry(0, 10, 602, 110);
     enviardatosw->exec();
@@ -930,7 +650,6 @@ void MainWindow::on_iniciarpani_pressed(){
         //serial->write("U");
         //spo2serial->write_value("U");
         //spo2serial->write_value("B");
-        //JORGE
         emit spo2serial->escribe("U");
         //ui->iniciarpani->setStyleSheet("border-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
         ui->iniciarpani->setChecked(false);
@@ -941,37 +660,31 @@ void MainWindow::on_iniciarpani_pressed(){
 }
 
 void MainWindow::on_open_records_pressed(){
-    bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    records = new alarmas(nullptr, teclado);
+    records = new alarmas;
     records->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(records, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(records, SIGNAL(habilitar_barra_desde_basedatos()), this, SLOT(cambiar_bandera()));
     records->exec();
     show();
 }
 
 
 void MainWindow::on_Paciente_pressed(){
-    bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    paciente = new Paciente(nullptr, teclado);
+    paciente = new Paciente;
     paciente->setWindowFlags(Qt::FramelessWindowHint);
     paciente->setWindowFlags(Qt::Popup);
     paciente->setGeometry(701, 105, 340, 588);
     QObject::connect(paciente, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(paciente, SIGNAL(bandera_perilla_7()), this, SLOT(cambiar_bandera()));
     paciente->exec();
     show();
 }
 
 void MainWindow::on_registro_usuario_pressed(){
-     bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    registros = new Registro(nullptr, teclado);
+    registros = new Registro;
     registros->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(registros, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(registros, SIGNAL(bandera_perilla_6()), this, SLOT(cambiar_bandera()));
     registros->exec();
     show();
 }
@@ -1083,13 +796,11 @@ void MainWindow::enviar_datos(int valor){
 }
 
 void MainWindow::on_alarmas_pressed(){
-    bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    alarma = new config_alarmas(nullptr, teclado);
+    alarma = new config_alarmas;
     alarma->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(alarma, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(alarma, SIGNAL(alarms_change()), this, SLOT(alarms_change()));
-    QObject::connect(alarma, SIGNAL(habilitar_barra_desde_alarmas()), this, SLOT(cambiar_bandera()));
     alarma->exec();
     show();
 }
@@ -1144,39 +855,26 @@ void MainWindow::funcionActivacionTimer(){
     puntos=puntos+1;//Timer animacion de puntos en "Realizando Analisis
 
     //Animación de puntos en label "Realizando Analisis..."
-<<<<<<< HEAD
-    if(puntos==1 && banderapuntos){
+    if(puntos==1000 && banderapuntos){
         ui->analisis->setText("Realizando Analisis");
     }
-    if(puntos==2 && banderapuntos){
+    if(puntos==2000 && banderapuntos){
         ui->analisis->setText("Realizando Analisis.");
     }
-    if(puntos==3 && banderapuntos){
+    if(puntos==3000 && banderapuntos){
         ui->analisis->setText("Realizando Analisis..");
     }
-    if(puntos==4 && banderapuntos){
-=======
-    if(puntos==10 && banderapuntos){
-        ui->analisis->setText("Realizando Analisis");
-    }
-    if(puntos==20 && banderapuntos){
-        ui->analisis->setText("Realizando Analisis.");
-    }
-    if(puntos==30 && banderapuntos){
-        ui->analisis->setText("Realizando Analisis..");
-    }
-    if(puntos==40 && banderapuntos){
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
+    if(puntos==4000 && banderapuntos){
         ui->analisis->setText("Realizando Analisis...");
         puntos=0;
     }
 
     //return to blank the label that appers when takes a screenshot
-    if(hora_captura>2){
+    if(hora_captura>2000){
         ui->label_6->setText("");
          hora_captura=0;
     }
-    if(check_bpm_value_time == 1){
+    if(check_bpm_value_time == 800){
         spo2serial->IsActive();
         if(save_alarm_data_bpm > alarma_max_ecg){
             ecg_in = true;
@@ -1203,22 +901,14 @@ void MainWindow::funcionActivacionTimer(){
        save_data_db();
        reg_save_data= 0;
     }
-<<<<<<< HEAD
-   if(pantalla>1){
-=======
-   if(pantalla>80){
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
+   if(pantalla>8300){
        ui->label_5->setText("");
         pantalla=0;
         spo2serial->bpm_flag_update();
    }
 
    //this blocks are for bliding the numbers when alarms are activated
-<<<<<<< HEAD
-   if(numeros_ecg==1){
-=======
-   if(numeros_ecg==10){
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
+   if(numeros_ecg==500){
        if(cambio_numeros && activated){
            QLabel *label1=ui->bpm_ecg;
            QString color="color:#880e00; border:none";
@@ -1237,11 +927,7 @@ void MainWindow::funcionActivacionTimer(){
 
        }
    }
-<<<<<<< HEAD
-   if(numeros_spo2==1){
-=======
-   if(numeros_spo2==10){
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
+   if(numeros_spo2==500){
        if(cambio_numeros2 && activated2){
              QLabel *label2=ui->SPO2;
              QString color="color:#005b01;border:none";
@@ -1262,11 +948,7 @@ void MainWindow::funcionActivacionTimer(){
 
        }
    }
-<<<<<<< HEAD
-   if(numeros_temp == 1){
-=======
-   if(numeros_temp == 10){
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
+   if(numeros_temp == 500){
        if(cambio_numeros3 && activated3){
            QLabel *label3=ui->temp;
            QString color="color:#003e56;border:none";
@@ -1286,13 +968,12 @@ void MainWindow::funcionActivacionTimer(){
 
 //show galery window
 void MainWindow::on_galeria_open_pressed(){
-    bandera_2 = false;
+
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    galeria1 = new galeria(nullptr, teclado);
+    galeria1 = new galeria;
     galeria1->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(galeria1, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
     QObject::connect(galeria1, SIGNAL(sonido_basura()), this, SLOT(sonido_basura()));
-    QObject::connect(galeria1, SIGNAL(bandera_perilla_2()), this, SLOT(cambiar_bandera()));
     galeria1->exec();
     show();
 
@@ -1301,15 +982,13 @@ void MainWindow::on_galeria_open_pressed(){
 
 //show settings window
 void MainWindow::on_ajustes_pressed(){
-    bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    settings = new ajustes(nullptr, teclado);
+    settings = new ajustes;
     settings->setWindowFlags(Qt::FramelessWindowHint);
     QObject::connect(settings, SIGNAL(change_color_click()), this, SLOT(change_color_once()));
     QObject::connect(settings, SIGNAL(detection_change()), this, SLOT(detection_toggle()));
     QObject::connect(settings, SIGNAL(time_save_change(int)), this, SLOT(time_save_change(int)));
     QObject::connect(settings, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(settings, SIGNAL(bandera_perilla()), this, SLOT(cambiar_bandera()));
     settings->exec();
     show();
 }
@@ -1361,10 +1040,10 @@ void MainWindow::change_color_once(){
         ui->color->setStyleSheet("background-color:" + maincolor);//background
         ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
         ui->ecg->change_square_ecg(maincolor);
-        ui->ecg_2->change_square_ecg(maincolor);
+        //ui->ecg_2->change_square_ecg(maincolor);
         //ui->borrargraph_ecg->setStyleSheet("background-color:" + maincolor);//background erase rectangle
 
-     if(maincolor == "#326d72"){
+     if(maincolor == "#326d72"){//VERDE AQUA
          //for the ples graph
          ui->plot->graph(0)->setPen(QPen(Qt::black, 1)); //color and width of the line
          ui->plot->axisRect()->setBackground(QColor(50, 109, 114)); //background of the graph
@@ -1376,22 +1055,22 @@ void MainWindow::change_color_once(){
          ui->plot->replot();
 
          //to change the sidebar
-         ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+         ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
          ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
          ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
          ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
          //for the ecg graph
          ui->ecg->change_color_chart(1);
-         ui->ecg_2->change_color_chart(1);
+         //ui->ecg_2->change_color_chart(1);
 
      }
-     if(maincolor == "#20214f"){
+     if(maincolor == "#20214f"){ //MORADO RENACIENTE
          //for the ples graph
          ui->plot->graph(0)->setPen(QPen(Qt::black, 1)); //color and width of the line
          ui->plot->axisRect()->setBackground(QColor(32, 33, 79)); //background of the graph
@@ -1403,22 +1082,22 @@ void MainWindow::change_color_once(){
          ui->plot->replot();
 
          //to change the sidebar
-         ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+         ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
          ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
          ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
          ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
          //for the ecg graph
          ui->ecg->change_color_chart(2);
-         ui->ecg_2->change_color_chart(2);
+         //ui->ecg_2->change_color_chart(2);
 
      }
-     if(maincolor == "#ffffff"){
+     if(maincolor == "#ffffff"){ //BLANCO LUMINOSO
          //for the ples graph
          ui->plot->graph(0)->setPen(QPen(Qt::black, 1)); //color and width of the line
          ui->plot->axisRect()->setBackground(QColor(255, 255, 255)); //background of the graph
@@ -1430,23 +1109,23 @@ void MainWindow::change_color_once(){
          ui->plot->replot();
 
          //to change the sidebar
-         ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-         ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-         ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-         ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-         ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-         ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
+         ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
          ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:black; border:none");
          ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:black; border:none");
          ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:black; border:none");
 
          //for the ecg graph
          ui->ecg->change_color_chart(3);
-         ui->ecg_2->change_color_chart(3);
+         //ui->ecg_2->change_color_chart(3);
 
 
      }
-     if(maincolor == "#000000"){
+     if(maincolor == "#000000"){ //NEGRO ESPACIAL
          //for the ples graph
          ui->plot->graph(0)->setPen(QPen(Qt::green, 1)); //color and width of the line
          ui->plot->axisRect()->setBackground(QColor(0, 0, 0)); //background of the graph
@@ -1458,23 +1137,23 @@ void MainWindow::change_color_once(){
          ui->plot->replot();
 
          //to change the sidebar
-         ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+         ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
          ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
          ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
          ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
          //for the ecg graph
          ui->ecg->change_color_chart(4);
-         ui->ecg_2->change_color_chart(4);
+         //ui->ecg_2->change_color_chart(4);
 
 
      }
-     if(maincolor == "#003e6c"){
+     if(maincolor == "#003e6c"){ //AZUL OPACO
          //for the ples graph
          ui->plot->graph(0)->setPen(QPen(Qt::green, 1)); //color and width of the line
          ui->plot->axisRect()->setBackground(QColor(0, 62, 108)); //background of the graph
@@ -1486,29 +1165,28 @@ void MainWindow::change_color_once(){
          ui->plot->replot();
 
          //to change the sidebar
-         ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+         ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
+         ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);");
          ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
          ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
          ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
          //for the ecg graph
          ui->ecg->change_color_chart(5);
-         ui->ecg_2->change_color_chart(5);
+         //ui->ecg_2->change_color_chart(5);
 
      }
 }
 
 //derivation window open
 void MainWindow::on_derivaciones_pressed(){
-    bandera_2 = false;
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
 
-    selection = new derivaciones(nullptr, teclado);
+    selection = new derivaciones;
     selection->setWindowFlags(Qt::FramelessWindowHint);
     selection->setWindowFlags(Qt::Popup);
     //selection->setGeometry(0,378,721,61);
@@ -1527,8 +1205,6 @@ void MainWindow::on_derivaciones_pressed(){
     QObject::connect(selection, SIGNAL(der11()), this, SLOT(der11()));
     QObject::connect(selection, SIGNAL(der12()), this, SLOT(der12()));
     QObject::connect(selection, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(selection, SIGNAL(bandera_perilla_4()), this, SLOT(cambiar_bandera()));
-    QObject::connect(selection, SIGNAL(habilitar_perilla_4()), this, SLOT(cambiar_bandera()));
 
     selection->exec();
     show();
@@ -1588,15 +1264,12 @@ void MainWindow::der12(){
 //show the numeric view
 void MainWindow::on_modelo2_pressed(){
       //cronometro->disconnect();
-      bandera_barra_2 = false;
-      bandera_2 = false;
       cronometro->stop();
      //  is_graph_ples_activated = false;
       //serial_ecg->close(); //verificar si este metodo funciona o si es mejor una variable booleana y seguir recibiendo datos
-      numerico = new MOD2(nullptr, teclado);
+      numerico = new MOD2;
       numerico->setWindowFlags(Qt::FramelessWindowHint);
       sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-      QObject::connect(this, SIGNAL(cambiar_estado_bandera_3()), numerico, SLOT(cambiar_bandera_barra()));
 
       //the next signals is to handle changes in the settings windows when it is oppened from the numeric view
       QObject::connect(numerico, SIGNAL(change_color()), this, SLOT(change_color_once()));
@@ -1616,7 +1289,6 @@ void MainWindow::on_modelo2_pressed(){
       QObject::connect(numerico, SIGNAL(galeria_2()), this, SLOT(on_galeria_open_pressed()));
       QObject::connect(numerico, SIGNAL(registro_2()), this, SLOT(on_registro_usuario_pressed()));
       QObject::connect(numerico, SIGNAL(time_check_alarms()), this, SLOT(check_alarms_time_to()));
-      QObject::connect(numerico, SIGNAL(bandera_perilla_8()), this, SLOT(cambiar_bandera_barra_2()));
       //QObject::connect(numerico, SIGNAL((), this, SLOT()))
       numerico->exec();
       show();

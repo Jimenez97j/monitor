@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QDir>
 #include <guiausuario.h>
+bool bandera_deshabilitar_mod2 = true;
 
 int contpos_2 = 0;
 ajustes::ajustes(QWidget *parent, SerialSpo2 *serialspo2_ajustes) :
@@ -74,7 +75,7 @@ ajustes::~ajustes(){
 }
 
 void ajustes::boton_handle(QString x){
-
+if (bandera_deshabilitar_mod2 == true){
     if (x == "derecha"){
     contpos_2 = contpos_2 + 1;
     if(contpos_2 > 8){
@@ -95,6 +96,7 @@ void ajustes::boton_handle(QString x){
 
     }
 
+}
 }
 
 void ajustes:: on_okay_clicked(){
@@ -264,11 +266,20 @@ void ajustes::on_checkBox_toggled(bool checked){
 
 void ajustes::on_Guia_Usu_pressed()
 {
+    bandera_deshabilitar_mod2 = false;
     emit sonido_click();
-    GuiaUsuario ventana1;
-    ventana1.setWindowFlags(Qt::FramelessWindowHint);
-    ventana1.exec();
+    Data = new GuiaUsuario(this, spo2serial_2);
+    Data->setWindowFlags(Qt::FramelessWindowHint);
+    QObject::connect(Data, SIGNAL(habilitar_barra_ajustes()), this, SLOT(cambiar_bandera_barra_ajustes()));
+    //Data->setWindowFlags(Qt::Popup);
+    Data->exec();
     show();
+
+}
+
+void ajustes::cambiar_bandera_barra_ajustes(){
+
+    bandera_deshabilitar_mod2 = true;
 }
 
 void ajustes::on_time_save_currentIndexChanged(int index)

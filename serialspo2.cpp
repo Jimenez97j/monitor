@@ -86,6 +86,7 @@ void SerialSpo2::handle_data()
           //qDebug()<<cadena;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
           if(cadena[0] == 'J'){
               ////qDebug()<<"emitir";
               emit boton_ajustes("derecha");
@@ -106,37 +107,47 @@ void SerialSpo2::handle_data()
 =======
 
 >>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
+=======
+        if(got >= 0){
+            //
+            if(cadena[0] == 'J'){
+                //qDebug()<<"emitir";
+                emit boton_ajustes("derecha");
+                cadena.clear();
+            }
 
+            if(cadena[0] == 'L'){
+                //qDebug()<<"emitir izquierda";
+                emit boton_ajustes("izquierda");
+                cadena.clear();
+            }
+>>>>>>> 32581b73894eed86315c9891fdda5f954fef2847
 
-           if(got >= 0){
+            if(cadena[0] == 'O'){
+                //qDebug()<<"em";
+                emit boton_ajustes("click");
+                cadena.clear();
+            }
 
-               /*if(cadena[0] == 'J'){
-                   //qDebug()<<"emitir";
-                   emit boton_ajustes("derecha");
-                   cadena.clear();
-               }
+            if(cadena[0] == 'F'){
+                emit boton_ajustes("pani");
+                cadena.clear();
+            }
+            if(cadena[0] == 'M'){
+                emit boton_ajustes("mute");
+                cadena.clear();
+            }
+            //
 
-               if(cadena[0] == 'L'){
-                   //qDebug()<<"emitir izquierda";
-                   emit boton_ajustes("izquierda");
-                   cadena.clear();
-               }
-
-               if(cadena[0] == 'O'){
-                   //qDebug()<<"em";
-                   emit boton_ajustes("click");
-                   cadena.clear();
-               }*/
-
-               if(cadena[0] == 'A'){
-                  QString data;
-                   for (int i = 1; i<2;i++ ) {
-                       data.append(cadena[i]);
-                   }
-               if(search_confirm){
-                   if(data == confirm_command){
-                       search_confirm = false;
-                       pani_activated = false;
+            if(cadena[0] == 'A'){
+               QString data;
+                for (int i = 1; i<2;i++ ) {
+                    data.append(cadena[i]);
+                }
+            if(search_confirm){
+                if(data == confirm_command){
+                    search_confirm = false;
+                    pani_activated = false;
 
                    }
                    else{
