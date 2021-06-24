@@ -74,6 +74,8 @@ void Registro::boton_handle_6(QString x){
             opciones_registro();
         }
        else if(x == "click"){
+            status_list = !status_list;
+
             on_okay_clicked();
 
         }
@@ -100,12 +102,10 @@ void Registro:: on_okay_clicked(){
         on_mother_last_name_selectionChanged();
         break;
     case 4:
-            status_list = !status_list;
 
             if(status_list){
                 ui->blood_type->showPopup();
-                list_size_registro = ui->blood_type->count();
-                qDebug() << list_size_registro;
+
             }else{
                 ui->blood_type->hidePopup();
             }
