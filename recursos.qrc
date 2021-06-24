@@ -243,5 +243,21 @@
         <file>imagenes/btn_aVFOFF.png</file>
         <file>imagenes/btn_aVLOFF.png</file>
         <file>imagenes/btn_CaraSonriente.png</file>
+        <file>imagenes/btn_Wifi.png</file>
+        <file>imagenes/img_wifi.png</file>
+        <file>imagenes/img_wifi_25.png</file>
+        <file>imagenes/img_wifi_50.png</file>
+        <file>imagenes/img_wifi_75.png</file>
+        <file>imagenes/img_wifi_100.png</file>
+        <file>imagenes/bateria0.png</file>
+        <file>imagenes/bateria0c.png</file>
+        <file>imagenes/bateria25.png</file>
+        <file>imagenes/bateria25c.png</file>
+        <file>imagenes/bateria50.png</file>
+        <file>imagenes/bateria50c.png</file>
+        <file>imagenes/bateria75.png</file>
+        <file>imagenes/bateria75c.png</file>
+        <file>imagenes/bateria100.png</file>
+        <file>imagenes/bateria100c.png</file>
     </qresource>
 </RCC>

@@ -44,6 +44,8 @@ private slots:
     void on_toolButton_2_clicked();
     void opciones_ajustes();
 
+    void on_btn_red_pressed();
+
 private:
     Ui::ajustes *ui;
     SerialSpo2 *spo2serial_2;

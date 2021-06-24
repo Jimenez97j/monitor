@@ -10,6 +10,8 @@ CONFIG += c++11
 
 SOURCES += \
     alarmas.cpp \
+    alarmasx.cpp \
+    configred.cpp \
     derivaciones.cpp \
     ecghandle.cpp \
     enviardatos.cpp \
@@ -18,6 +20,7 @@ SOURCES += \
     graficaecg.cpp \
     main.cpp \
     mainwindow.cpp \
+    myswitch.cpp \
     paciente.cpp \
     pantallacarga.cpp \
     qcustomplot.cpp \
@@ -29,10 +32,13 @@ SOURCES += \
     serialspo2.cpp \
     serialthread.cpp \
     serialthread2.cpp \
-    teclado.cpp
+    teclado.cpp \
+    wificontrol.cpp
 
 HEADERS += \
     alarmas.h \
+    alarmasx.h \
+    configred.h \
     derivaciones.h \
     ecghandle.h \
     enviardatos.h \
@@ -41,6 +47,7 @@ HEADERS += \
     galeria.h \
     graficaecg.h \
     mainwindow.h \
+    myswitch.h \
     paciente.h \
     pantallacarga.h \
     qcustomplot.h \
@@ -52,10 +59,12 @@ HEADERS += \
     serialspo2.h \
     serialthread.h \
     serialthread2.h \
-    teclado.h
+    teclado.h \
+    wificontrol.h
 
 FORMS += \
     alarmas.ui \
+    configred.ui \
     derivaciones.ui \
     ecghandle.ui \
     enviardatos.ui \

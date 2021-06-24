@@ -1,4 +1,4 @@
-﻿#include "registro.h"
+#include "registro.h"
 #include "ui_registro.h"
 #include <qdebug.h>
 int contpos_6 = 0, list_size_registro = 0;
@@ -27,7 +27,8 @@ Registro::Registro(QWidget *parent, SerialSpo2 *serialspo2_registro) :
      nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
      db = QSqlDatabase::addDatabase("QSQLITE");
      db.setDatabaseName(nombre);
-     if(db.open()){
+     if(db.open())
+     {
          QSqlQuery crear;
          consulta.append("SELECT * FROM pacientes WHERE id = 1");
          crear.prepare(consulta);
