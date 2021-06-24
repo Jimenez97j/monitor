@@ -314,7 +314,7 @@ MainWindow::MainWindow(QWidget *parent)
     //error for pani
     connect(spo2serial, SIGNAL(errorpani()), this, SLOT(errorpani()), Qt::QueuedConnection);
 
-    teclado = new SerialSpo2(nullptr,"ttyUSB10");
+    teclado = new SerialSpo2(nullptr,"ttyUSB0");
     connect(teclado, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
    connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
    //mqtt jeru

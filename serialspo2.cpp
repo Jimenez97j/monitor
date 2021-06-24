@@ -84,34 +84,36 @@ void SerialSpo2::handle_data()
           length = cadena.length();
           int got = cadena.indexOf('\n');
           //qDebug()<<cadena;
-               /*if(cadena[0] == 'J'){
-                   //qDebug()<<"emitir";
-                   emit boton_ajustes("derecha");
-                   cadena.clear();
-               }
 
-               if(cadena[0] == 'L'){
-                   //qDebug()<<"emitir izquierda";
-                   emit boton_ajustes("izquierda");
-                   cadena.clear();
-               }
-
-               if(cadena[0] == 'O'){
-                   //qDebug()<<"em";
-                   emit boton_ajustes("click");
-                   cadena.clear();
-               }
-
-               if(cadena[0] == 'F'){
-                   emit boton_ajustes("pani");
-                   cadena.clear();
-               }
-               if(cadena[0] == 'M'){
-                   emit boton_ajustes("mute");
-                   cadena.clear();
-               }*/
         if(got >= 0){
+            //
+            if(cadena[0] == 'J'){
+                //qDebug()<<"emitir";
+                emit boton_ajustes("derecha");
+                cadena.clear();
+            }
 
+            if(cadena[0] == 'L'){
+                //qDebug()<<"emitir izquierda";
+                emit boton_ajustes("izquierda");
+                cadena.clear();
+            }
+
+            if(cadena[0] == 'O'){
+                //qDebug()<<"em";
+                emit boton_ajustes("click");
+                cadena.clear();
+            }
+
+            if(cadena[0] == 'F'){
+                emit boton_ajustes("pani");
+                cadena.clear();
+            }
+            if(cadena[0] == 'M'){
+                emit boton_ajustes("mute");
+                cadena.clear();
+            }
+            //
 
             if(cadena[0] == 'A'){
                QString data;
