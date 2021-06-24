@@ -20,7 +20,7 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>0</y>
+     <y>10</y>
      <width>801</width>
      <height>481</height>
     </rect>
@@ -39,7 +39,7 @@ color:#a3fcd7;
     <enum>QTabWidget::South</enum>
    </property>
    <property name="currentIndex">
-    <number>22</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="Guia">
     <property name="cursor">
@@ -64,7 +64,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>:/imagenes/1</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/1.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -94,7 +94,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/2.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/2.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -124,7 +124,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/3.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/3.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -154,7 +154,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/4.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/4.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -184,7 +184,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/5.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/5.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -214,7 +214,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/6.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/6.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -244,7 +244,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/7.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/7.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -274,7 +274,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/8.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/8.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -304,7 +304,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/9.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/9.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -334,7 +334,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/10.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/10.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -364,7 +364,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/11.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/11.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -394,7 +394,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/12.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/12.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -424,7 +424,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/13.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/13.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -454,7 +454,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/14.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/14.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -484,7 +484,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/15.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/15.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -514,7 +514,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/16.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/16.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -544,7 +544,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/17.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/17.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -574,7 +574,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/18.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/18.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -604,67 +604,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/19.png</pixmap>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="Configuracion">
-    <property name="cursor">
-     <cursorShape>BlankCursor</cursorShape>
-    </property>
-    <attribute name="title">
-     <string>Configuración</string>
-    </attribute>
-    <widget class="QLabel" name="label_20">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>800</width>
-       <height>451</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>BlankCursor</cursorShape>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/20.png</pixmap>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="C2">
-    <property name="cursor">
-     <cursorShape>BlankCursor</cursorShape>
-    </property>
-    <attribute name="title">
-     <string>C2</string>
-    </attribute>
-    <widget class="QLabel" name="label_21">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>800</width>
-       <height>451</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>BlankCursor</cursorShape>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/21.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/19.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -694,7 +634,67 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/22.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/20.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="Configuracion">
+    <property name="cursor">
+     <cursorShape>BlankCursor</cursorShape>
+    </property>
+    <attribute name="title">
+     <string>Configuración</string>
+    </attribute>
+    <widget class="QLabel" name="label_20">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>800</width>
+       <height>451</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>BlankCursor</cursorShape>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/21.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="C2">
+    <property name="cursor">
+     <cursorShape>BlankCursor</cursorShape>
+    </property>
+    <attribute name="title">
+     <string>C2</string>
+    </attribute>
+    <widget class="QLabel" name="label_21">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>800</width>
+       <height>451</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>BlankCursor</cursorShape>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/22.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -724,7 +724,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/23.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/25.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -754,7 +754,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/24.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/26.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -784,7 +784,7 @@ color:#a3fcd7;
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="rscimages.qrc">:/imagenes/25.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/25.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -859,7 +859,7 @@ color:rgb(0, 70, 88);
   </widget>
  </widget>
  <resources>
-  <include location="rscimages.qrc"/>
+  <include location="recursos.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <serialspo2.h>
+#include <guiausuario.h>
 
 namespace Ui {
 class ajustes;
@@ -35,6 +36,7 @@ private slots:
     void on_Guia_Usu_pressed();
     void boton_handle(QString x);
     void on_okay_clicked();
+    void cambiar_bandera_barra_ajustes();
 
 
     void on_time_save_currentIndexChanged(int index);
@@ -45,6 +47,7 @@ private slots:
 private:
     Ui::ajustes *ui;
     SerialSpo2 *spo2serial_2;
+    GuiaUsuario* Data;
 
 };
 

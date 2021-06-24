@@ -3,6 +3,7 @@
 #include <QScrollBar>
 #include <QDebug>
 
+ int contador_posicion = 0;
 
 alarmas::alarmas(QWidget *parent, SerialSpo2 *serialspo2_registro) :
     QDialog(parent)
@@ -46,6 +47,7 @@ void alarmas::boton_handle_7(QString x){
     }
     else if(x == "click"){
         //tecla ok
+        on_pushButton_pressed();
     }
 }
 
@@ -78,7 +80,10 @@ void alarmas::crearTabla(){
 void alarmas::on_pushButton_pressed()
 {
     emit sonido_click();
+    emit habilitar_barra_desde_basedatos();
     this->close();
+    contador_posicion = 0;
+    delete this;
 }
 
 void alarmas::bajar(){

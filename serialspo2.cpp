@@ -100,6 +100,16 @@ void SerialSpo2::handle_data()
            cadena.clear();
        }
 
+       if(cadena[0] == 'F'){
+           emit boton_ajustes("pani");
+           cadena.clear();
+       }
+
+       if(cadena[0] == 'M'){
+           emit boton_ajustes("mute");
+           cadena.clear();
+       }
+
 
         if(got >= 0){
 

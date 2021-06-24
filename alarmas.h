@@ -31,6 +31,7 @@ public:
     void obtener_numero_scrolls();
 signals:
     void sonido_click();
+    void habilitar_barra_desde_basedatos();
 private slots:
     void on_pushButton_pressed();
     void boton_handle_7(QString x);
