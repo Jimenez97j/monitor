@@ -4,7 +4,11 @@
 #include <QDebug>
 #include <QDir>
 #include <guiausuario.h>
+
 bool bandera_deshabilitar_mod2 = true;
+
+#include <configred.h>
+
 
 int contpos_2 = 0;
 ajustes::ajustes(QWidget *parent, SerialSpo2 *serialspo2_ajustes) :
@@ -326,4 +330,13 @@ void ajustes::on_toolButton_2_clicked()
     {
         qDebug()<<"Hardware clock actualizado";
     }
+}
+
+void ajustes::on_btn_red_pressed()
+{
+    emit sonido_click();
+    ConfigRed ventanaRed;
+    ventanaRed.setWindowFlags(Qt::FramelessWindowHint);
+    ventanaRed.exec();
+    show();
 }

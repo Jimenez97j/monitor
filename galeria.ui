@@ -224,7 +224,7 @@ border:none;
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="recursos.qrc">:/imagenes/fondo_Alarmas.png</pixmap>
+    <pixmap>:/imagenes/fondo_Alarmas.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -253,7 +253,7 @@ border:none;
     <string notr="true">border: 0px;</string>
    </property>
    <property name="icon">
-    <iconset resource="recursos.qrc">
+    <iconset>
      <normaloff>:/imagenes/btn_Cerrar.png</normaloff>:/imagenes/btn_Cerrar.png</iconset>
    </property>
    <property name="iconSize">
@@ -282,7 +282,7 @@ border:none;
     <string/>
    </property>
    <property name="icon">
-    <iconset resource="recursos.qrc">
+    <iconset>
      <normaloff>:/imagenes/btn_Eliminar.png</normaloff>:/imagenes/btn_Eliminar.png</iconset>
    </property>
    <property name="iconSize">
@@ -326,8 +326,6 @@ border:none;
   <zorder>trash</zorder>
   <zorder>label_2</zorder>
  </widget>
- <resources>
-  <include location="recursos.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

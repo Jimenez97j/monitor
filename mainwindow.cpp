@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     //
     ui->setupUi(this);
     //cambios serial
+
     //pequeña modificacion
     ui->ecg->iniciar_serial();
 
@@ -63,13 +64,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     //ui->ecg_2->set_serial_name("DATOSECG"); //ECG2
     ui->ecg_2->iniciar_serial();
+
+    QProcess::execute(QString("sudo /bin/chmod 777 /etc/wpa_supplicant/wpa_supplicant.conf"));
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
     //connect(ui->ecg,SLOT(compartir_dato(QVector<double>,QVector<double>,int, double, double, double)),ui->ecg_2,SIGNAL(plot_ECG(QVector<double>,QVector<double>,int,double,double,double)));
     //
     m_networkManager = new QNetworkAccessManager(this);
     m_networkReply = m_networkManager->get(QNetworkRequest(QUrl("https://qtmonitor-b39a1-default-rtdb.firebaseio.com/listausuarios/2471085539xcqz.json")));
     //connect(m_networkReply, &QNetworkReply::readyRead, this, &MainWindow::networkReadyRead);
-
     // wifi
     /*QNetworkConfigurationManager ncm;
     netcfgList = ncm.allConfigurations(QNetworkConfiguration::PublicPurpose);
@@ -143,7 +145,7 @@ MainWindow::MainWindow(QWidget *parent)
      //create new thread for ecg chart
      graficar = new ecghandle;
 
-
+    qDebug()<<"btn_Bocina";
     //+++++++++++++++++++++++++++++++++++++++++++ SPO2 PLOT ++++++++++++++++++++++++++++++++++++++++++
 
     ui->plot->addGraph();  //add a graph to the wiget size in the screen interface
@@ -380,7 +382,7 @@ MainWindow::MainWindow(QWidget *parent)
     //ui->toolButton->setStyleSheet("qproperty-icon: url(:/imagenes/btn_Bocina.png);");
     //ui->toolButton->setIcon(QIcon(QPixmap(":/imagenes/btn_Bocina.png")));
 
-    //qDebug("btn_Bocina");
+    qDebug()<<"btn_Bocina";
 
 }
 
@@ -893,6 +895,8 @@ void MainWindow::on_toolButton_2_clicked(){
     enviardatosw->setGeometry(0, 10, 602, 110);
     enviardatosw->exec();
     show();
+
+
 }
 void MainWindow::on_iniciar_pressed(){
 
@@ -1665,5 +1669,73 @@ void MainWindow::stoppani(){
     //serial->write("A");
     emit spo2serial->escribe("U");
 }
+
+void MainWindow::actualizaEdoBateria(QString dato)
+{
+    QStringList dato1 = dato.split(",");
+    bool cargando = false;
+    if (dato1[0] == "B0")
+    {
+        cargando = false;
+    }
+    else
+    {
+        cargando = true;
+    }
+
+    if (dato[1] >= 0 and dato[1] <= 25)
+    {
+        if (cargando == true)
+        {
+            ui->imgBateria->setPixmap(QPixmap (":/imagenes/bateria25c.png"));
+
+        }
+        else
+        {
+            ui->imgBateria->setPixmap(QPixmap (":/imagenes/bateria25.png"));
+        }
+    }
+
+    else if (dato[1] >= 26 and dato[1] <= 50)
+    {
+        if (cargando == true)
+        {
+            ui->imgBateria->setPixmap(QPixmap (":/imagenes/bateria50c.png"));
+
+        }
+        else
+        {
+            ui->imgBateria->setPixmap(QPixmap (":/imagenes/bateria50.png"));
+        }
+    }
+
+    else if (dato[1] >= 51 and dato[1] <= 75)
+    {
+        if (cargando == true)
+        {
+            ui->imgBateria->setPixmap(QPixmap (":/imagenes/bateria75c.png"));
+
+        }
+        else
+        {
+            ui->imgBateria->setPixmap(QPixmap (":/imagenes/bateria75.png"));
+        }
+    }
+
+    else if (dato[1] >= 76 and dato[1] <= 99)
+    {
+        if (cargando == true)
+        {
+            ui->imgBateria->setPixmap(QPixmap (":/imagenes/bateria100c.png"));
+
+        }
+        else
+        {
+            ui->imgBateria->setPixmap(QPixmap (":/imagenes/bateria100.png"));
+        }
+    }
+}
+
+
 
 

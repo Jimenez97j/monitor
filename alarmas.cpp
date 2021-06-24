@@ -27,8 +27,6 @@ alarmas::alarmas(QWidget *parent, SerialSpo2 *serialspo2_registro) :
         qDebug()<<"conexion establecida";
     }
     ui->tableWidget->verticalScrollBar()->setStyleSheet("QScrollBar:vertical { width: 50px; background-color: #90c6fd;}");
-
-
 }
 
 

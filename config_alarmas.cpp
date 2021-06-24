@@ -12,7 +12,7 @@ config_alarmas::config_alarmas(QWidget *parent, SerialSpo2 *serialspo2_alarmas) 
     opciones_alarmas();
     connect(spo2serial_4, SIGNAL(boton_ajustes(QString )), this, SLOT(boton_handle_4(QString )), Qt::QueuedConnection);
     QString nombre;
-    nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
+    nombre.append("/opt/monitor_selespo/bin/prueba.sqlite");
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(nombre);
 
