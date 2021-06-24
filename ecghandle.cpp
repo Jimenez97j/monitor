@@ -64,6 +64,7 @@ void ecghandle::iniciar_serial(){
 
 void ecghandle::funcionActivacionTimer(){
 
+
    ui->plot_ecg->replot(); //se vuelven a dibujar los valores
    ui->plot_ecg->update(); // se actualiza la gráfica
 }

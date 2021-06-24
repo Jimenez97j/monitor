@@ -3495,10 +3495,10 @@
          </colorrole>
          <colorrole role="Base">
           <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>46</red>
-            <green>52</green>
-            <blue>54</blue>
+           <color alpha="0">
+            <red>191</red>
+            <green>64</green>
+            <blue>64</blue>
            </color>
           </brush>
          </colorrole>
@@ -3542,10 +3542,10 @@
          </colorrole>
          <colorrole role="Base">
           <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>46</red>
-            <green>52</green>
-            <blue>54</blue>
+           <color alpha="0">
+            <red>191</red>
+            <green>64</green>
+            <blue>64</blue>
            </color>
           </brush>
          </colorrole>
@@ -4344,7 +4344,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/caudricula_FondoBlanco.png</pixmap>
+      <pixmap>:/imagenes/Cuadricula y Guia de Usuario/caudricula_FondoBlanco.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -4926,7 +4926,8 @@
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:none;</string>
+     <string notr="true">border:none;
+</string>
     </property>
    </widget>
    <zorder>plot</zorder>

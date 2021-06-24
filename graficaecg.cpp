@@ -131,12 +131,12 @@ void GraficaEcg::change_color_chart(int what_style){
     if(what_style == 4){
            ui->plot_ecg->graph(0)->setPen(QPen(Qt::red, 1)); //color and width of the line
            //ui->plot_ecg->graph(1)->setPen(QPen(Qt::red, 1));
-        //   ui->plot_ecg->axisRect()->setBackground(QColor(0, 0, 0)); //background of the graph
-       //    ui->plot_ecg->xAxis->grid()->setPen(QPen(QColor(0, 0, 0), Qt::SolidLine)); //x axis color
-      //     ui->plot_ecg->yAxis->grid()->setPen(QPen(QColor(0, 0, 0), Qt::SolidLine)); //y axis color
-    //       ui->plot_ecg->xAxis->setBasePen(QPen(QColor(0, 0, 0)));
-     //      ui->plot_ecg->yAxis->setBasePen(QPen(QColor(0, 0, 0)));
-     //      ui->plot_ecg->setBackground(QColor(0, 0, 0));
+          ui->plot_ecg->axisRect()->setBackground(QColor(0, 0, 0)); //background of the graph
+          ui->plot_ecg->xAxis->grid()->setPen(QPen(QColor(0, 0, 0), Qt::SolidLine)); //x axis color
+          ui->plot_ecg->yAxis->grid()->setPen(QPen(QColor(0, 0, 0), Qt::SolidLine)); //y axis color
+         ui->plot_ecg->xAxis->setBasePen(QPen(QColor(0, 0, 0)));
+          ui->plot_ecg->yAxis->setBasePen(QPen(QColor(0, 0, 0)));
+          ui->plot_ecg->setBackground(QColor(0, 0, 0));
      //  qDebug()<<"hi4";
     }
     if(what_style == 5){
