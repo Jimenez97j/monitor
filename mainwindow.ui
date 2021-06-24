@@ -4344,7 +4344,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/caudricula_FondoBlanco.png</pixmap>
+      <pixmap>:/imagenes/Cuadricula y Guia de Usuario/caudricula_FondoBlanco.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -4513,6 +4513,10 @@
      <property name="text">
       <string/>
      </property>
+     <property name="icon">
+      <iconset resource="recursos.qrc">
+       <normaloff>:/imagenes/btn_Iniciar.png</normaloff>:/imagenes/btn_Iniciar.png</iconset>
+     </property>
      <property name="iconSize">
       <size>
        <width>90</width>
@@ -4669,7 +4673,7 @@
      <property name="geometry">
       <rect>
        <x>1200</x>
-       <y>40</y>
+       <y>60</y>
        <width>81</width>
        <height>41</height>
       </rect>
@@ -4828,6 +4832,10 @@
      <property name="text">
       <string/>
      </property>
+     <property name="icon">
+      <iconset resource="recursos.qrc">
+       <normaloff>:/imagenes/btn_Bocina.png</normaloff>:/imagenes/btn_Bocina.png</iconset>
+     </property>
      <property name="iconSize">
       <size>
        <width>90</width>
@@ -4862,6 +4870,25 @@
        <width>90</width>
        <height>90</height>
       </size>
+     </property>
+    </widget>
+    <widget class="QLabel" name="imgBateria">
+     <property name="geometry">
+      <rect>
+       <x>1200</x>
+       <y>10</y>
+       <width>81</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="recursos.qrc">:/imagenes/bateria0.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
@@ -4926,7 +4953,8 @@
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">border:none;</string>
+     <string notr="true">border:none;
+</string>
     </property>
    </widget>
    <zorder>plot</zorder>

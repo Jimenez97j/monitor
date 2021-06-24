@@ -11,7 +11,7 @@ Paciente::Paciente(QWidget *parent, SerialSpo2 *serialspo2_registro) :
     ui->setupUi(this);
     connect(spo2serial_7, SIGNAL(boton_ajustes(QString )), this, SLOT(boton_handle_7(QString )), Qt::QueuedConnection);
     QString nombre, consulta;
-    nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
+    nombre.append("/opt/monitor_selespo/bin/prueba.sqlite");
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(nombre);
     if(db.open()){

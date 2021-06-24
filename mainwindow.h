@@ -23,6 +23,8 @@
 #include <QNetworkConfigurationManager>
 #include <QNetworkSession>
 #include <QTimer>
+#include <configred.h>
+#include <alarmasx.h>
 
 
 
@@ -144,6 +146,7 @@ private slots:
 
     void on_ok_clicked();
     void cambiar_bandera();
+    void actualizaEdoBateria(QString dato);
 
 private:
     QNetworkSession *session;
@@ -179,6 +182,9 @@ private:
     bool mqtt_connected;
     int mqtt_cont_ecg;
     QStringList *mqtt_list_ecg;
+    ConfigRed* configred1;
+    AlarmasX* alarmasx;
+
 
 };
 #endif // MAINWINDOW_H

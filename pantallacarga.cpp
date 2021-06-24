@@ -20,6 +20,7 @@ PantallaCarga::PantallaCarga(QWidget *parent) :
     ui->barradecarga->setValue(0);
     ui->barradecarga->setMinimum(0);
     ui->barradecarga->setMaximum(100);
+    //Dafne
    // ui->barradecarga->setStyleSheet(ui->barradecarga->property("defaultStyleSheet").toString() + " QProgressBar::chunk { background: #000080; }");
 }
 

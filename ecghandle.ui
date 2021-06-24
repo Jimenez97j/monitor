@@ -95,6 +95,9 @@
    <property name="autoFillBackground">
     <bool>true</bool>
    </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <widget class="QWidget" name="borrargraph_ecg" native="true">
     <property name="geometry">
      <rect>
