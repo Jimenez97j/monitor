@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     reconexionMqtt->setSingleShot(true);
     //
     ui->setupUi(this);
+    opciones();
     //cambios serial
     //pequeña modificacion
     ui->ecg->iniciar_serial();
