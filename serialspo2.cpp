@@ -84,12 +84,6 @@ void SerialSpo2::handle_data()
           length = cadena.length();
           int got = cadena.indexOf('\n');
           //qDebug()<<cadena;
-
-
-
-
-           if(got >= 0){
-
                /*if(cadena[0] == 'J'){
                    //qDebug()<<"emitir";
                    emit boton_ajustes("derecha");
@@ -106,17 +100,28 @@ void SerialSpo2::handle_data()
                    //qDebug()<<"em";
                    emit boton_ajustes("click");
                    cadena.clear();
-               }*/
+               }
 
-               if(cadena[0] == 'A'){
-                  QString data;
-                   for (int i = 1; i<2;i++ ) {
-                       data.append(cadena[i]);
-                   }
-               if(search_confirm){
-                   if(data == confirm_command){
-                       search_confirm = false;
-                       pani_activated = false;
+               if(cadena[0] == 'F'){
+                   emit boton_ajustes("pani");
+                   cadena.clear();
+               }
+               if(cadena[0] == 'M'){
+                   emit boton_ajustes("mute");
+                   cadena.clear();
+               }*/
+        if(got >= 0){
+
+
+            if(cadena[0] == 'A'){
+               QString data;
+                for (int i = 1; i<2;i++ ) {
+                    data.append(cadena[i]);
+                }
+            if(search_confirm){
+                if(data == confirm_command){
+                    search_confirm = false;
+                    pani_activated = false;
 
                    }
                    else{

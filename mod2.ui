@@ -37,12 +37,6 @@
       <height>220</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgba(191, 64, 64, 0);
-border-style: outset;
-border-width: 7px;
-border-color: white;</string>
-    </property>
     <widget class="QLabel" name="tex2">
      <property name="geometry">
       <rect>
@@ -192,9 +186,9 @@ border:none;</string>
     <widget class="QLabel" name="SPO2">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>40</x>
        <y>0</y>
-       <width>311</width>
+       <width>291</width>
        <height>211</height>
       </rect>
      </property>
@@ -1021,16 +1015,10 @@ border:none;</string>
        <height>220</height>
       </rect>
      </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgba(191, 64, 64, 0);
-border-style: outset;
-border-width: 7px;
-border-color: white;</string>
-     </property>
      <widget class="QLabel" name="bpm_ecg">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>30</x>
         <y>0</y>
         <width>311</width>
         <height>211</height>
@@ -1329,18 +1317,12 @@ border-color: white;</string>
        <height>220</height>
       </rect>
      </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgba(191, 64, 64, 0);
-border-style: outset;
-border-width: 7px;
-border-color: white;</string>
-     </property>
      <widget class="QLabel" name="sisto">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>40</x>
         <y>10</y>
-        <width>301</width>
+        <width>291</width>
         <height>201</height>
        </rect>
       </property>
@@ -1783,12 +1765,6 @@ border-color: white;</string>
        <height>220</height>
       </rect>
      </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgba(191, 64, 64, 0);
-border-style: outset;
-border-width: 7px;
-border-color: white;</string>
-     </property>
      <widget class="QLabel" name="tex7">
       <property name="geometry">
        <rect>
@@ -2084,7 +2060,7 @@ border-color: white;</string>
      <widget class="QLabel" name="dias">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>30</x>
         <y>10</y>
         <width>311</width>
         <height>201</height>
@@ -2237,18 +2213,12 @@ border-color: white;</string>
        <height>220</height>
       </rect>
      </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgba(191, 64, 64, 0);
-border-style: outset;
-border-width: 7px;
-border-color: white;</string>
-     </property>
      <widget class="QLabel" name="media">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>40</x>
         <y>10</y>
-        <width>301</width>
+        <width>291</width>
         <height>201</height>
        </rect>
       </property>
@@ -2692,16 +2662,10 @@ border-color: white;</string>
        <height>220</height>
       </rect>
      </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgba(191, 64, 64, 0);
-border-style: outset;
-border-width: 7px;
-border-color: white;</string>
-     </property>
      <widget class="QLabel" name="temp">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>40</x>
         <y>10</y>
         <width>311</width>
         <height>201</height>
@@ -3137,6 +3101,31 @@ border-color: white;</string>
       </property>
      </widget>
     </widget>
+    <widget class="QLabel" name="fondoCuadricula2">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>9</y>
+       <width>1111</width>
+       <height>691</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/fondoCuandriculaMOD2_2.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <zorder>fondoCuadricula2</zorder>
+    <zorder>BPMBLOCK</zorder>
+    <zorder>SYSBLOCK</zorder>
+    <zorder>DIABLOCK</zorder>
+    <zorder>PANIBLOCK</zorder>
+    <zorder>TEMPBLOCK</zorder>
    </widget>
    <zorder>frame</zorder>
    <zorder>SPO2BLOCK</zorder>

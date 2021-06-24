@@ -31,7 +31,7 @@ MOD2::MOD2(QWidget *parent, SerialSpo2 *serialspo2_modelo_2) :
     //connect(spo2serial_8, SIGNAL(cambiar_estado_bandera_3()), this, SLOT(cambiar_bandera_barra_2()));
     ui->sound->setCheckable(true);
     ui->pani->setCheckable(true);
-    nombre.append("/opt/monitor_selespo2/bin/prueba.sqlite");
+    nombre.append("/opt/monitor_selespo/bin/prueba.sqlite");
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(nombre);
     if(db.open()){
@@ -491,7 +491,7 @@ void MOD2::on_captura_pressed()
 
 void MOD2::on_internet_clicked(){
     bandera_3 = false;
-    envdat = new enviardatos(0, spo2serial_8);
+    envdat = new enviardatos(this, spo2serial_8);
     //enviardatosw = new enviardatos;
     envdat->setWindowFlags(Qt::FramelessWindowHint);
     envdat->setWindowFlags(Qt::Popup);

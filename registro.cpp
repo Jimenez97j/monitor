@@ -2,7 +2,7 @@
 #include "ui_registro.h"
 #include <qdebug.h>
 int contpos_6 = 0, list_size_registro = 0;
-bool status_list = false;
+bool status_list = true;
 
 Registro::Registro(QWidget *parent, SerialSpo2 *serialspo2_registro) :
     QDialog(parent),
