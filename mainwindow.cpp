@@ -163,7 +163,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->color->setStyleSheet("background-color:" + maincolor);//background
     ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
     ui->ecg->change_square_ecg(maincolor);   //background erase rectangle
-    ui->ecg_2->change_square_ecg(maincolor);
+  //  ui->ecg_2->change_square_ecg(maincolor);
 
  if(maincolor == "#326d72"){
      //for the ples graph
@@ -733,11 +733,8 @@ void MainWindow::leds_inicio(){
    // show();
     //+++++++++++++++++++++++++++++++++++++++++ REFRESH TIMER ++++++++++++++++++++++++++++++++++++++++
     connect(cronometro, SIGNAL(timeout()), this, SLOT(funcionActivacionTimer()));
-<<<<<<< HEAD
-    cronometro->start(1000);
-=======
+
     cronometro->start(100);
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
     connect(spo2_refresh_chart, SIGNAL(timeout()), this, SLOT(alarm_sound()));
     //+++++++++++++++++++++++++++++++++++++ INTERFAZ IS READY +++++++++++++++++++++++++++++++++
     serial_ecg_data->write("restart\n"); //Restart all the systems
@@ -1143,19 +1140,6 @@ void MainWindow::funcionActivacionTimer(){
     reg_save_data = 1 + reg_save_data;
     puntos=puntos+1;//Timer animacion de puntos en "Realizando Analisis
 
-    //Animación de puntos en label "Realizando Analisis..."
-<<<<<<< HEAD
-    if(puntos==1 && banderapuntos){
-        ui->analisis->setText("Realizando Analisis");
-    }
-    if(puntos==2 && banderapuntos){
-        ui->analisis->setText("Realizando Analisis.");
-    }
-    if(puntos==3 && banderapuntos){
-        ui->analisis->setText("Realizando Analisis..");
-    }
-    if(puntos==4 && banderapuntos){
-=======
     if(puntos==10 && banderapuntos){
         ui->analisis->setText("Realizando Analisis");
     }
@@ -1166,7 +1150,6 @@ void MainWindow::funcionActivacionTimer(){
         ui->analisis->setText("Realizando Analisis..");
     }
     if(puntos==40 && banderapuntos){
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
         ui->analisis->setText("Realizando Analisis...");
         puntos=0;
     }
@@ -1203,22 +1186,16 @@ void MainWindow::funcionActivacionTimer(){
        save_data_db();
        reg_save_data= 0;
     }
-<<<<<<< HEAD
-   if(pantalla>1){
-=======
+
    if(pantalla>80){
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
        ui->label_5->setText("");
         pantalla=0;
         spo2serial->bpm_flag_update();
    }
 
    //this blocks are for bliding the numbers when alarms are activated
-<<<<<<< HEAD
-   if(numeros_ecg==1){
-=======
+
    if(numeros_ecg==10){
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
        if(cambio_numeros && activated){
            QLabel *label1=ui->bpm_ecg;
            QString color="color:#880e00; border:none";
@@ -1237,11 +1214,8 @@ void MainWindow::funcionActivacionTimer(){
 
        }
    }
-<<<<<<< HEAD
-   if(numeros_spo2==1){
-=======
+
    if(numeros_spo2==10){
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
        if(cambio_numeros2 && activated2){
              QLabel *label2=ui->SPO2;
              QString color="color:#005b01;border:none";
@@ -1262,11 +1236,8 @@ void MainWindow::funcionActivacionTimer(){
 
        }
    }
-<<<<<<< HEAD
-   if(numeros_temp == 1){
-=======
+
    if(numeros_temp == 10){
->>>>>>> 5aa98c5610205b406adc02e3eb995785d31bf797
        if(cambio_numeros3 && activated3){
            QLabel *label3=ui->temp;
            QString color="color:#003e56;border:none";
@@ -1361,7 +1332,7 @@ void MainWindow::change_color_once(){
         ui->color->setStyleSheet("background-color:" + maincolor);//background
         ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
         ui->ecg->change_square_ecg(maincolor);
-        ui->ecg_2->change_square_ecg(maincolor);
+      //  ui->ecg_2->change_square_ecg(maincolor);
         //ui->borrargraph_ecg->setStyleSheet("background-color:" + maincolor);//background erase rectangle
 
      if(maincolor == "#326d72"){
@@ -1470,7 +1441,7 @@ void MainWindow::change_color_once(){
 
          //for the ecg graph
          ui->ecg->change_color_chart(4);
-         ui->ecg_2->change_color_chart(4);
+         //ui->ecg_2->change_color_chart(4);
 
 
      }
