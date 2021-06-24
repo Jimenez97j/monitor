@@ -145,7 +145,7 @@ void derivaciones:: opciones_derivaciones(){
     {
     case 0:
         ui->d1->setStyleSheet("background-color:red;");
-        ui->d2->setIcon(QIcon(":/imagenes/btn_der2OFF.png"));
+        ui->d2->setStyleSheet("");
         break;
     case 1:
         ui->d2->setStyleSheet("background-color:red;");

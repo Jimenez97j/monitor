@@ -270,5 +270,10 @@
         <file>imagenes/Cuadricula y Guia de Usuario/fondoCuadricula2.png</file>
         <file>imagenes/Cuadricula y Guia de Usuario/fondoCuandriculaMOD2_1.png</file>
         <file>imagenes/Cuadricula y Guia de Usuario/fondoCuandriculaMOD2_2.png</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/caudricula_FondoBlanco.png</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/caudricula_FondoBlanco_v2.png</file>
+        <file>imagenes/btn_aVFOFF.png</file>
+        <file>imagenes/btn_aVLOFF.png</file>
+        <file>imagenes/btn_CaraSonriente.png</file>
     </qresource>
 </RCC>

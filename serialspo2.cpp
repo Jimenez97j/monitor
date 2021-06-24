@@ -89,13 +89,13 @@ void SerialSpo2::handle_data()
             //
             if(cadena[0] == 'J'){
                 //qDebug()<<"emitir";
-                emit boton_ajustes("derecha");
+                emit boton_ajustes("izquierda");
                 cadena.clear();
             }
 
             if(cadena[0] == 'L'){
                 //qDebug()<<"emitir izquierda";
-                emit boton_ajustes("izquierda");
+                emit boton_ajustes("derecha");
                 cadena.clear();
             }
 

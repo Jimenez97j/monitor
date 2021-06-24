@@ -176,15 +176,15 @@ MainWindow::MainWindow(QWidget *parent)
      ui->plot->replot();
 
      //to change the sidebar
-     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
-     ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
-     ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
+   // ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+    // ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+    // ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+    // ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+    // ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+    // ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
+    // ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
+     //ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
      //for the ecg graph
      ui->ecg->change_color_chart(1);
@@ -228,14 +228,15 @@ MainWindow::MainWindow(QWidget *parent)
      ui->plot->replot();
 
      //to change the sidebar
-     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
-     ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:black; border:none");
-     ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:black; border:none");
+     //ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
+     //ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
+     //ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
+     //ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
+     //ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
+     //ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: black;");
+     //ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:black; border:none");
+     //ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:black; border:none");
+     //
      ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:black; border:none");
 
      //for the ecg graph
@@ -254,15 +255,15 @@ MainWindow::MainWindow(QWidget *parent)
      ui->plot->replot();
 
      //to change the sidebar
-     ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-     ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
-     ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
-     ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
+     //ui->->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+     //ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
+     //ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
+     //ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
      //for the ecg graph
      ui->ecg->change_color_chart(4);
@@ -674,6 +675,7 @@ void MainWindow::panivalues(QString s, QString d, QString m){
 void MainWindow::updatetemperature(QString temperature, double saving_temperature_number){
 
     ui->temp->setText(temperature);
+    ui->temp->setStyleSheet("background-color:none");
     temp_mod2 = temperature;
     saving_temperature = saving_temperature_number;
     temp_save_reg = temperature;
@@ -1235,14 +1237,14 @@ void MainWindow::funcionActivacionTimer(){
    if(numeros_temp == 10){
        if(cambio_numeros3 && activated3){
            QLabel *label3=ui->temp;
-           QString color="color:#003e56;border:none";
+           QString color="color:#003e56;border:none;background-color:none;";
            alarmasnumeros(label3,color);
            cambio_numeros3=false;
            numeros_temp=0;
        }
        else{
            QLabel *label3=ui->temp;
-           QString color="color:#1b50ff;border:none ";
+           QString color="color:#1b50ff;border:none;background-color:none; ";
            alarmasnumeros(label3,color);
            cambio_numeros3=true;
            numeros_temp=0;
@@ -1424,15 +1426,15 @@ void MainWindow::change_color_once(){
          ui->plot->replot();
 
          //to change the sidebar
-         ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
-         ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
-         ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
-         ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
+         //ui->TEMP->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+         //ui->OXBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+         //ui->PANI->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+         //ui->ECGBLOCK->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+         //ui->DIAS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+         //ui->SYS->setStyleSheet("background-color: rgba(0, 0, 0, 0);border-style: outset;border-width: 2px;border-color: white;");
+         //ui->pres_sis->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
+         //ui->pres_sis_label->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
+         //ui->pres_sis_label_3->setStyleSheet("background-color: rgba(0, 0, 0, 0);color:white; border:none");
 
          //for the ecg graph
          ui->ecg->change_color_chart(4);

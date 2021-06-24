@@ -31,17 +31,17 @@
    <widget class="QWidget" name="SPO2BLOCK" native="true">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>0</y>
-      <width>550</width>
-      <height>220</height>
+      <x>110</x>
+      <y>19</y>
+      <width>511</width>
+      <height>191</height>
      </rect>
     </property>
     <widget class="QLabel" name="tex2">
      <property name="geometry">
       <rect>
        <x>350</x>
-       <y>40</y>
+       <y>20</y>
        <width>121</width>
        <height>61</height>
       </rect>
@@ -187,9 +187,9 @@ border:none;</string>
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>0</y>
-       <width>291</width>
-       <height>211</height>
+       <y>10</y>
+       <width>231</width>
+       <height>161</height>
       </rect>
      </property>
      <property name="palette">
@@ -333,8 +333,8 @@ border:none;</string>
      <property name="geometry">
       <rect>
        <x>380</x>
-       <y>130</y>
-       <width>81</width>
+       <y>110</y>
+       <width>61</width>
        <height>51</height>
       </rect>
      </property>
@@ -459,7 +459,7 @@ border:none;</string>
      <property name="font">
       <font>
        <family>Ubuntu Condensed</family>
-       <pointsize>48</pointsize>
+       <pointsize>36</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -1009,19 +1009,19 @@ border:none;</string>
     <widget class="QWidget" name="BPMBLOCK" native="true">
      <property name="geometry">
       <rect>
-       <x>670</x>
-       <y>10</y>
-       <width>550</width>
-       <height>220</height>
+       <x>689</x>
+       <y>30</y>
+       <width>491</width>
+       <height>191</height>
       </rect>
      </property>
      <widget class="QLabel" name="bpm_ecg">
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>0</y>
+        <y>10</y>
         <width>311</width>
-        <height>211</height>
+        <height>171</height>
        </rect>
       </property>
       <property name="palette">
@@ -1165,9 +1165,9 @@ border:none;</string>
       <property name="geometry">
        <rect>
         <x>370</x>
-        <y>0</y>
+        <y>10</y>
         <width>111</width>
-        <height>91</height>
+        <height>71</height>
        </rect>
       </property>
       <property name="palette">
@@ -1311,19 +1311,19 @@ border:none;</string>
     <widget class="QWidget" name="SYSBLOCK" native="true">
      <property name="geometry">
       <rect>
-       <x>110</x>
-       <y>240</y>
-       <width>550</width>
-       <height>220</height>
+       <x>130</x>
+       <y>259</y>
+       <width>521</width>
+       <height>191</height>
       </rect>
      </property>
      <widget class="QLabel" name="sisto">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>10</y>
-        <width>291</width>
-        <height>201</height>
+        <x>30</x>
+        <y>20</y>
+        <width>251</width>
+        <height>151</height>
        </rect>
       </property>
       <property name="palette">
@@ -1467,7 +1467,7 @@ border:none;</string>
       <property name="geometry">
        <rect>
         <x>370</x>
-        <y>60</y>
+        <y>20</y>
         <width>91</width>
         <height>51</height>
        </rect>
@@ -1613,7 +1613,7 @@ border:none;</string>
       <property name="geometry">
        <rect>
         <x>330</x>
-        <y>120</y>
+        <y>90</y>
         <width>161</width>
         <height>71</height>
        </rect>
@@ -1759,17 +1759,17 @@ border:none;</string>
     <widget class="QWidget" name="DIABLOCK" native="true">
      <property name="geometry">
       <rect>
-       <x>670</x>
-       <y>240</y>
-       <width>550</width>
-       <height>220</height>
+       <x>689</x>
+       <y>259</y>
+       <width>511</width>
+       <height>191</height>
       </rect>
      </property>
      <widget class="QLabel" name="tex7">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>110</y>
+        <x>320</x>
+        <y>80</y>
         <width>171</width>
         <height>71</height>
        </rect>
@@ -1914,8 +1914,8 @@ border:none;</string>
      <widget class="QLabel" name="tex6">
       <property name="geometry">
        <rect>
-        <x>370</x>
-        <y>60</y>
+        <x>360</x>
+        <y>20</y>
         <width>101</width>
         <height>51</height>
        </rect>
@@ -2062,8 +2062,8 @@ border:none;</string>
        <rect>
         <x>30</x>
         <y>10</y>
-        <width>311</width>
-        <height>201</height>
+        <width>161</width>
+        <height>171</height>
        </rect>
       </property>
       <property name="palette">
@@ -2207,10 +2207,10 @@ border:none;</string>
     <widget class="QWidget" name="PANIBLOCK" native="true">
      <property name="geometry">
       <rect>
-       <x>110</x>
-       <y>470</y>
-       <width>550</width>
-       <height>220</height>
+       <x>129</x>
+       <y>489</y>
+       <width>511</width>
+       <height>191</height>
       </rect>
      </property>
      <widget class="QLabel" name="media">
@@ -2218,8 +2218,8 @@ border:none;</string>
        <rect>
         <x>40</x>
         <y>10</y>
-        <width>291</width>
-        <height>201</height>
+        <width>241</width>
+        <height>161</height>
        </rect>
       </property>
       <property name="palette">
@@ -2363,7 +2363,7 @@ border:none;</string>
       <property name="geometry">
        <rect>
         <x>360</x>
-        <y>70</y>
+        <y>30</y>
         <width>121</width>
         <height>41</height>
        </rect>
@@ -2509,8 +2509,8 @@ border:none;</string>
      <widget class="QLabel" name="tex11">
       <property name="geometry">
        <rect>
-        <x>360</x>
-        <y>120</y>
+        <x>350</x>
+        <y>90</y>
         <width>151</width>
         <height>51</height>
        </rect>
@@ -2656,19 +2656,19 @@ border:none;</string>
     <widget class="QWidget" name="TEMPBLOCK" native="true">
      <property name="geometry">
       <rect>
-       <x>670</x>
-       <y>470</y>
-       <width>550</width>
-       <height>220</height>
+       <x>689</x>
+       <y>489</y>
+       <width>511</width>
+       <height>191</height>
       </rect>
      </property>
      <widget class="QLabel" name="temp">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>10</y>
-        <width>311</width>
-        <height>201</height>
+        <x>30</x>
+        <y>0</y>
+        <width>281</width>
+        <height>181</height>
        </rect>
       </property>
       <property name="palette">
@@ -2812,7 +2812,7 @@ border:none;</string>
       <property name="geometry">
        <rect>
         <x>360</x>
-        <y>50</y>
+        <y>30</y>
         <width>121</width>
         <height>61</height>
        </rect>
@@ -2958,7 +2958,7 @@ border:none;</string>
       <property name="geometry">
        <rect>
         <x>390</x>
-        <y>120</y>
+        <y>110</y>
         <width>67</width>
         <height>61</height>
        </rect>
