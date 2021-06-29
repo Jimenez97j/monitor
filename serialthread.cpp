@@ -33,7 +33,7 @@ SerialThread::~SerialThread()
 void SerialThread::init_port()
 {
     ecg_port = new QSerialPort();
-    ecg_port ->setPortName("DATOSECG"); //"ECG"
+    ecg_port ->setPortName("ECG2"); //"ECG"
     ecg_port ->setBaudRate(QSerialPort::Baud115200);
     ecg_port ->setReadBufferSize(1);
     ecg_port ->setParity(QSerialPort::NoParity);

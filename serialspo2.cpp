@@ -523,7 +523,7 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
                 }
              }
         }
-    qDebug()<<bpm_pulse;
+    //qDebug()<<bpm_pulse;
        if(bpm_send_data){
            bpm_send_data = false;;
            bpm_pulse = bpm_pulse * 4;
@@ -545,23 +545,32 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
 //method for writting a caracter into the serial port
 void SerialSpo2::procesaDato(QByteArray value_write)
 {
-    if(value_write == "B"){
+    if(value_write == "Q"){
+        qDebug() << "[PANI] fuera cierra valvula";
         spo2_port->write(value_write);
+    }
+    //qDebug()<<value_write;
+    if(value_write == "B"){
+        spo2_port->write("B");
         pani_activated = true;
         confirm_command = "B";
     }
-    if(value_write == "U"){
-        spo2_port->write(value_write);
-        pani_activated = false;
-        confirm_command = "U";
+    if(value_write == "P"){
+      spo2_port->write(value_write);
+      pani_activated = false;
+      confirm_command = "P";
     }
     if(pani_activated){
        search_confirm = true;
     }
     else{
-        spo2_port->write(value_write);
-        confirm_command = value_write;
-        search_confirm = true;
+       spo2_port->write(value_write);
+       confirm_command = value_write;
+       search_confirm = true;
+       //qDebug() << "[PANI] cierra valvula";
+       /*if(value_write == "Q"){
+           qDebug() << "[PANI] cierra valvula";
+       }*/
     }
 }
 
