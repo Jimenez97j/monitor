@@ -317,7 +317,7 @@ void SerialSpo2::handle_data()
                       }
                       if(promedio>99){
                       saving_temperature_spo2 =  saving_temperature_spo2/100;
-                      saving_temperature_spo2 = saving_temperature_spo2 + 1.21;
+                      saving_temperature_spo2 = saving_temperature_spo2 + 1.71;
                       QString valueAsString = QString::number(saving_temperature_spo2, 'g', 3);
                       emit   updatetemperature(valueAsString, saving_temperature_spo2);
                       promedio = 0;
