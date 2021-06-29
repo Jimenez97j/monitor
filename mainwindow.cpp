@@ -1182,7 +1182,7 @@ void MainWindow::funcionActivacionTimer(){
     ActivarAlarmas = ActivarAlarmas + 1;
     TimerBateria = TimerBateria +1;
     if(TimerBateria == 50){
-        emit teclado->escribe("BOK");
+        emit teclado->escribe("BOK\n");
         TimerBateria = 0 ;
     }
 
