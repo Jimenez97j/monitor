@@ -15,7 +15,7 @@ QString aux, uid_value, uid_doctor;
 int bandera=0, check_bpm_value_time = 0;
 int indicadoranalisis = 0;
 int continicio = 0;
-int hora_captura=0, puntos=0 , numeros_ecg=0, numeros_spo2 = 0, numeros_temp = 0, ActivarAlarmas =0, AlarmaApagada = 0;//Resetea timers para Captura de Pantalla, "Realizando analisis" y cambio de color en números
+int hora_captura=0, puntos=0 , numeros_ecg=0, numeros_spo2 = 0, numeros_temp = 0, ActivarAlarmas =0, AlarmaApagada = 0, TimerBateria = 0;//Resetea timers para Captura de Pantalla, "Realizando analisis" y cambio de color en números
 int reg_save_data = 0; //flag for confirmation label of ss and flag for save data into a data base
 bool reg_save_data_activated = true,  cambio_numeros=false,cambio_numeros2=false,cambio_numeros3=false;//flag to start getting data into a data base
 QTimer *cronometro = new QTimer();
@@ -1180,15 +1180,22 @@ void MainWindow::funcionActivacionTimer(){
     reg_save_data = 1 + reg_save_data;
     puntos=puntos+1;//Timer animacion de puntos en "Realizando Analisis
     ActivarAlarmas = ActivarAlarmas + 1;
-    if(AlarmaApagada == 1){
-    if (banderaActAlarma){
-    if (ActivarAlarmas==300){
-        on_toolButton_pressed();
-        banderaActAlarma = false;
-        ActivarAlarmas = 0;
-        AlarmaApagada = 0;
-        }
+    TimerBateria = TimerBateria +1;
+    if(TimerBateria == 50){
+        emit teclado->escribe("BOK");
+        TimerBateria = 0 ;
     }
+
+
+    if(AlarmaApagada == 1){
+        if (banderaActAlarma){
+            if (ActivarAlarmas==300){
+                on_toolButton_pressed();
+                banderaActAlarma = false;
+                ActivarAlarmas = 0;
+                AlarmaApagada = 0;
+            }
+        }
 } else{
         ActivarAlarmas = 0;
     }

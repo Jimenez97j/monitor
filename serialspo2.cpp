@@ -549,6 +549,10 @@ void SerialSpo2::procesaDato(QByteArray value_write)
         qDebug() << "[PANI] fuera cierra valvula";
         spo2_port->write(value_write);
     }
+    if(value_write == "BOK"){
+        qDebug() << "ESTADO_BATERIA";
+        spo2_port->write(value_write);
+    }
     //qDebug()<<value_write;
     if(value_write == "B"){
         spo2_port->write("B");
