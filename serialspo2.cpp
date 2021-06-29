@@ -113,6 +113,21 @@ void SerialSpo2::handle_data()
                 emit boton_ajustes("mute");
                 cadena.clear();
             }
+
+            if(cadena[0] == 'D'){
+                QString data;
+                for (int i = 1; i < length;i++){
+                    data.append(cadena[i]);
+                }
+                QStringList list3 = data.split(QLatin1Char(','));
+                if (list3[0].toInt() ==  0){
+                    estadoBateria(list3[1].toInt(),0);
+
+                }
+                else if (list3[0].toInt() ==  1){
+                    estadoBateria(list3[1].toInt(), 1);
+                }
+            }
             //
 
             if(cadena[0] == 'A'){
@@ -379,6 +394,39 @@ void SerialSpo2::handle_data()
            //when all finish arrys need to be cleaned
                cadena.clear();
            }
+}
+
+void SerialSpo2::estadoBateria(int x, int p){
+    if (p == 1)
+    {
+    if(x >= 0 && x<=25){
+        emit boton_bateria("B1,rojo");
+    }
+    else if(x >= 26 && x<=50){
+        emit boton_bateria("B1,naranja");
+    }
+    else if(x>= 51 && x<=75){
+        emit boton_bateria("B1,amarillo");
+    }
+    else if(x >= 76 && x<=99){
+        emit boton_bateria("B1,verde");
+    }
+    }
+    else if (p == 0)
+    {
+    if(x >= 0 && x<=25){
+        emit boton_bateria("B0,rojo");
+    }
+    else if(x >= 26 && x<=50){
+        emit boton_bateria("B0,naranja");
+    }
+    else if(x>= 51 && x<=75){
+        emit boton_bateria("B0,amarillo");
+    }
+    else if(x >= 76 && x<=99){
+        emit boton_bateria("B0,verde");
+    }
+    }
 }
 
 void SerialSpo2::IsActive(){

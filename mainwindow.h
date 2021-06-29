@@ -29,6 +29,7 @@
 
 
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -147,6 +148,9 @@ private slots:
     void on_ok_clicked();
     void cambiar_bandera();
     void actualizaEdoBateria(QString dato);
+    void on_hiloMuteAlarmas();
+    void HabilitarMute();
+
 
 private:
     QNetworkSession *session;
@@ -172,6 +176,7 @@ private:
     Paciente* paciente;
     ecghandle* graficar;
     SerialSpo2 *spo2serial, *teclado;
+
 
     int mqtt_fc;
     int mqtt_porce_spo2;

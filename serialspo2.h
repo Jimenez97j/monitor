@@ -20,6 +20,7 @@ public:
     void IsActive();
     bool check_allowed_values();
     void bpm_flag_update();
+    void estadoBateria(int x , int p);
   QSerialPort *spo2_port;
 
 public slots:
@@ -27,7 +28,8 @@ public slots:
     void procesaDato(QByteArray);
 
 signals:
-    void boton_ajustes(QString);
+  void boton_ajustes(QString);
+  void boton_bateria(QString);
   void receive_data(QVector<double>, QVector<double>, int, double, double, double);
   void not_data();
   void bpm_count(QString);

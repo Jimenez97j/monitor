@@ -15,7 +15,7 @@ QString aux, uid_value, uid_doctor;
 int bandera=0, check_bpm_value_time = 0;
 int indicadoranalisis = 0;
 int continicio = 0;
-int hora_captura=0, puntos=0 , numeros_ecg=0, numeros_spo2 = 0, numeros_temp = 0; //Resetea timers para Captura de Pantalla, "Realizando analisis" y cambio de color en números
+int hora_captura=0, puntos=0 , numeros_ecg=0, numeros_spo2 = 0, numeros_temp = 0, ActivarAlarmas =0, AlarmaApagada = 0;//Resetea timers para Captura de Pantalla, "Realizando analisis" y cambio de color en números
 int reg_save_data = 0; //flag for confirmation label of ss and flag for save data into a data base
 bool reg_save_data_activated = true,  cambio_numeros=false,cambio_numeros2=false,cambio_numeros3=false;//flag to start getting data into a data base
 QTimer *cronometro = new QTimer();
@@ -27,6 +27,7 @@ int contpos = 0;
 bool bandera_2= true;
 bool bandera_barra_2= true;
 bool bandera_click = true;
+bool banderaActAlarma = false;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -321,6 +322,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     teclado = new SerialSpo2(nullptr,"ttyUSB0");
     connect(teclado, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
+    connect(teclado,SIGNAL(boton_bateria(QString)),this,SLOT(actualizaEdoBateria(QString)),Qt::QueuedConnection);
    connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
    //mqtt jeru
    connect(spo2serial, SIGNAL(spo2_plot_mqtt(double)),this, SLOT(publish_spo2_mqtt(double)));
@@ -353,7 +355,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_client, &QMqttClient::messageReceived, this, [this](const QByteArray &message, const QMqttTopicName &topic) {
 
     //this block works on,ly if detection is activated
-        qDebug()<<message;
+       // qDebug()<<message;
         if(detection){
             if (message == "NORMAL")
             {
@@ -391,7 +393,7 @@ void MainWindow::rec_mqtt(){
     if(!mqtt_connected){
         m_client->connectToHost();
         reconexionMqtt->start(10000);
-        qDebug() << "[MQTT] Reconexion";
+       // qDebug() << "[MQTT] Reconexion";
     }
 
 }
@@ -463,7 +465,15 @@ void MainWindow::boton_ajustes2(QString h)
         on_iniciarpani_pressed();
     }
     else if(h == "mute"){
+        //on_hiloMuteAlarmas();
+        banderaActAlarma = true;
         on_toolButton_pressed();
+        AlarmaApagada = AlarmaApagada + 1;
+        if(AlarmaApagada >= 2){
+            AlarmaApagada = 0;
+        }
+        qDebug() << AlarmaApagada;
+
     }
     }
 }
@@ -515,7 +525,12 @@ void MainWindow:: on_ok_clicked(){
         on_modelo2_pressed();
         break;
     case 9:
+        banderaActAlarma = true;
         on_toolButton_pressed();
+        AlarmaApagada = AlarmaApagada + 1;
+        if(AlarmaApagada >= 2){
+            AlarmaApagada = 0;
+        }
         break;
     case 10:
         on_ajustes_pressed();
@@ -1146,7 +1161,19 @@ void MainWindow::funcionActivacionTimer(){
     numeros_temp = numeros_temp + 1;// Timer cambio de color en numeros
     reg_save_data = 1 + reg_save_data;
     puntos=puntos+1;//Timer animacion de puntos en "Realizando Analisis
-
+    ActivarAlarmas = ActivarAlarmas + 1;
+    if(AlarmaApagada == 1){
+    if (banderaActAlarma){
+    if (ActivarAlarmas==300){
+        on_toolButton_pressed();
+        banderaActAlarma = false;
+        ActivarAlarmas = 0;
+        AlarmaApagada = 0;
+        }
+    }
+} else{
+        ActivarAlarmas = 0;
+    }
     //Animación de puntos en label "Realizando Analisis..."
 
 
@@ -1279,6 +1306,7 @@ void MainWindow::on_galeria_open_pressed(){
 
 
 }
+
 
 //show settings window
 void MainWindow::on_ajustes_pressed(){
@@ -1684,7 +1712,7 @@ void MainWindow::actualizaEdoBateria(QString dato)
         cargando = true;
     }
 
-    if (dato[1] >= 0 and dato[1] <= 25)
+    if (dato1[1] == "rojo")
     {
         if (cargando == true)
         {
@@ -1697,7 +1725,7 @@ void MainWindow::actualizaEdoBateria(QString dato)
         }
     }
 
-    else if (dato[1] >= 26 and dato[1] <= 50)
+    else if (dato1[1] == "naranja")
     {
         if (cargando == true)
         {
@@ -1710,7 +1738,7 @@ void MainWindow::actualizaEdoBateria(QString dato)
         }
     }
 
-    else if (dato[1] >= 51 and dato[1] <= 75)
+    else if (dato1[1] == "amarillo")
     {
         if (cargando == true)
         {
@@ -1723,7 +1751,7 @@ void MainWindow::actualizaEdoBateria(QString dato)
         }
     }
 
-    else if (dato[1] >= 76 and dato[1] <= 99)
+    else if (dato1[1] == "verde")
     {
         if (cargando == true)
         {
