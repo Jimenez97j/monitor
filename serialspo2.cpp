@@ -432,7 +432,7 @@ void SerialSpo2::estadoBateria(int x, int p){
 void SerialSpo2::IsActive(){
     if(!(spo2_port->isReadable())){
         spo2_port->close();
-        spo2_port->setPortName("ttyUSB0"); //ttyUSB1
+        spo2_port->setPortName("SPO2"); //ttyUSB1
         spo2_port->setBaudRate(QSerialPort::Baud115200);
         spo2_port->setReadBufferSize(10);
         spo2_port->setParity(QSerialPort::NoParity);
