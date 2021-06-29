@@ -98,7 +98,7 @@
      <rect>
       <x>30</x>
       <y>460</y>
-      <width>1071</width>
+      <width>991</width>
       <height>211</height>
      </rect>
     </property>
@@ -1677,9 +1677,9 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>10</y>
+        <y>0</y>
         <width>71</width>
-        <height>71</height>
+        <height>81</height>
        </rect>
       </property>
       <property name="palette">
@@ -2807,7 +2807,7 @@
      <widget class="QLabel" name="pres_sis_label_2">
       <property name="geometry">
        <rect>
-        <x>130</x>
+        <x>140</x>
         <y>10</y>
         <width>61</width>
         <height>31</height>
@@ -3007,7 +3007,7 @@
      <widget class="QLabel" name="pres_sis_label_4">
       <property name="geometry">
        <rect>
-        <x>110</x>
+        <x>130</x>
         <y>40</y>
         <width>91</width>
         <height>41</height>
@@ -3207,9 +3207,9 @@
      <widget class="QLabel" name="pres_sis_2">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>10</x>
         <y>0</y>
-        <width>71</width>
+        <width>111</width>
         <height>81</height>
        </rect>
       </property>
@@ -3459,7 +3459,7 @@
        <rect>
         <x>5</x>
         <y>10</y>
-        <width>131</width>
+        <width>191</width>
         <height>71</height>
        </rect>
       </property>
@@ -3630,7 +3630,7 @@
      <widget class="QLabel" name="pres_sis_label">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>190</x>
         <y>40</y>
         <width>101</width>
         <height>41</height>
@@ -3830,7 +3830,7 @@
      <widget class="QLabel" name="pres_sis_label_3">
       <property name="geometry">
        <rect>
-        <x>150</x>
+        <x>190</x>
         <y>10</y>
         <width>61</width>
         <height>41</height>
@@ -4344,7 +4344,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>:/imagenes/Cuadricula y Guia de Usuario/caudricula_FondoBlanco.png</pixmap>
+      <pixmap resource="recursos.qrc">:/imagenes/Cuadricula y Guia de Usuario/caudricula_FondoBlanco.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -4957,7 +4957,6 @@
 </string>
     </property>
    </widget>
-   <zorder>plot</zorder>
    <zorder>color</zorder>
    <zorder>ecg</zorder>
    <zorder>label_2</zorder>
@@ -4971,6 +4970,7 @@
    <zorder>borrargraph</zorder>
    <zorder>label_4</zorder>
    <zorder>ecg_2</zorder>
+   <zorder>plot</zorder>
   </widget>
  </widget>
  <customwidgets>

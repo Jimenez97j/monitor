@@ -6,6 +6,7 @@
 #include <guiausuario.h>
 
 bool bandera_deshabilitar_mod2 = true;
+bool list_diseno_show = false;
 
 #include <configred.h>
 
@@ -14,10 +15,13 @@ int contpos_2 = 0;
 ajustes::ajustes(QWidget *parent, SerialSpo2 *serialspo2_ajustes) :
     QDialog(parent),
     ui(new Ui::ajustes)
+
 {
     spo2serial_2 = serialspo2_ajustes;
     ui->setupUi(this);
+    opciones_ajustes();
     QString maincolor = getajustes();
+
 
     ui->comboBox->addItem(maincolor);
     if(maincolor != "Verde Aqua"){
@@ -108,9 +112,16 @@ void ajustes:: on_okay_clicked(){
     switch(contpos_2)
     {
     case 0:
-
+        list_diseno_show = !list_diseno_show;
+        if(list_diseno_show){
+            ui->comboBox->showPopup();
+        }else{
+            ui->comboBox->hidePopup();
+        }
         break;
+
     case 1:
+
 
         break;
     case 2:
@@ -120,12 +131,24 @@ void ajustes:: on_okay_clicked(){
         on_toolButton_2_clicked();
         break;
     case 4:
+        list_diseno_show = !list_diseno_show;
+        if(list_diseno_show){
+            ui->time_save->showPopup();
+        }else{
+            ui->time_save->hidePopup();
+        }
 
         break;
     case 5:
         on_Guia_Usu_pressed();
         break;
     case 6:
+        list_diseno_show = !list_diseno_show;
+        if(list_diseno_show){
+            ui->checkBox->checkState()  ;
+        }else{
+            ui->checkBox->checkState()  ;
+        }
 
         break;
     case 7:
