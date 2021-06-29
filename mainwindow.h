@@ -152,8 +152,7 @@ private slots:
     void on_ok_clicked();
     void cambiar_bandera();
     void actualizaEdoBateria(QString dato);
-    void on_hiloMuteAlarmas();
-    void HabilitarMute();
+
 
 
 private:
