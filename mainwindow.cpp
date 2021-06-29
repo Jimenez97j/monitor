@@ -51,6 +51,12 @@ MainWindow::MainWindow(QWidget *parent)
     reconexionMqtt = new QTimer;
     connect(reconexionMqtt, SIGNAL(timeout()),this, SLOT(rec_mqtt()));
     reconexionMqtt->setSingleShot(true);
+
+    //valvula
+    timerValvula = new QTimer;
+    timerValvula->setSingleShot(true);
+    connect(timerValvula, SIGNAL(timeout()), this, SLOT(cerrar_valvula()));
+
     //
     ui->setupUi(this);
     opciones();
@@ -319,16 +325,16 @@ MainWindow::MainWindow(QWidget *parent)
     //error for pani
     connect(spo2serial, SIGNAL(errorpani()), this, SLOT(errorpani()), Qt::QueuedConnection);
 
-    teclado = new SerialSpo2(nullptr,"ttyUSB0");
+    teclado = new SerialSpo2(nullptr,"teclado");
     connect(teclado, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
-   connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
+   //connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
    //mqtt jeru
    connect(spo2serial, SIGNAL(spo2_plot_mqtt(double)),this, SLOT(publish_spo2_mqtt(double)));
 
 //+++++++++++++++++++++++++++++++++++++ SERIAL PORT ECG(DATOS) +++++++++++++++++++++++++++++++++++
 
     serial_ecg_data= new QSerialPort(); // Serial port for bpm, rpm
-    serial_ecg_data->setPortName("nobody"); //DATOSECG
+    serial_ecg_data->setPortName("DATOSECG"); //DATOSECG
     serial_ecg_data->setBaudRate(QSerialPort::Baud115200);
     serial_ecg_data->setReadBufferSize(5);
     serial_ecg_data->setParity(QSerialPort::NoParity);
@@ -385,6 +391,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     qDebug()<<"btn_Bocina";
 
+}
+
+void MainWindow::cerrar_valvula(){
+    qDebug() << "[VALVULA] Cerrar";
+    emit spo2serial->escribe("Q");
 }
 
 void MainWindow::rec_mqtt(){
@@ -460,7 +471,8 @@ void MainWindow::boton_ajustes2(QString h)
     }
 
     else if(h == "pani"){
-        on_iniciarpani_pressed();
+        //on_iniciarpani_pressed();
+        qDebug()<<"boton pani";
     }
     else if(h == "mute"){
         on_toolButton_pressed();
@@ -646,6 +658,9 @@ void MainWindow::errorpani(){
     ui->label_5->setText("<font color='red' size='1'>Se ha detectado error en medición PANI, inicialize nuevamente </font>");
     //ui->iniciarpani->setStyleSheet("background-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
     ui->iniciarpani->setIcon(QIcon(":/imagenes/btn_Iniciar.png"));
+
+    //jeru timer
+    timerValvula->start(6000);
 }
 
 void MainWindow::panivalues(QString s, QString d, QString m){
@@ -673,6 +688,9 @@ void MainWindow::panivalues(QString s, QString d, QString m){
     }
     rpm_save_reg = m; // value to save for rpm register into database
     med_mod2 = m;
+
+    //jeru timer
+    timerValvula->start(6000);
 
 }
 
@@ -722,7 +740,7 @@ void MainWindow::not_data(){
     savespo2 = 0;
     ui->SPO2->setText("00");
     ui->SPO2->setText("00");
-    ui->SPO2->setGeometry(10,10,111,51);
+    ui->SPO2->setGeometry(10,10,71,81);
     ui->bpmsp2->setText("00");
     is_spo2_ready = false;
     reciving_spo2_data = false;
@@ -935,7 +953,7 @@ void MainWindow::on_iniciarpani_pressed(){
         //spo2serial->write_value("U");
         //spo2serial->write_value("B");
         //JORGE
-        emit spo2serial->escribe("U");
+        emit spo2serial->escribe("P");
         //ui->iniciarpani->setStyleSheet("border-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
         ui->iniciarpani->setChecked(false);
         ui->iniciarpani->setIcon(QIcon(":/imagenes/btn_Iniciar.png"));
@@ -1150,9 +1168,10 @@ void MainWindow::funcionActivacionTimer(){
     //Animación de puntos en label "Realizando Analisis..."
 
 
-    if(puntos==10 && banderapuntos){
+    /*if(puntos==10 && banderapuntos){
+        emit spo2serial->escribe("Q"); //jeru junio 29
         ui->analisis->setText("Realizando Analisis");
-    }
+    }*/
     if(puntos==20 && banderapuntos){
         ui->analisis->setText("Realizando Analisis.");
     }
@@ -1668,7 +1687,7 @@ void MainWindow::stoppani(){
     //ui->iniciarpani->setStyleSheet("background-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
     bandera_pani=false;
     //serial->write("A");
-    emit spo2serial->escribe("U");
+    emit spo2serial->escribe("P");
 }
 
 void MainWindow::actualizaEdoBateria(QString dato)
