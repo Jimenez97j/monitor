@@ -922,7 +922,6 @@ void MainWindow::on_iniciar_pressed(){
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
     indicadoranalisis = 1;
     //serial->write("Z");
-     emit spo2serial->escribe("Z");
     if(detection){
         ui->analisis->setText("Realizando Analisis");
         puntos = 0;
