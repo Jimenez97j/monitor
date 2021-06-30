@@ -473,7 +473,7 @@ void MainWindow::boton_ajustes2(QString h)
     }
 
     else if(h == "pani"){
-        //on_iniciarpani_pressed();
+        on_iniciarpani_pressed();
         qDebug()<<"boton pani";
     }
     else if(h == "mute"){
