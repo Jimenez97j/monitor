@@ -105,27 +105,32 @@ void SerialSpo2::handle_data()
                 cadena.clear();
             }
 
-            if(cadena[0] == 'F'){
+            if(cadena[0] == 'P'){
                 emit boton_ajustes("pani");
                 cadena.clear();
             }
-            if(cadena[0] == 'M'){
+            if(cadena[0] == 'N'){
                 emit boton_ajustes("mute");
                 cadena.clear();
             }
 
             if(cadena[0] == 'D'){
-                QString data;
-                for (int i = 1; i < length;i++){
-                    data.append(cadena[i]);
-                }
-                QStringList list3 = data.split(QLatin1Char(','));
-                if (list3[0].toInt() ==  0){
-                    estadoBateria(list3[1].toInt(),0);
+                if(cadena.length()>4)
+                {
+                    QString data;
+                    for (int i = 1; i < length;i++){
+                        data.append(cadena[i]);
+                    }
+                    QStringList list3 = data.split(QLatin1Char(','));
+                    if(list3.length()>1){
+                        if (list3[0].toInt() ==  0){
+                            estadoBateria(list3[1].toInt(),0);
 
-                }
-                else if (list3[0].toInt() ==  1){
-                    estadoBateria(list3[1].toInt(), 1);
+                        }
+                        else if (list3[0].toInt() ==  1){
+                            estadoBateria(list3[1].toInt(), 1);
+                        }
+                    }
                 }
             }
             //
@@ -332,7 +337,7 @@ void SerialSpo2::handle_data()
                       }
                       if(promedio>99){
                       saving_temperature_spo2 =  saving_temperature_spo2/100;
-                      saving_temperature_spo2 = saving_temperature_spo2 + 1.21;
+                      saving_temperature_spo2 = saving_temperature_spo2 + 1.71;
                       QString valueAsString = QString::number(saving_temperature_spo2, 'g', 3);
                       emit   updatetemperature(valueAsString, saving_temperature_spo2);
                       promedio = 0;
@@ -432,7 +437,7 @@ void SerialSpo2::estadoBateria(int x, int p){
 void SerialSpo2::IsActive(){
     if(!(spo2_port->isReadable())){
         spo2_port->close();
-        spo2_port->setPortName("ttyUSB0"); //ttyUSB1
+        spo2_port->setPortName("SPO2"); //ttyUSB1
         spo2_port->setBaudRate(QSerialPort::Baud115200);
         spo2_port->setReadBufferSize(10);
         spo2_port->setParity(QSerialPort::NoParity);
