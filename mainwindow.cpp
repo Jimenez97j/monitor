@@ -660,7 +660,7 @@ void MainWindow::errorpani(){
     ui->iniciarpani->setIcon(QIcon(":/imagenes/btn_Iniciar.png"));
 
     //jeru timer
-    timerValvula->start(6000);
+    timerValvula->start(20000);
 }
 
 void MainWindow::panivalues(QString s, QString d, QString m){
@@ -690,7 +690,7 @@ void MainWindow::panivalues(QString s, QString d, QString m){
     med_mod2 = m;
 
     //jeru timer
-    timerValvula->start(6000);
+    timerValvula->start(20000);
 
 }
 
@@ -938,6 +938,7 @@ void MainWindow::on_iniciar_pressed(){
 
 void MainWindow::on_iniciarpani_pressed(){
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+    timerValvula->stop();
     if(!bandera_pani){
         //serial->write("B");
         //spo2serial->write_value("B");
