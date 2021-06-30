@@ -94,7 +94,7 @@ void SerialSpo2::handle_data()
             }
 
             if(cadena[0] == 'L'){
-                //qDebug()<<"emitir izquierda";
+                qDebug()<<"emitir izquierda";
                 emit boton_ajustes("derecha");
                 cadena.clear();
             }
@@ -105,13 +105,33 @@ void SerialSpo2::handle_data()
                 cadena.clear();
             }
 
-            if(cadena[0] == 'F'){
+            if(cadena[0] == 'P'){
                 emit boton_ajustes("pani");
                 cadena.clear();
             }
-            if(cadena[0] == 'M'){
+            if(cadena[0] == 'N'){
                 emit boton_ajustes("mute");
                 cadena.clear();
+            }
+
+            if(cadena[0] == 'D'){
+                if(cadena.length()>4)
+                {
+                    QString data;
+                    for (int i = 1; i < length;i++){
+                        data.append(cadena[i]);
+                    }
+                    QStringList list3 = data.split(QLatin1Char(','));
+                    if(list3.length()>1){
+                        if (list3[0].toInt() ==  0){
+                            estadoBateria(list3[1].toInt(),0);
+
+                        }
+                        else if (list3[0].toInt() ==  1){
+                            estadoBateria(list3[1].toInt(), 1);
+                        }
+                    }
+                }
             }
             //
 
@@ -381,6 +401,39 @@ void SerialSpo2::handle_data()
            }
 }
 
+void SerialSpo2::estadoBateria(int x, int p){
+    if (p == 1)
+    {
+    if(x >= 0 && x<=25){
+        emit boton_bateria("B1,rojo");
+    }
+    else if(x >= 26 && x<=50){
+        emit boton_bateria("B1,naranja");
+    }
+    else if(x>= 51 && x<=75){
+        emit boton_bateria("B1,amarillo");
+    }
+    else if(x >= 76 && x<=99){
+        emit boton_bateria("B1,verde");
+    }
+    }
+    else if (p == 0)
+    {
+    if(x >= 0 && x<=25){
+        emit boton_bateria("B0,rojo");
+    }
+    else if(x >= 26 && x<=50){
+        emit boton_bateria("B0,naranja");
+    }
+    else if(x>= 51 && x<=75){
+        emit boton_bateria("B0,amarillo");
+    }
+    else if(x >= 76 && x<=99){
+        emit boton_bateria("B0,verde");
+    }
+    }
+}
+
 void SerialSpo2::IsActive(){
     if(!(spo2_port->isReadable())){
         spo2_port->close();
@@ -499,6 +552,10 @@ void SerialSpo2::procesaDato(QByteArray value_write)
 {
     if(value_write == "Q"){
         qDebug() << "[PANI] fuera cierra valvula";
+        spo2_port->write(value_write);
+    }
+    if(value_write == "BOK\n"){
+        qDebug() << "ESTADO_BATERIA";
         spo2_port->write(value_write);
     }
     //qDebug()<<value_write;

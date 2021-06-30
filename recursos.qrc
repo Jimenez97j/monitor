@@ -285,11 +285,20 @@
         <file>imagenes/Cuadricula y Guia de Usuario/24.png</file>
         <file>imagenes/Cuadricula y Guia de Usuario/25.png</file>
         <file>imagenes/Cuadricula y Guia de Usuario/26.png</file>
-        <file>imagenes/Cuadricula y Guia de Usuario/caudricula_FondoBlanco_v2.png</file>
         <file>imagenes/Cuadricula y Guia de Usuario/caudricula_FondoBlanco.png</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/caudricula_FondoBlanco_v2.png</file>
         <file>imagenes/Cuadricula y Guia de Usuario/fondoCuadricula1.png</file>
         <file>imagenes/Cuadricula y Guia de Usuario/fondoCuadricula2.png</file>
         <file>imagenes/Cuadricula y Guia de Usuario/fondoCuandriculaMOD2_1.png</file>
         <file>imagenes/Cuadricula y Guia de Usuario/fondoCuandriculaMOD2_2.png</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/mainwindow.ui</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/bateria100c.png</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/bateria100.png</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/bateria75c.png</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/bateria75.png</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/bateria50c.png</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/bateria50.png</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/bateria25c.png</file>
+        <file>imagenes/Cuadricula y Guia de Usuario/bateria25.png</file>
     </qresource>
 </RCC>
