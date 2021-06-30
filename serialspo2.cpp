@@ -105,27 +105,32 @@ void SerialSpo2::handle_data()
                 cadena.clear();
             }
 
-            if(cadena[0] == 'F'){
+            if(cadena[0] == 'P'){
                 emit boton_ajustes("pani");
                 cadena.clear();
             }
-            if(cadena[0] == 'M'){
+            if(cadena[0] == 'N'){
                 emit boton_ajustes("mute");
                 cadena.clear();
             }
 
             if(cadena[0] == 'D'){
-                QString data;
-                for (int i = 1; i < length;i++){
-                    data.append(cadena[i]);
-                }
-                QStringList list3 = data.split(QLatin1Char(','));
-                if (list3[0].toInt() ==  0){
-                    estadoBateria(list3[1].toInt(),0);
+                if(cadena.length()>4)
+                {
+                    QString data;
+                    for (int i = 1; i < length;i++){
+                        data.append(cadena[i]);
+                    }
+                    QStringList list3 = data.split(QLatin1Char(','));
+                    if(list3.length()>1){
+                        if (list3[0].toInt() ==  0){
+                            estadoBateria(list3[1].toInt(),0);
 
-                }
-                else if (list3[0].toInt() ==  1){
-                    estadoBateria(list3[1].toInt(), 1);
+                        }
+                        else if (list3[0].toInt() ==  1){
+                            estadoBateria(list3[1].toInt(), 1);
+                        }
+                    }
                 }
             }
             //
