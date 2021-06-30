@@ -24,10 +24,8 @@ QTimer *spo2_refresh_chart = new QTimer();
 int registro_firebase = 0;
 QString *arrdata_to_send;
 int contpos = 0;
-bool bandera_2= true;
-bool bandera_barra_2= true;
-bool bandera_click = true;
-bool banderaActAlarma = false;
+bool bandera_2= true, bandera_barra_2= true, bandera_click = true, banderaActAlarma = false;
+bool freeze = false; //variable para desactivar la botononera touch y fisica
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -490,20 +488,7 @@ void MainWindow::boton_ajustes2(QString h)
     }
 }
 
-void MainWindow:: on_Derecha_clicked(){
-    contpos = contpos + 1;
-    if(contpos > 10){
-        contpos = 10;
-    }
-}
 
-void MainWindow:: on_Izquierda_clicked(){
-    contpos = contpos - 1;
-    if (contpos < 0){
-        contpos = 0;
-    }
-
-}
 
 void MainWindow:: on_ok_clicked(){
 

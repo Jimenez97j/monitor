@@ -143,11 +143,8 @@ private slots:
 
 
     void on_toolButton_2_clicked();
-    void on_Derecha_clicked();
     void opciones();
     void cambiar_bandera_barra_2();
-
-    void on_Izquierda_clicked();
 
     void on_ok_clicked();
     void cambiar_bandera();
