@@ -105,12 +105,17 @@ void SerialSpo2::handle_data()
                 cadena.clear();
             }
 
-            if(cadena[0] == 'P'){
+            if(cadena[0] == 'F'){
                 emit boton_ajustes("pani");
                 cadena.clear();
             }
-            if(cadena[0] == 'N'){
+            if(cadena[0] == 'M'){
                 emit boton_ajustes("mute");
+                cadena.clear();
+            }
+
+            if(cadena[0] == 'N'){
+                emit boton_ajustes("numerico");
                 cadena.clear();
             }
 

@@ -17,6 +17,7 @@ public:
     explicit derivaciones(QWidget *parent = 0, SerialSpo2 *serialspo2_derivaciones = NULL);
     int statebutton();
     void changebutton();
+    void on_okay_clicked();
     ~derivaciones();
 
 signals:
@@ -37,7 +38,8 @@ signals:
     void habilitar_perilla_4();
 
 
-private slots:
+
+public slots:
     void on_d1_pressed();
     void on_d2_pressed();
     void on_d3_pressed();
@@ -52,7 +54,7 @@ private slots:
     void on_d12_pressed();
     void boton_handle_5(QString k);
     void opciones_derivaciones();
-    void on_okay_clicked();
+    //void on_okay_clicked();
     void closeEvent(QCloseEvent*);
 
 private:

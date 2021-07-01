@@ -326,7 +326,7 @@ MainWindow::MainWindow(QWidget *parent)
     //error for pani
     connect(spo2serial, SIGNAL(errorpani()), this, SLOT(errorpani()), Qt::QueuedConnection);
 
-    teclado = new SerialSpo2(nullptr,"teclado");
+    teclado = new SerialSpo2(nullptr,"ttyUSB0");
     connect(teclado, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
     connect(teclado,SIGNAL(boton_bateria(QString)),this,SLOT(actualizaEdoBateria(QString)),Qt::QueuedConnection);
    connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
@@ -476,6 +476,9 @@ void MainWindow::boton_ajustes2(QString h)
         on_iniciarpani_pressed();
         qDebug()<<"boton pani";
     }
+    else if(h == "numerico"){
+        on_modelo2_pressed();
+    }
     else if(h == "mute"){
         //on_hiloMuteAlarmas();
         banderaActAlarma = true;
@@ -506,7 +509,7 @@ void MainWindow:: on_Izquierda_clicked(){
 }
 
 void MainWindow:: on_ok_clicked(){
-
+    //qDebug() << "[on_ok_clicked]: " << contpos;
     switch(contpos)
     {
     case 0:

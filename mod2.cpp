@@ -109,6 +109,9 @@ if (bandera_3 == true){
         on_okay_clicked();
 
     }
+    else if(y == "numerico"){
+        on_close_pressed();
+    }
 
 }
 }
@@ -233,6 +236,7 @@ void MOD2::on_close_pressed()
     emit closing_window(); //verificar si este metodo funciona o si es mejor una variable booleana y seguir recibiendo datos
     emit bandera_perilla_8();
     this->close();
+    //this->hide();
     contpos_8 = 0;
     delete this;
 }
