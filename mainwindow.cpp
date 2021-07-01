@@ -24,10 +24,8 @@ QTimer *spo2_refresh_chart = new QTimer();
 int registro_firebase = 0;
 QString *arrdata_to_send;
 int contpos = 0;
-bool bandera_2= true;
-bool bandera_barra_2= true;
-bool bandera_click = true;
-bool banderaActAlarma = false;
+bool bandera_2= true, bandera_barra_2= true, bandera_click = true, banderaActAlarma = false;
+bool freeze = false; //variable para desactivar la botononera touch y fisica
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -493,20 +491,7 @@ void MainWindow::boton_ajustes2(QString h)
     }
 }
 
-void MainWindow:: on_Derecha_clicked(){
-    contpos = contpos + 1;
-    if(contpos > 10){
-        contpos = 10;
-    }
-}
 
-void MainWindow:: on_Izquierda_clicked(){
-    contpos = contpos - 1;
-    if (contpos < 0){
-        contpos = 0;
-    }
-
-}
 
 void MainWindow:: on_ok_clicked(){
     //qDebug() << "[on_ok_clicked]: " << contpos;
@@ -678,7 +663,8 @@ void MainWindow::errorpani(){
     ui->iniciarpani->setIcon(QIcon(":/imagenes/btn_Iniciar.png"));
 
     //jeru timer
-    timerValvula->start(6000);
+    timerValvula->start(20000);
+
 }
 
 void MainWindow::panivalues(QString s, QString d, QString m){
@@ -708,7 +694,7 @@ void MainWindow::panivalues(QString s, QString d, QString m){
     med_mod2 = m;
 
     //jeru timer
-    timerValvula->start(6000);
+    timerValvula->start(20000);
 
 }
 
@@ -940,7 +926,6 @@ void MainWindow::on_iniciar_pressed(){
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
     indicadoranalisis = 1;
     //serial->write("Z");
-     emit spo2serial->escribe("Z");
     if(detection){
         ui->analisis->setText("Realizando Analisis");
         puntos = 0;
@@ -957,6 +942,7 @@ void MainWindow::on_iniciar_pressed(){
 
 void MainWindow::on_iniciarpani_pressed(){
     sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+    timerValvula->stop();
     if(!bandera_pani){
         //serial->write("B");
         //spo2serial->write_value("B");
@@ -1717,6 +1703,11 @@ void MainWindow::startpani(){
     ui->iniciarpani->setIcon(QIcon(":/imagenes/btn_Detener.png"));
     //ui->iniciarpani->setStyleSheet("background-image: url(:/imagenes/detenerpani2.png);background-repeat:none;border: none");
     bandera_pani=true;
+    //jeru
+    if(timerValvula->isActive()){
+        qDebug() << "[PANI] detener timer por reinicio";
+        timerValvula->stop();
+    }
 }
 
 void MainWindow::stoppani(){
