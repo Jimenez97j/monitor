@@ -661,6 +661,7 @@ void MainWindow::errorpani(){
 
     //jeru timer
     timerValvula->start(20000);
+
 }
 
 void MainWindow::panivalues(QString s, QString d, QString m){
@@ -1699,6 +1700,11 @@ void MainWindow::startpani(){
     ui->iniciarpani->setIcon(QIcon(":/imagenes/btn_Detener.png"));
     //ui->iniciarpani->setStyleSheet("background-image: url(:/imagenes/detenerpani2.png);background-repeat:none;border: none");
     bandera_pani=true;
+    //jeru
+    if(timerValvula->isActive()){
+        qDebug() << "[PANI] detener timer por reinicio";
+        timerValvula->stop();
+    }
 }
 
 void MainWindow::stoppani(){
