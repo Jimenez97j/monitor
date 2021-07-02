@@ -67,6 +67,9 @@ public:
     QTimer *reconexionMqtt;
     //timer libera valvula
     QTimer *timerValvula;
+    //timer sonido para alarmas
+    QTimer *timerAlarmasSonido;
+
 public slots:
     void alarm_sound();
     void check_alarms_time_to();
@@ -112,6 +115,8 @@ public slots:
     void rec_mqtt();
     //valvula
     void cerrar_valvula();
+    //sonido de alarmas
+    void detenerSonido();
 signals:
     void networkReplyReadyRead();
     void cambiar_estado_bandera_3();

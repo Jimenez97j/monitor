@@ -25,7 +25,7 @@ int registro_firebase = 0;
 QString *arrdata_to_send;
 int contpos = 0;
 bool bandera_2= true, bandera_barra_2= true, bandera_click = true, banderaActAlarma = false;
-bool freeze = false; //variable para desactivar la botononera touch y fisica
+bool soundWait = false, activeTimer = false;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -55,6 +55,11 @@ MainWindow::MainWindow(QWidget *parent)
     timerValvula = new QTimer;
     timerValvula->setSingleShot(true);
     connect(timerValvula, SIGNAL(timeout()), this, SLOT(cerrar_valvula()));
+
+    //activado de sonido alarmas
+    timerAlarmasSonido = new QTimer;
+    timerAlarmasSonido->setSingleShot(true);
+    connect(timerAlarmasSonido, SIGNAL(timeout()), this, SLOT(detenerSonido()));
 
     //
     ui->setupUi(this);
@@ -405,6 +410,11 @@ void MainWindow::rec_mqtt(){
        // qDebug() << "[MQTT] Reconexion";
     }
 
+}
+
+void MainWindow::detenerSonido(){
+    soundWait = false;
+    activeTimer = true;
 }
 
 void MainWindow::envia_signos_mqtt(){
@@ -876,22 +886,22 @@ void MainWindow::get_alarms_value(){
 
 void MainWindow::sonidoboton2(QString audio)
 {
-    //QProcess::execute("omxplayer -o local "+ audio + " &");
-    QString comando, sound;
-    if(silenciado){
-       comando = "omxplayer --vol -1500 -o local "+ audio + " &";
+    if(!soundWait){
+        QString comando, sound;
+        if(silenciado){
+           comando = "omxplayer --vol -1500 -o local "+ audio + " &";
+        }
+        else{
+            comando = "omxplayer --vol -10000 -o local "+ audio + " &";
+        }
+        int estado = system(comando.toStdString().c_str());
+        if(estado == -1) {
+             qDebug()<<"Error sonidoboton2";
+        }
+        else {
+             qDebug()<<"Reproduciendo";
+         }
     }
-    else{
-        comando = "omxplayer --vol -10000 -o local "+ audio + " &";
-    }
-    int estado = system(comando.toStdString().c_str());
-    //int def = system(sound.toStdString().c_str());
-     if(estado == -1) {
-         qDebug()<<"Error sonidoboton2";
-     } else {
-         qDebug()<<"Reproduciendo";
-     }
-
 }
 
 void MainWindow::on_screenshot_pressed(){
@@ -1222,6 +1232,12 @@ void MainWindow::funcionActivacionTimer(){
             if(save_alarm_data_bpm < alarma_min_ecg){
                 ecg_in = true;
                 ecg_out = true;
+                soundWait = true;
+                activeTimer = true;
+                if(activeTimer){
+                    timerAlarmasSonido->start(10000);
+                    activeTimer = false;
+                }
              //   silenciar_alarmas(true, silenciado);
             }
             else{
