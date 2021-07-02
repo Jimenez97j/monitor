@@ -41,6 +41,7 @@ derivaciones::derivaciones(QWidget *parent, SerialSpo2 *serialspo2_derivaciones)
     spo2serial_5 = serialspo2_derivaciones;
     opciones_derivaciones();
     connect(spo2serial_5, SIGNAL(boton_ajustes(QString )), this, SLOT(boton_handle_5(QString )), Qt::QueuedConnection);
+    //connect(spo2serial_5, &SerialSpo2::boton_ajustes,this, &derivaciones::boton_handle_5, Qt::QueuedConnection);
     int value = statebutton();
     QToolButton *arr[12] = {ui->d1, ui->d2, ui->d3, ui->d4, ui->d5, ui->d6, ui->d7, ui->d8, ui->d9, ui->d10, ui->d11, ui->d12};
   for(int i = 0; i<12; i++)
@@ -54,7 +55,7 @@ derivaciones::derivaciones(QWidget *parent, SerialSpo2 *serialspo2_derivaciones)
  arr[value]->setChecked(true);
  arr[value]->setIcon(QIcon(imgon[value]));
  arr[value]->setStyleSheet("border: 2px solid green; border-radius:10px;");
-
+    qDebug() << "[derivaciones] constructor";
 }
 
 
@@ -72,7 +73,7 @@ void derivaciones::closeEvent(QCloseEvent*){
 void derivaciones::boton_handle_5(QString k){
 
 
-    qDebug()<<"hola";
+    qDebug()<<"[Derivaciones] boton_handle_5";
     if (k == "derecha"){
     contpos_5 = contpos_5 + 1;
     if(contpos_5 > 13){

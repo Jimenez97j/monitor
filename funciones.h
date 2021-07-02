@@ -55,6 +55,11 @@ int number_of_data_pm = 25, data_time_rate = 57000; //saving data per minute, 43
 double datos_en_pantalla_rpm = 100, datos_grafica_max_rpm = 800, upset_rpm= 0, rango_max_rpm, rango_min_rpm, rescale_value_rpm=20, data_save_rpm = 0;
 QByteArray presion = "A";
 
+//jeru variables alarmas
+bool alarm_first_ecg = true;
+bool alarm_first_spo2 = true;
+bool alarm_first_temp = true;
+
 
 void MainWindow::alarmasonido(bool boton, bool activado){
    if(boton && activado){
@@ -75,10 +80,14 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
                alarm1 = true;
                alarmasonido(boton, true);
            }
-           //qDebug()<<"serialecgon";
-           emit spo2serial->escribe("H");
-           spo2_out = false;
-           temp_out = false;
+
+           if(!alarm_first_ecg){
+               alarm_first_ecg = true;
+               //qDebug()<<"serialecgon";
+               emit spo2serial->escribe("H");
+               spo2_out = false;
+               temp_out = false;
+           }
        }
        else{
            if(activated){
@@ -87,6 +96,7 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
               // qDebug()<<"serialecgoff";
                // serial->write("L");
                emit spo2serial->escribe("L");
+               alarm_first_ecg = false;
                 if(spo2_in || temp_in){
                     alarmasonido(boton, true); // si hay otras alarmas dejamos encendido el sonido
                 }else{
@@ -100,20 +110,25 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
                activated2 = true;//parpadeo numerico aquí
            }
            if(spo2_out){
-              // qDebug()<<"serialspo2on"; //serial write el comando al arduino para el color amarillo y sonido
-               alarm2 = true;
-               temp_out = false;
-               //serial->write("K");
-               emit spo2serial->escribe("K");
+               if(!alarm_first_spo2){
+                   alarm_first_spo2 = true;
+                   // qDebug()<<"serialspo2on"; //serial write el comando al arduino para el color amarillo y sonido
+                   alarm2 = true;
+                   temp_out = false;
+                   //serial->write("K");
+                   emit spo2serial->escribe("K");
+               }
+
            }
        }
        else{
            if(activated2){
                 alarm2 = false;
                 activated2 = false; //apagar parpadeo numerico spo2
-              //  qDebug() << "serialspo2off";
-               // serial->write("L");
-                //spo2serial->write_value("L");
+                //qDebug() << "serialspo2off";
+                //serial->write("L");
+                alarm_first_spo2 = false;
+                spo2serial->escribe("L");
            }
        }
        if(temp_in){
@@ -121,10 +136,13 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
                activated3 = true; //parpadeo numerico aquí
            }
            if(temp_out){
-            //   qDebug()<<"serialtempon"; //serial write el comando al arduino para el color azul y sonido
-              // serial->write("J");
-               emit spo2serial->escribe("J");
-               alarm3 = true;
+               if(!alarm_first_temp){
+                   alarm_first_temp = true;
+                   //qDebug()<<"serialtempon"; //serial write el comando al arduino para el color azul y sonido
+                   //serial->write("J");
+                   emit spo2serial->escribe("J");
+                   alarm3 = true;
+                }
            }
        }
        else{
@@ -134,6 +152,7 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
                qDebug()<< "serialtempoff";
                //serial->write("L");
                emit spo2serial->escribe("L");
+               alarm_first_temp = false;
             }
        }
        if(ecg_in && activated_before){
