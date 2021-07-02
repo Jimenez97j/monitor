@@ -56,9 +56,9 @@ double datos_en_pantalla_rpm = 100, datos_grafica_max_rpm = 800, upset_rpm= 0, r
 QByteArray presion = "A";
 
 //jeru variables alarmas
-bool alarm_first_ecg = true;
-bool alarm_first_spo2 = true;
-bool alarm_first_temp = true;
+bool alarm_first_ecg = false;
+bool alarm_first_spo2 = false;
+bool alarm_first_temp = false;
 
 
 void MainWindow::alarmasonido(bool boton, bool activado){
@@ -72,120 +72,7 @@ void MainWindow::alarmasonido(bool boton, bool activado){
 }
 
 
-void MainWindow::silenciar_alarmas(bool valor, bool boton){
-    if(ecg_in){
-           if(!alarm1){
-               activated = true; //parpadeo numerico aquí
-              // qDebug()<<"serialecgon"; //serial write el comando al arduino para el color rojo y sonido
-               alarm1 = true;
-               alarmasonido(boton, true);
-           }
 
-           if(!alarm_first_ecg){
-               alarm_first_ecg = true;
-               //qDebug()<<"serialecgon";
-               emit spo2serial->escribe("H");
-               spo2_out = false;
-               temp_out = false;
-           }
-       }
-       else{
-           if(activated){
-               alarm1 = false;
-               activated = false; //apagar parpadeo numerico ecg
-              // qDebug()<<"serialecgoff";
-               // serial->write("L");
-               emit spo2serial->escribe("L");
-               alarm_first_ecg = false;
-                if(spo2_in || temp_in){
-                    alarmasonido(boton, true); // si hay otras alarmas dejamos encendido el sonido
-                }else{
-                    alarmasonido(boton, false); //apagamos sonido si no hay otras alarmas
-                }
-           }
-       }
-       if(spo2_in)
-       {
-           if(!alarm2){
-               activated2 = true;//parpadeo numerico aquí
-           }
-           if(spo2_out){
-               if(!alarm_first_spo2){
-                   alarm_first_spo2 = true;
-                   // qDebug()<<"serialspo2on"; //serial write el comando al arduino para el color amarillo y sonido
-                   alarm2 = true;
-                   temp_out = false;
-                   //serial->write("K");
-                   emit spo2serial->escribe("K");
-               }
-
-           }
-       }
-       else{
-           if(activated2){
-                alarm2 = false;
-                activated2 = false; //apagar parpadeo numerico spo2
-                //qDebug() << "serialspo2off";
-                //serial->write("L");
-                alarm_first_spo2 = false;
-                spo2serial->escribe("L");
-           }
-       }
-       if(temp_in){
-           if(!alarm3){
-               activated3 = true; //parpadeo numerico aquí
-           }
-           if(temp_out){
-               if(!alarm_first_temp){
-                   alarm_first_temp = true;
-                   //qDebug()<<"serialtempon"; //serial write el comando al arduino para el color azul y sonido
-                   //serial->write("J");
-                   emit spo2serial->escribe("J");
-                   alarm3 = true;
-                }
-           }
-       }
-       else{
-           if(activated3){
-               alarm3 = false;
-               activated3 = false; //apagar parpadeo numerico temp
-               qDebug()<< "serialtempoff";
-               //serial->write("L");
-               emit spo2serial->escribe("L");
-               alarm_first_temp = false;
-            }
-       }
-       if(ecg_in && activated_before){
-           //alarmasonido(boton, true);
-           qDebug()<<"ecgsound";
-           activated_before = false;
-           desactivated_before = true;
-       }
-       else {
-           if(spo2_out && activated_before){
-           //alarmasonido(boton, true);
-           qDebug()<<"spo2sound";
-           activated_before = false;
-           desactivated_before = true;
-            }
-           else{
-               if(temp_out && activated_before){
-               //alarmasonido(boton, true);
-               qDebug()<<"tempsound";
-               activated_before = false;
-               desactivated_before = true;
-               }
-               else{
-                   if(!ecg_in && !spo2_out && !temp_out && desactivated_before){
-                      // alarmasonido(boton, false);
-                       qDebug()<<"off";
-                       activated_before = true;
-                       desactivated_before = false;
-                   }
-               }
-           }
-       }
-}
 
 
 void MainWindow::plot_spo2(QVector<double> x, QVector<double> y, int upset_data, double min_range, double max_range, double size_max){  //function for ploting the spo2

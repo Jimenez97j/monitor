@@ -25,7 +25,7 @@ int registro_firebase = 0;
 QString *arrdata_to_send;
 int contpos = 0;
 bool bandera_2= true, bandera_barra_2= true, bandera_click = true, banderaActAlarma = false;
-bool soundWait = false, activeTimer = false;
+bool soundWait = false, activeTimer = true;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -329,7 +329,7 @@ MainWindow::MainWindow(QWidget *parent)
     //error for pani
     connect(spo2serial, SIGNAL(errorpani()), this, SLOT(errorpani()), Qt::QueuedConnection);
 
-    teclado = new SerialSpo2(nullptr,"ttyUSB0");
+    teclado = new SerialSpo2(nullptr,"teclado");
     connect(teclado, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
     connect(teclado,SIGNAL(boton_bateria(QString)),this,SLOT(actualizaEdoBateria(QString)),Qt::QueuedConnection);
    connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
@@ -413,7 +413,7 @@ void MainWindow::rec_mqtt(){
 }
 
 void MainWindow::detenerSonido(){
-    soundWait = false;
+    soundWait = true;
     activeTimer = true;
 }
 
@@ -886,7 +886,8 @@ void MainWindow::get_alarms_value(){
 
 void MainWindow::sonidoboton2(QString audio)
 {
-    if(!soundWait){
+    qDebug()<< soundWait;
+    if(soundWait){
         QString comando, sound;
         if(silenciado){
            comando = "omxplayer --vol -1500 -o local "+ audio + " &";
@@ -901,6 +902,7 @@ void MainWindow::sonidoboton2(QString audio)
         else {
              qDebug()<<"Reproduciendo";
          }
+        soundWait = false;
     }
 }
 
@@ -1226,18 +1228,13 @@ void MainWindow::funcionActivacionTimer(){
         if(save_alarm_data_bpm > alarma_max_ecg){
             ecg_in = true;
             ecg_out = true;
-           //silenciar_alarmas(true, silenciado);
+
         }
         else{
             if(save_alarm_data_bpm < alarma_min_ecg){
                 ecg_in = true;
                 ecg_out = true;
-                soundWait = true;
-                activeTimer = true;
-                if(activeTimer){
-                    timerAlarmasSonido->start(10000);
-                    activeTimer = false;
-                }
+
              //   silenciar_alarmas(true, silenciado);
             }
             else{
@@ -1321,6 +1318,138 @@ void MainWindow::funcionActivacionTimer(){
            numeros_temp=0;
        }
    }
+}
+
+
+void MainWindow::silenciar_alarmas(bool valor, bool boton){
+    if(ecg_in){
+           if(!alarm1){
+               activated = true; //parpadeo numerico aquí
+              // qDebug()<<"serialecgon"; //serial write el comando al arduino para el color rojo y sonido
+               alarm1 = true;
+               alarmasonido(boton, true);
+           }
+
+           if(!alarm_first_ecg){
+               alarm_first_ecg = true;
+               //qDebug()<<"serialecgon";
+               emit spo2serial->escribe("H");
+               if(activeTimer){
+                   timerAlarmasSonido->start(500);
+                   activeTimer = false;
+                   soundWait = true;
+               }
+               spo2_out = false;
+               temp_out = false;
+           }
+       }
+       else{
+           if(activated){
+               alarm1 = false;
+               activated = false; //apagar parpadeo numerico ecg
+              // qDebug()<<"serialecgoff";
+               // serial->write("L");
+               emit spo2serial->escribe("L");
+               if(activeTimer){
+                   timerAlarmasSonido->start(500);
+                   activeTimer = false;
+                   soundWait = true;
+               }
+               alarm_first_ecg = false;
+                if(spo2_in || temp_in){
+                    alarmasonido(boton, true); // si hay otras alarmas dejamos encendido el sonido
+                }else{
+                    alarmasonido(boton, false); //apagamos sonido si no hay otras alarmas
+                }
+           }
+       }
+       if(spo2_in)
+       {
+           if(!alarm2){
+               activated2 = true;//parpadeo numerico aquí
+           }
+           if(spo2_out){
+               if(!alarm_first_spo2){
+                   alarm_first_spo2 = true;
+                   // qDebug()<<"serialspo2on"; //serial write el comando al arduino para el color amarillo y sonido
+                   alarm2 = true;
+                   temp_out = false;
+                   //serial->write("K");
+                   emit spo2serial->escribe("K");
+                   if(activeTimer){
+                       timerAlarmasSonido->start(500);
+                       activeTimer = false;
+                       soundWait = true;
+                   }
+               }
+
+           }
+       }
+       else{
+           if(activated2){
+                alarm2 = false;
+                activated2 = false; //apagar parpadeo numerico spo2
+                //qDebug() << "serialspo2off";
+                //serial->write("L");
+                alarm_first_spo2 = false;
+                spo2serial->escribe("L");
+           }
+       }
+       if(temp_in){
+           if(!alarm3){
+               activated3 = true; //parpadeo numerico aquí
+           }
+           if(temp_out){
+               if(!alarm_first_temp){
+                   alarm_first_temp = true;
+                   //qDebug()<<"serialtempon"; //serial write el comando al arduino para el color azul y sonido
+                   //serial->write("J");
+                   emit spo2serial->escribe("J");
+                   alarm3 = true;
+                }
+           }
+       }
+       else{
+           if(activated3){
+               alarm3 = false;
+               activated3 = false; //apagar parpadeo numerico temp
+               qDebug()<< "serialtempoff";
+               //serial->write("L");
+               emit spo2serial->escribe("L");
+               alarm_first_temp = false;
+            }
+       }
+       if(ecg_in && activated_before){
+           //alarmasonido(boton, true);
+           qDebug()<<"ecgsound";
+           activated_before = false;
+           desactivated_before = true;
+       }
+       else {
+           if(spo2_out && activated_before){
+           //alarmasonido(boton, true);
+           qDebug()<<"spo2sound";
+           activated_before = false;
+           desactivated_before = true;
+            }
+           else{
+               if(temp_out && activated_before){
+               //alarmasonido(boton, true);
+               qDebug()<<"tempsound";
+               activated_before = false;
+               desactivated_before = true;
+               }
+               else{
+                   if(!ecg_in && !spo2_out && !temp_out && desactivated_before){
+                      // alarmasonido(boton, false);
+                       qDebug()<<"off";
+                       activated_before = true;
+                       desactivated_before = false;
+                   }
+               }
+           }
+       }
+    //   soundWait = false;
 }
 
 //show galery window
