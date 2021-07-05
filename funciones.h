@@ -56,9 +56,9 @@ double datos_en_pantalla_rpm = 100, datos_grafica_max_rpm = 800, upset_rpm= 0, r
 QByteArray presion = "A";
 
 //jeru variables alarmas
-bool alarm_first_ecg = true;
-bool alarm_first_spo2 = true;
-bool alarm_first_temp = true;
+bool alarm_first_ecg = false;
+bool alarm_first_spo2 = false;
+bool alarm_first_temp = false;
 
 
 void MainWindow::alarmasonido(bool boton, bool activado){

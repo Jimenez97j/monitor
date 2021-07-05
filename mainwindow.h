@@ -23,9 +23,9 @@
 #include <QNetworkConfigurationManager>
 #include <QNetworkSession>
 #include <QTimer>
+#include <QMessageBox>
 #include <configred.h>
 #include <alarmasx.h>
-
 
 
 
@@ -65,6 +65,8 @@ public:
     QTimer *mqttTimer;
     //
     QTimer *reconexionMqtt;
+    QTimer *reconexionMqttTermo;
+    QTimer *timerCloseBoxTemp;
     //timer libera valvula
     QTimer *timerValvula;
 public slots:
@@ -110,6 +112,8 @@ public slots:
     void publish_spo2_mqtt(double data);
     void publish_ecg_mqtt(QString data);
     void rec_mqtt();
+    void rec_mqtt_termo();
+    void cerrar_box_temp();
     //valvula
     void cerrar_valvula();
 signals:
@@ -150,7 +154,10 @@ private slots:
     void cambiar_bandera();
     void actualizaEdoBateria(QString dato);
 
-
+    //mqtt termo
+    void updateLogStateChangeTermo();
+    void brokerDisconnectedTermo();
+    void brokerConnectedTermo();
 
 private:
     QNetworkSession *session;
@@ -190,6 +197,12 @@ private:
     ConfigRed* configred1;
     AlarmasX* alarmasx;
 
+    //mqtt termo
+    QMqttClient *m_client_termo;
+    bool mqtt_connected_termo;
+
+    QMessageBox *msgBoxTemp;
+    QString color_msgBoxTemp;
 
 };
 #endif // MAINWINDOW_H
