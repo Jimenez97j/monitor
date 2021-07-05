@@ -119,6 +119,16 @@ void SerialSpo2::handle_data()
                 cadena.clear();
             }
 
+            if(cadena[0] == 'N'){
+                emit boton_ajustes("numerico");
+                cadena.clear();
+            }
+
+            if(cadena[0] == 'P'){
+                emit boton_ajustes("sTouch");
+                cadena.clear();
+            }
+
             if(cadena[0] == 'D'){
                 if(cadena.length()>4)
                 {

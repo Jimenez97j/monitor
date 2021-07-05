@@ -61,6 +61,7 @@ public:
     void leds_inicio();
     void sonidoboton2(QString audio);
     void active_timer_for_alarms(bool state);
+    void deshabiliTouch();
   //  void RecibirArreglo_ECG();
     QTimer *mqttTimer;
     //
@@ -113,6 +114,7 @@ public slots:
     void publish_spo2_mqtt(double data);
     void publish_ecg_mqtt(QString data);
     void rec_mqtt();
+    void recibeEdoBocinaMod2();
     //valvula
     void cerrar_valvula();
     //sonido de alarmas
@@ -120,6 +122,7 @@ public slots:
 signals:
     void networkReplyReadyRead();
     void cambiar_estado_bandera_3();
+    void cambiar_estado_bocina();
 private slots:
     void boton_ajustes2(QString h);
     void funcionActivacionTimer();
