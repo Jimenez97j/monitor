@@ -20,9 +20,9 @@ enviardatos::~enviardatos()
 
 void enviardatos::closeEvent(QCloseEvent*){
     emit bandera_perilla_9();
-    this->close();
+    //this->close();
     contpos_9 = 0;
-    delete this;
+    //delete this;
 }
 
 void enviardatos::boton_handle_9(QString x){
@@ -43,6 +43,34 @@ void enviardatos::boton_handle_9(QString x){
         opciones_enviardatos();
     }
 
+
+    else if(x == "click"){
+        on_okay_clicked();
+
+    }
+
+}
+
+void enviardatos:: on_okay_clicked(){
+
+    switch(contpos_9)
+    {
+    case 0:
+       on_bpm_envio_clicked();
+        break;
+    case 1:
+        on_spo2_envio_clicked();
+        break;
+    case 2:
+        on_pani_envio_clicked();
+        break;
+    case 3:
+        on_temp_envio_clicked();
+        break;
+    case 4:
+        on_toolButton_5_clicked();
+        break;
+    }
 }
 
 void enviardatos:: opciones_enviardatos(){
@@ -78,25 +106,45 @@ void enviardatos:: opciones_enviardatos(){
 
 void enviardatos::on_bpm_envio_clicked()
 {
+    emit bandera_perilla_9();
     emit send_data(1);
+    this->close();
+    contpos_9 = 0;
+    delete this;
 }
 
 void enviardatos::on_spo2_envio_clicked()
 {
-     emit send_data(2);
+    emit bandera_perilla_9();
+    emit send_data(2);
+    this->close();
+    contpos_9 = 0;
+    delete this;
 }
 
 void enviardatos::on_pani_envio_clicked()
 {
-     emit send_data(3);
+    emit bandera_perilla_9();
+    emit send_data(3);
+    this->close();
+    contpos_9 = 0;
+    delete this;
 }
 
 void enviardatos::on_temp_envio_clicked()
 {
-     emit send_data(4);
+    emit bandera_perilla_9();
+    emit send_data(4);
+    this->close();
+    contpos_9 = 0;
+    delete this;
 }
 
 void enviardatos::on_toolButton_5_clicked()
 {
-     emit send_data(5);
+    emit bandera_perilla_9();
+    emit send_data(5);
+    this->close();
+    contpos_9 = 0;
+    delete this;
 }

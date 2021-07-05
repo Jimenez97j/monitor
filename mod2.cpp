@@ -6,7 +6,9 @@
 #include <QScreen>
 
 int contpos_8 = 0;
-
+int  contaTouch = 0;
+bool banderaEdoTouch = true;
+bool EdoBocina = true;
 
 QString hora2;
 int captura = 0, time_color = 0, time_check_alarms_value = 0;
@@ -63,6 +65,10 @@ MOD2::MOD2(QWidget *parent, SerialSpo2 *serialspo2_modelo_2) :
 
 //++++++++++++++++++++++++++++++++++++++ Getting sound settings ++++++++++++++++++++++++++++++++++++
 
+    estadoBocinaPrincipal();
+}
+
+void MOD2::estadoBocinaPrincipal(){
     bool sound_status = sonido_get_status();
     if(!sound_status){
         //ui->sound->setStyleSheet("background-repeat:none;border-image: url(:/imagenes/nosound.png);border: none;");
@@ -76,6 +82,7 @@ MOD2::MOD2(QWidget *parent, SerialSpo2 *serialspo2_modelo_2) :
         ui->sound->setChecked(true);
         ui->sound->setIcon(QIcon(":/imagenes/btn_Bocina.png"));
     }
+
 }
 
 void MOD2::alarm_status_change(){
@@ -90,30 +97,64 @@ MOD2::~MOD2()
 void MOD2::boton_handle_8(QString y){
 if (bandera_3 == true){
     if (y == "derecha"){
-    contpos_8 = contpos_8 + 1;
-    if(contpos_8 > 10){
-        contpos_8 = 10;
-    }
-        opciones_mod2();
-    }
+        if (banderaEdoTouch == true){
+            contpos_8 = contpos_8 + 1;
+                if(contpos_8 > 10){
+                        contpos_8 = 10;
+                    }
+                opciones_mod2();
+        }
+     }
 
     else if(y == "izquierda"){
-        contpos_8 = contpos_8 - 1;
-        if(contpos_8 < 0){
-            contpos_8 = 0;
+        if (banderaEdoTouch == true){
+            contpos_8 = contpos_8 - 1;
+                if(contpos_8 < 0){
+                    contpos_8 = 0;
+            }
+            opciones_mod2();
         }
-        opciones_mod2();
     }
 
     else if(y == "click"){
-        on_okay_clicked();
-
+        if (banderaEdoTouch == true){
+            on_okay_clicked();
+        }
     }
     else if(y == "numerico"){
-        on_close_pressed();
+        if (banderaEdoTouch == true){
+            on_close_pressed();
+        }
     }
+    else if(y == "sTouch"){
+          contaTouch = contaTouch + 1;
+          qDebug() <<  contaTouch;
+          deshabilitaTouch();
+    }
+    else if(y == "pani"){
+      if (banderaEdoTouch == true){
+            on_pani_pressed();
 
+        }
+    }
+    else if(y == "mute"){
+      if (banderaEdoTouch == true){
+            on_sound_pressed();
+                }
+        }
+
+  }
 }
+
+void MOD2::deshabilitaTouch()
+{
+    if (contaTouch == 1){
+    banderaEdoTouch = false;
+    }
+    if (contaTouch == 2){
+        banderaEdoTouch = true;
+        contaTouch = 0;
+    }
 }
 
 void MOD2:: opciones_mod2(){
@@ -175,6 +216,11 @@ void MOD2:: opciones_mod2(){
     }
 }
 
+void MOD2::recibirBanderaTouch(bool bandera){
+
+    banderaEdoTouch = bandera;
+}
+
 void MOD2:: on_okay_clicked(){
 
     switch(contpos_8)
@@ -224,21 +270,24 @@ void MOD2::cambiar_bandera_barra(){
 
 void MOD2::on_registros_pressed()
 {
-    bandera_3 = false;
-    emit records_2();
+    if (banderaEdoTouch == true){
+      bandera_3 = false;
+      emit records_2();
+    }
 }
 
 void MOD2::on_close_pressed()
 {
+    if (banderaEdoTouch == true){
 
-    cronometro_mod2->disconnect();
-    cronometro_mod2->stop();
-    emit closing_window(); //verificar si este metodo funciona o si es mejor una variable booleana y seguir recibiendo datos
-    emit bandera_perilla_8();
-    this->close();
-    //this->hide();
-    contpos_8 = 0;
-    delete this;
+        cronometro_mod2->disconnect();
+        cronometro_mod2->stop();
+        emit closing_window(); //verificar si este metodo funciona o si es mejor una variable booleana y seguir recibiendo datos
+        emit bandera_perilla_8();
+        this->close();
+        contpos_8 = 0;
+        delete this;
+    }
 }
 
 void MOD2::funcionActivacionTimer(){
@@ -410,21 +459,27 @@ void MOD2::funcionActivacionTimer(){
 
 void MOD2::on_galeria_pressed()
 {
-    bandera_3 = false;
-    emit galeria_2();
+    if (banderaEdoTouch == true){
+       bandera_3 = false;
+       emit galeria_2();
+    }
 }
 
 void MOD2::on_alarmas_pressed()
 {
-   bandera_3 = false;
-   emit alarmas_2();
+    if (banderaEdoTouch == true){
+       bandera_3 = false;
+       emit alarmas_2();
+    }
 }
 
 void MOD2::on_ajustes_pressed()
 {
-    bandera_3 = false;
-    emit ajustes_2();
-    update_color_time = true;
+    if (banderaEdoTouch == true){
+       bandera_3 = false;
+       emit ajustes_2();
+       update_color_time = true;
+    }
 }
 
 void MOD2::detection_toggle_once(){
@@ -446,20 +501,23 @@ void MOD2::change_color_mod2(){
 
 void MOD2::on_sound_pressed()
 {
-    //bandera_3 = false;
-    if(bocina){
-        bocina=false;
-        ui->sound->setChecked(false);
-        ui->sound->setIcon(QIcon(":/imagenes/btn_BocinaOFF.png"));
-        //ui->sound->setStyleSheet("QToolButton {background-image: url(:/imagenes/nosound.png); background-repeat:none; border:none}");
-        emit sound_change_on();
-    }
-    else{
-        bocina=true;
-        ui->sound->setChecked(true);
-        ui->sound->setIcon(QIcon(":/imagenes/btn_Bocina.png"));
-        //ui->sound->setStyleSheet("QToolButton {background-image: url(:/imagenes/sonido.png); background-repeat:none; border:none}");
-        emit sound_change_on();
+    if (banderaEdoTouch == true){
+       emit cambioEstadBtnBocina();
+       //bandera_3 = false;
+       if(bocina){
+           bocina=false;
+           ui->sound->setChecked(false);
+           ui->sound->setIcon(QIcon(":/imagenes/btn_BocinaOFF.png"));
+           //ui->sound->setStyleSheet("QToolButton {background-image: url(:/imagenes/nosound.png); background-repeat:none; border:none}");
+           emit sound_change_on();
+       }
+       else{
+           bocina=true;
+           ui->sound->setChecked(true);
+           ui->sound->setIcon(QIcon(":/imagenes/btn_Bocina.png"));
+           //ui->sound->setStyleSheet("QToolButton {background-image: url(:/imagenes/sonido.png); background-repeat:none; border:none}");
+           emit sound_change_on();
+       }
     }
 }
 
@@ -467,84 +525,91 @@ void MOD2::on_sound_pressed()
 
 void MOD2::on_captura_pressed()
 {
-    //bandera_3 = false;
-    QScreen *QSCREEN = QGuiApplication::primaryScreen();
-    QPixmap qpix = QSCREEN->grabWindow(this->winId(), 0, 0, QApplication::desktop()->width(),
+    if (banderaEdoTouch == true){
+        //bandera_3 = false;
+        QScreen *QSCREEN = QGuiApplication::primaryScreen();
+        QPixmap qpix = QSCREEN->grabWindow(this->winId(), 0, 0, QApplication::desktop()->width(),
                                        QApplication::desktop()->height());
-    qpix.save("./imagenes/"+hora2+".png");
-     ui->notificacion->setText("<font color='#08afff'>C</font>");
-    ui->notificacion2->setText("<font color='#08afff'>A</font>");
-    ui->notificacion3->setText("<font color='#08afff'>P</font>");
-    ui->notificacion4->setText("<font color='#08afff'>T</font>");
-    ui->notificacion5->setText("<font color='#08afff'>U</font>");
-    ui->notificacion6->setText("<font color='#08afff'>R</font>");
-    ui->notificacion7->setText("<font color='#08afff'>A</font>");
-    ui->notificacion8->setText("<font color='#08afff'>T</font>");
-    ui->notificacion9->setText("<font color='#08afff'>O</font>");
-   ui->notificacion10->setText("<font color='#08afff'>M</font>");
-   ui->notificacion11->setText("<font color='#08afff'>A</font>");
-   ui->notificacion12->setText("<font color='#08afff'>D</font>");
-   ui->notificacion13->setText("<font color='#08afff'>A</font>");
-   ui->frame->show();
-   ui->frame->setStyleSheet("background-color: #ffffff;");
-    captura = 0;
-    capture_activated = true;
-    capture_activated_animation = true;
-       // hora_captura=0;
+        qpix.save("./imagenes/"+hora2+".png");
+        ui->notificacion->setText("<font color='#08afff'>C</font>");
+        ui->notificacion2->setText("<font color='#08afff'>A</font>");
+        ui->notificacion3->setText("<font color='#08afff'>P</font>");
+        ui->notificacion4->setText("<font color='#08afff'>T</font>");
+        ui->notificacion5->setText("<font color='#08afff'>U</font>");
+        ui->notificacion6->setText("<font color='#08afff'>R</font>");
+        ui->notificacion7->setText("<font color='#08afff'>A</font>");
+        ui->notificacion8->setText("<font color='#08afff'>T</font>");
+        ui->notificacion9->setText("<font color='#08afff'>O</font>");
+        ui->notificacion10->setText("<font color='#08afff'>M</font>");
+        ui->notificacion11->setText("<font color='#08afff'>A</font>");
+        ui->notificacion12->setText("<font color='#08afff'>D</font>");
+        ui->notificacion13->setText("<font color='#08afff'>A</font>");
+        ui->frame->show();
+        ui->frame->setStyleSheet("background-color: #ffffff;");
+        captura = 0;
+        capture_activated = true;
+        capture_activated_animation = true;
+           // hora_captura=0;
+    }
 }
 
 void MOD2::on_internet_clicked(){
-    bandera_3 = false;
-    envdat = new enviardatos(this, spo2serial_8);
-    //enviardatosw = new enviardatos;
-    envdat->setWindowFlags(Qt::FramelessWindowHint);
-    envdat->setWindowFlags(Qt::Popup);
-    QObject::connect(envdat, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(envdat, SIGNAL(send_data(int)), this, SLOT(enviar_datos(int)));
-    QObject::connect(envdat, SIGNAL(bandera_perilla_9()), this, SLOT(cambiar_bandera_barra()));
-    //enviardatosw->setGeometry(87, 10, 510, 70);
-    envdat->setGeometry(0, 10, 602, 110);
-    envdat->exec();
-    show();
+    if (banderaEdoTouch == true){
+       bandera_3 = false;
+       envdat = new enviardatos(this, spo2serial_8);
+       //enviardatosw = new enviardatos;
+       envdat->setWindowFlags(Qt::FramelessWindowHint);
+       envdat->setWindowFlags(Qt::Popup);
+       QObject::connect(envdat, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+       QObject::connect(envdat, SIGNAL(send_data(int)), this, SLOT(enviar_datos(int)));
+       QObject::connect(envdat, SIGNAL(bandera_perilla_9()), this, SLOT(cambiar_bandera_barra()));
+       //enviardatosw->setGeometry(87, 10, 510, 70);
+       envdat->setGeometry(0, 10, 602, 110);
+       envdat->exec();
+       show();
+    }
 }
 
 
 void MOD2::on_registro_pressed()
 {
-    bandera_3 = false;
-    emit registro_2();
+    if (banderaEdoTouch == true){
+        bandera_3 = false;
+        emit registro_2();
+    }
 }
 
 void MOD2::on_paciente_pressed()
 {
-    bandera_3 = false;
-    emit paciente_2();
+    if (banderaEdoTouch == true){
+        bandera_3 = false;
+        emit paciente_2();
+    }
 }
 
 
 
 void MOD2::on_pani_pressed()
 {
-    //bandera_3 = false;
+    if (banderaEdoTouch == true){
+      //bandera_3 = false;
 
-    if(!pani_toggle_style)
-    {
-        emit startpani();
-        pani_toggle_style = true;
-        ui->pani->setChecked(true);
-        ui->pani->setIcon(QIcon(":/imagenes/btn_Detener.png"));
-        //ui->pani->setStyleSheet("background-image: url(:/imagenes/detenerpani2.png);background-repeat:none;border: none");
-    }
-    else{
-        emit stoppani();
-        pani_toggle_style = false;
-        ui->pani->setChecked(false);
-        ui->pani->setIcon(QIcon(":/imagenes/btn_Iniciar.png"));
-        //ui->pani->setStyleSheet("background-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
+          if(!pani_toggle_style)
+          {
+              emit startpani();
+              pani_toggle_style = true;
+              ui->pani->setChecked(true);
+              ui->pani->setIcon(QIcon(":/imagenes/btn_Detener.png"));
+              //ui->pani->setStyleSheet("background-image: url(:/imagenes/detenerpani2.png);background-repeat:none;border: none");
+          }
+          else{
+              emit stoppani();
+              pani_toggle_style = false;
+              ui->pani->setChecked(false);
+              ui->pani->setIcon(QIcon(":/imagenes/btn_Iniciar.png"));
+              //ui->pani->setStyleSheet("background-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
+          }
     }
 }
 
-void MOD2::on_internet_pressed()
-{
 
-}

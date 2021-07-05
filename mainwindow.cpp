@@ -24,8 +24,10 @@ QTimer *spo2_refresh_chart = new QTimer();
 int registro_firebase = 0;
 QString *arrdata_to_send;
 int contpos = 0;
+int conTouch = 0;
 bool bandera_2= true, bandera_barra_2= true, bandera_click = true, banderaActAlarma = false;
-bool freeze = false; //variable para desactivar la botononera touch y fisica
+bool deshabilitarTouch = true;
+bool soundWait = false, activeTimer = false;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -71,6 +73,11 @@ MainWindow::MainWindow(QWidget *parent)
     timerValvula = new QTimer;
     timerValvula->setSingleShot(true);
     connect(timerValvula, SIGNAL(timeout()), this, SLOT(cerrar_valvula()));
+
+    //activado de sonido alarmas
+    timerAlarmasSonido = new QTimer;
+    timerAlarmasSonido->setSingleShot(true);
+    connect(timerAlarmasSonido, SIGNAL(timeout()), this, SLOT(detenerSonido()));
 
     //
     ui->setupUi(this);
@@ -484,6 +491,11 @@ void MainWindow::cerrar_box_temp(){
     msgBoxTemp->done(0);
 }
 
+void MainWindow::detenerSonido(){
+    soundWait = false;
+    activeTimer = true;
+}
+
 void MainWindow::envia_signos_mqtt(){
     if(mqtt_connected){
         /*mqtt_fc = 0;
@@ -528,48 +540,77 @@ void MainWindow::boton_ajustes2(QString h)
     if (bandera_2 == true){
     qDebug()<< "llegando";
     if (h == "derecha"){
+   if (deshabilitarTouch == true){
     contpos = contpos + 1;
     if(contpos > 11){
         contpos = 11;
     }
     opciones();
+   }
     }
 
     else if(h == "izquierda"){
-        contpos = contpos - 1;
-        if(contpos < 0){
-            contpos = 0;
-        }
-        opciones();
+          if (deshabilitarTouch == true){
+                contpos = contpos - 1;
+                    if(contpos < 0){
+                        contpos = 0;
+                    }
+                 opciones();
+            }
     }
 
     else if(h == "click"){
-        on_ok_clicked();
+         if (deshabilitarTouch == true){
+                on_ok_clicked();
+         }
     }
+
+     else if(h == "numerico"){
+       if (deshabilitarTouch == true){
+         on_modelo2_pressed();
+       }
+     }
+
+     else if(h == "sTouch"){
+           conTouch = conTouch + 1;
+           qDebug() <<  conTouch;
+           deshabiliTouch();
+     }
 
     else if(h == "pani"){
-        on_iniciarpani_pressed();
-        qDebug()<<"boton pani";
-    }
-    else if(h == "numerico"){
-        on_modelo2_pressed();
+         if (deshabilitarTouch == true){
+               on_iniciarpani_pressed();
+               qDebug()<<"boton pani";
+           }
     }
     else if(h == "mute"){
-        //on_hiloMuteAlarmas();
-        banderaActAlarma = true;
-        on_toolButton_pressed();
-        AlarmaApagada = AlarmaApagada + 1;
-        if(AlarmaApagada >= 2){
-            AlarmaApagada = 0;
+         if (deshabilitarTouch == true){
+                recibeEdoBocinaMod2();
+              }
         }
-        qDebug() << AlarmaApagada;
-
-    }
     }
 }
 
+void MainWindow::recibeEdoBocinaMod2(){
+    banderaActAlarma = true;
+    on_toolButton_pressed();
+    AlarmaApagada = AlarmaApagada + 1;
+    if(AlarmaApagada >= 2){
+        qDebug()<<"Mute AlarmaApagada: "+QString::number(AlarmaApagada);
+            AlarmaApagada = 0;
+        }
+}
 
-
+void MainWindow::deshabiliTouch()
+{
+    if (conTouch == 1){
+    deshabilitarTouch = false;
+    }
+    if (conTouch == 2){
+        deshabilitarTouch = true;
+        conTouch = 0;
+    }
+}
 void MainWindow:: on_ok_clicked(){
     //qDebug() << "[on_ok_clicked]: " << contpos;
     switch(contpos)
@@ -817,11 +858,11 @@ void MainWindow::bpm_count_spo2(QString bpm){
 void MainWindow::not_data(){
     sop2_mod2 = "not";
     ui->bpmsp2_2->setText("<font color='red' size='.3'>Coloque \r\n dedo</font>");
-    ui->bpmsp2_2->setGeometry(95,30,51,31);
+    ui->bpmsp2_2->setGeometry(95,30,210,61);
     savespo2 = 0;
     ui->SPO2->setText("00");
     ui->SPO2->setText("00");
-    ui->SPO2->setGeometry(10,10,71,81);
+    ui->SPO2->setGeometry(10,10,201,61);
     ui->bpmsp2->setText("00");
     is_spo2_ready = false;
     reciving_spo2_data = false;
@@ -978,48 +1019,51 @@ void MainWindow::get_alarms_value(){
 
 void MainWindow::sonidoboton2(QString audio)
 {
-    //QProcess::execute("omxplayer -o local "+ audio + " &");
-    QString comando, sound;
-    if(silenciado){
-       comando = "omxplayer --vol -1500 -o local "+ audio + " &";
+    if(!soundWait){
+        QString comando, sound;
+        if(silenciado){
+           comando = "omxplayer --vol -1500 -o local "+ audio + " &";
+        }
+        else{
+            comando = "omxplayer --vol -10000 -o local "+ audio + " &";
+        }
+        int estado = system(comando.toStdString().c_str());
+        if(estado == -1) {
+             qDebug()<<"Error sonidoboton2";
+        }
+        else {
+             qDebug()<<"Reproduciendo";
+         }
     }
-    else{
-        comando = "omxplayer --vol -10000 -o local "+ audio + " &";
-    }
-    int estado = system(comando.toStdString().c_str());
-    //int def = system(sound.toStdString().c_str());
-     if(estado == -1) {
-         qDebug()<<"Error sonidoboton2";
-     } else {
-         qDebug()<<"Reproduciendo";
-     }
-
 }
 
 void MainWindow::on_screenshot_pressed(){
-
-    sonidoboton2("/home/pi/Music/sonidos/CAMARA.mp3");
-    QScreen *QSCREEN = QGuiApplication::primaryScreen();
-    QPixmap qpix = QSCREEN->grabWindow(this->winId(), 0, 0, QApplication::desktop()->width(),
+    if (deshabilitarTouch == true){
+        sonidoboton2("/home/pi/Music/sonidos/CAMARA.mp3");
+        QScreen *QSCREEN = QGuiApplication::primaryScreen();
+        QPixmap qpix = QSCREEN->grabWindow(this->winId(), 0, 0, QApplication::desktop()->width(),
                                        QApplication::desktop()->height());
-    qpix.save("./imagenes/"+aux+".png");
-    ui->label_6->setText("<font color='#08afff'>Se ha tomado una captura de pantalla</font>");
+        qpix.save("./imagenes/"+aux+".png");
+        ui->label_6->setText("<font color='#08afff'>Se ha tomado una captura de pantalla</font>");
 
-    hora_captura=0;
+        hora_captura=0;
+    }
 }
 void MainWindow::on_toolButton_2_clicked(){
-    bandera_2 = false;
-    qDebug("ON TOOL BUTTON");
-    enviardatosw = new enviardatos(nullptr, teclado);
-    enviardatosw->setWindowFlags(Qt::FramelessWindowHint);
-    enviardatosw->setWindowFlags(Qt::Popup);
-    QObject::connect(enviardatosw, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(enviardatosw, SIGNAL(send_data(int)), this, SLOT(enviar_datos(int)));
-    QObject::connect(enviardatosw, SIGNAL(bandera_perilla_9()), this, SLOT(cambiar_bandera()));
-    //enviardatosw->setGeometry(87, 10, 510, 70);
-    enviardatosw->setGeometry(0, 10, 602, 110);
-    enviardatosw->exec();
-    show();
+     if (deshabilitarTouch == true){
+         bandera_2 = false;
+         qDebug("ON TOOL BUTTON");
+         enviardatosw = new enviardatos(nullptr, teclado);
+         enviardatosw->setWindowFlags(Qt::FramelessWindowHint);
+         enviardatosw->setWindowFlags(Qt::Popup);
+         QObject::connect(enviardatosw, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+         QObject::connect(enviardatosw, SIGNAL(send_data(int)), this, SLOT(enviar_datos(int)));
+         QObject::connect(enviardatosw, SIGNAL(bandera_perilla_9()), this, SLOT(cambiar_bandera()));
+         //enviardatosw->setGeometry(87, 10, 510, 70);
+         enviardatosw->setGeometry(0, 10, 602, 110);
+         enviardatosw->exec();
+         show();
+     }
 
 
 }
@@ -1043,65 +1087,73 @@ void MainWindow::on_iniciar_pressed(){
 
 
 void MainWindow::on_iniciarpani_pressed(){
-    sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    timerValvula->stop();
-    if(!bandera_pani){
-        //serial->write("B");
-        //spo2serial->write_value("B");
-        emit spo2serial->escribe("B");
-        //ui->iniciarpani->setStyleSheet("border-image: url(:/imagenes/detenerpani2.png);background-repeat:none;border: none");
-        ui->iniciarpani->setChecked(true);
-        ui->iniciarpani->setIcon(QIcon(":/imagenes/btn_Detener.png"));
-        bandera_pani=true;
-     }
-    else{
-        //serial->write("U");
-        //spo2serial->write_value("U");
-        //spo2serial->write_value("B");
-        //JORGE
-        emit spo2serial->escribe("P");
-        //ui->iniciarpani->setStyleSheet("border-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
-        ui->iniciarpani->setChecked(false);
-        ui->iniciarpani->setIcon(QIcon(":/imagenes/btn_Iniciar.png"));
-        bandera_pani=false;
-        cadena3[0] = 'E'; //Al detener manualmente la medicion se manda "E" para lanzar activar label ERROR en medición
-    }
+         if (deshabilitarTouch == true){
+             sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+             timerValvula->stop();
+              if(!bandera_pani){
+                  //serial->write("B");
+                  //spo2serial->write_value("B");
+                  emit spo2serial->escribe("B");
+                  //ui->iniciarpani->setStyleSheet("border-image: url(:/imagenes/detenerpani2.png);background-repeat:none;border: none");
+                  ui->iniciarpani->setChecked(true);
+                  ui->iniciarpani->setIcon(QIcon(":/imagenes/btn_Detener.png"));
+                  bandera_pani=true;
+               }
+             else{
+                  //serial->write("U");
+                  //spo2serial->write_value("U");
+                  //spo2serial->write_value("B");
+                  //JORGE
+                  emit spo2serial->escribe("P");
+                  //ui->iniciarpani->setStyleSheet("border-image: url(:/imagenes/inciarpani2.png);background-repeat:none;border: none");
+                  ui->iniciarpani->setChecked(false);
+                  ui->iniciarpani->setIcon(QIcon(":/imagenes/btn_Iniciar.png"));
+                  bandera_pani=false;
+                  cadena3[0] = 'E'; //Al detener manualmente la medicion se manda "E" para lanzar activar label ERROR en medición
+             }
+         }
 }
 
 void MainWindow::on_open_records_pressed(){
-    bandera_2 = false;
-    sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    records = new alarmas(nullptr, teclado);
-    records->setWindowFlags(Qt::FramelessWindowHint);
-    QObject::connect(records, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(records, SIGNAL(habilitar_barra_desde_basedatos()), this, SLOT(cambiar_bandera()));
-    records->exec();
-    show();
+        if (deshabilitarTouch == true){
+            bandera_2 = false;
+            sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+            records = new alarmas(nullptr, teclado);
+            records->setWindowFlags(Qt::FramelessWindowHint);
+            QObject::connect(records, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+            QObject::connect(records, SIGNAL(habilitar_barra_desde_basedatos()), this, SLOT(cambiar_bandera()));
+            records->exec();
+            show();
+        }
 }
 
 
 void MainWindow::on_Paciente_pressed(){
-    bandera_2 = false;
-    sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    paciente = new Paciente(nullptr, teclado);
-    paciente->setWindowFlags(Qt::FramelessWindowHint);
-    paciente->setWindowFlags(Qt::Popup);
-    paciente->setGeometry(701, 105, 340, 588);
-    QObject::connect(paciente, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(paciente, SIGNAL(bandera_perilla_7()), this, SLOT(cambiar_bandera()));
-    paciente->exec();
-    show();
+      if (deshabilitarTouch == true){
+            bandera_2 = false;
+            sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+            paciente = new Paciente(nullptr, teclado);
+            paciente->setWindowFlags(Qt::FramelessWindowHint);
+            paciente->setWindowFlags(Qt::Popup);
+            paciente->setGeometry(701, 105, 340, 588);
+           QObject::connect(paciente, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+           QObject::connect(paciente, SIGNAL(bandera_perilla_7()), this, SLOT(cambiar_bandera()));
+           paciente->exec();
+           show();
+      }
 }
 
 void MainWindow::on_registro_usuario_pressed(){
-     bandera_2 = false;
-    sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    registros = new Registro(nullptr, teclado);
-    registros->setWindowFlags(Qt::FramelessWindowHint);
-    QObject::connect(registros, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(registros, SIGNAL(bandera_perilla_6()), this, SLOT(cambiar_bandera()));
-    registros->exec();
-    show();
+     if (deshabilitarTouch == true){
+         bandera_2 = false;
+         sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+         registros = new Registro(nullptr, teclado);
+         registros->setWindowFlags(Qt::FramelessWindowHint);
+         QObject::connect(registros, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+         QObject::connect(registros, SIGNAL(bandera_perilla_6()), this, SLOT(cambiar_bandera()));
+         registros->exec();
+         show();
+     }
 }
 
 void MainWindow::enviar_datos(int valor){
@@ -1211,15 +1263,17 @@ void MainWindow::enviar_datos(int valor){
 }
 
 void MainWindow::on_alarmas_pressed(){
-    bandera_2 = false;
-    sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    alarma = new config_alarmas(nullptr, teclado);
-    alarma->setWindowFlags(Qt::FramelessWindowHint);
-    QObject::connect(alarma, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(alarma, SIGNAL(alarms_change()), this, SLOT(alarms_change()));
-    QObject::connect(alarma, SIGNAL(habilitar_barra_desde_alarmas()), this, SLOT(cambiar_bandera()));
-    alarma->exec();
-    show();
+        if (deshabilitarTouch == true){
+            bandera_2 = false;
+            sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+            alarma = new config_alarmas(nullptr, teclado);
+            alarma->setWindowFlags(Qt::FramelessWindowHint);
+            QObject::connect(alarma, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+            QObject::connect(alarma, SIGNAL(alarms_change()), this, SLOT(alarms_change()));
+            QObject::connect(alarma, SIGNAL(habilitar_barra_desde_alarmas()), this, SLOT(cambiar_bandera()));
+            alarma->exec();
+            show();
+        }
 }
 
 void MainWindow::alarms_change(){
@@ -1282,7 +1336,8 @@ void MainWindow::funcionActivacionTimer(){
         if (banderaActAlarma){
             if (ActivarAlarmas==300){
                 on_toolButton_pressed();
-                banderaActAlarma = false;
+               // banderaActAlarma = false;
+                emit cambiar_estado_bocina();
                 ActivarAlarmas = 0;
                 AlarmaApagada = 0;
             }
@@ -1324,6 +1379,12 @@ void MainWindow::funcionActivacionTimer(){
             if(save_alarm_data_bpm < alarma_min_ecg){
                 ecg_in = true;
                 ecg_out = true;
+                soundWait = true;
+                activeTimer = true;
+                if(activeTimer){
+                    timerAlarmasSonido->start(10000);
+                    activeTimer = false;
+                }
              //   silenciar_alarmas(true, silenciado);
             }
             else{
@@ -1411,33 +1472,35 @@ void MainWindow::funcionActivacionTimer(){
 
 //show galery window
 void MainWindow::on_galeria_open_pressed(){
-    bandera_2 = false;
-    sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    galeria1 = new galeria(nullptr, teclado);
-    galeria1->setWindowFlags(Qt::FramelessWindowHint);
-    QObject::connect(galeria1, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(galeria1, SIGNAL(sonido_basura()), this, SLOT(sonido_basura()));
-    QObject::connect(galeria1, SIGNAL(bandera_perilla_2()), this, SLOT(cambiar_bandera()));
-    galeria1->exec();
-    show();
-
-
+    if (deshabilitarTouch == true){
+        bandera_2 = false;
+        sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+        galeria1 = new galeria(nullptr, teclado);
+        galeria1->setWindowFlags(Qt::FramelessWindowHint);
+        QObject::connect(galeria1, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+        QObject::connect(galeria1, SIGNAL(sonido_basura()), this, SLOT(sonido_basura()));
+        QObject::connect(galeria1, SIGNAL(bandera_perilla_2()), this, SLOT(cambiar_bandera()));
+        galeria1->exec();
+        show();
+    }
 }
 
 
 //show settings window
 void MainWindow::on_ajustes_pressed(){
-    bandera_2 = false;
-    sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-    settings = new ajustes(nullptr, teclado);
-    settings->setWindowFlags(Qt::FramelessWindowHint);
-    QObject::connect(settings, SIGNAL(change_color_click()), this, SLOT(change_color_once()));
-    QObject::connect(settings, SIGNAL(detection_change()), this, SLOT(detection_toggle()));
-    QObject::connect(settings, SIGNAL(time_save_change(int)), this, SLOT(time_save_change(int)));
-    QObject::connect(settings, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(settings, SIGNAL(bandera_perilla()), this, SLOT(cambiar_bandera()));
-    settings->exec();
-    show();
+    if (deshabilitarTouch == true){
+        bandera_2 = false;
+        sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+        settings = new ajustes(nullptr, teclado);
+        settings->setWindowFlags(Qt::FramelessWindowHint);
+        QObject::connect(settings, SIGNAL(change_color_click()), this, SLOT(change_color_once()));
+        QObject::connect(settings, SIGNAL(detection_change()), this, SLOT(detection_toggle()));
+        QObject::connect(settings, SIGNAL(time_save_change(int)), this, SLOT(time_save_change(int)));
+        QObject::connect(settings, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+        QObject::connect(settings, SIGNAL(bandera_perilla()), this, SLOT(cambiar_bandera()));
+        settings->exec();
+        show();
+    }
 }
 
 //signal for change the saving time
@@ -1632,33 +1695,35 @@ void MainWindow::change_color_once(){
 
 //derivation window open
 void MainWindow::on_derivaciones_pressed(){
-    bandera_2 = false;
-    sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+    if (deshabilitarTouch == true){
+        bandera_2 = false;
+        sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
 
-    selection = new derivaciones(nullptr, teclado);
-    selection->setWindowFlags(Qt::FramelessWindowHint);
-    selection->setWindowFlags(Qt::Popup);
-    //selection->setGeometry(0,378,721,61);
-    selection->setGeometry(0,590,1021,100);//modificacion ADRIAN
+        selection = new derivaciones(nullptr, teclado);
+        selection->setWindowFlags(Qt::FramelessWindowHint);
+        selection->setWindowFlags(Qt::Popup);
+        //selection->setGeometry(0,378,721,61);
+        selection->setGeometry(0,590,1021,100);//modificacion ADRIAN
 
-    QObject::connect(selection, SIGNAL(der1()), this, SLOT(der1()));
-    QObject::connect(selection, SIGNAL(der2()), this, SLOT(der2()));
-    QObject::connect(selection, SIGNAL(der3()), this, SLOT(der3()));
-    QObject::connect(selection, SIGNAL(der4()), this, SLOT(der4()));
-    QObject::connect(selection, SIGNAL(der5()), this, SLOT(der5()));
-    QObject::connect(selection, SIGNAL(der6()), this, SLOT(der6()));
-    QObject::connect(selection, SIGNAL(der7()), this, SLOT(der7()));
-    QObject::connect(selection, SIGNAL(der8()), this, SLOT(der8()));
-    QObject::connect(selection, SIGNAL(der9()), this, SLOT(der9()));
-    QObject::connect(selection, SIGNAL(der10()), this, SLOT(der10()));
-    QObject::connect(selection, SIGNAL(der11()), this, SLOT(der11()));
-    QObject::connect(selection, SIGNAL(der12()), this, SLOT(der12()));
-    QObject::connect(selection, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
-    QObject::connect(selection, SIGNAL(bandera_perilla_4()), this, SLOT(cambiar_bandera()));
-    QObject::connect(selection, SIGNAL(habilitar_perilla_4()), this, SLOT(cambiar_bandera()));
+        QObject::connect(selection, SIGNAL(der1()), this, SLOT(der1()));
+        QObject::connect(selection, SIGNAL(der2()), this, SLOT(der2()));
+        QObject::connect(selection, SIGNAL(der3()), this, SLOT(der3()));
+        QObject::connect(selection, SIGNAL(der4()), this, SLOT(der4()));
+        QObject::connect(selection, SIGNAL(der5()), this, SLOT(der5()));
+        QObject::connect(selection, SIGNAL(der6()), this, SLOT(der6()));
+        QObject::connect(selection, SIGNAL(der7()), this, SLOT(der7()));
+        QObject::connect(selection, SIGNAL(der8()), this, SLOT(der8()));
+        QObject::connect(selection, SIGNAL(der9()), this, SLOT(der9()));
+        QObject::connect(selection, SIGNAL(der10()), this, SLOT(der10()));
+        QObject::connect(selection, SIGNAL(der11()), this, SLOT(der11()));
+        QObject::connect(selection, SIGNAL(der12()), this, SLOT(der12()));
+        QObject::connect(selection, SIGNAL(sonido_click()), this, SLOT(sonido_click()));
+        QObject::connect(selection, SIGNAL(bandera_perilla_4()), this, SLOT(cambiar_bandera()));
+        QObject::connect(selection, SIGNAL(habilitar_perilla_4()), this, SLOT(cambiar_bandera()));
 
-    selection->exec();
-    show();
+        selection->exec();
+        show();
+    }
 }
 
 //the next 12 blocks handdle the signal to write the instruction into the serial port
@@ -1714,39 +1779,44 @@ void MainWindow::der12(){
 
 //show the numeric view
 void MainWindow::on_modelo2_pressed(){
-      //cronometro->disconnect();
-      bandera_barra_2 = false;
-      bandera_2 = false;
-      cronometro->stop();
-     //  is_graph_ples_activated = false;
-      //serial_ecg->close(); //verificar si este metodo funciona o si es mejor una variable booleana y seguir recibiendo datos
-      numerico = new MOD2(nullptr, teclado);
-      numerico->setWindowFlags(Qt::FramelessWindowHint);
-      sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
-      QObject::connect(this, SIGNAL(cambiar_estado_bandera_3()), numerico, SLOT(cambiar_bandera_barra()));
+      if (deshabilitarTouch == true){
+          //cronometro->disconnect();
+          bandera_barra_2 = false;
+          bandera_2 = false;
+          //cronometro->stop();
+         //  is_graph_ples_activated = false;
+          //serial_ecg->close(); //verificar si este metodo funciona o si es mejor una variable booleana y seguir recibiendo datos
+          numerico = new MOD2(nullptr, teclado);
+          numerico->recibirBanderaTouch(deshabilitarTouch);
+          numerico->setWindowFlags(Qt::FramelessWindowHint);
+          sonidoboton2("/home/pi/Music/sonidos/CLICK.mp3");
+          QObject::connect(this, SIGNAL(cambiar_estado_bandera_3()), numerico, SLOT(cambiar_bandera_barra()));
+          QObject::connect(this, SIGNAL(cambiar_estado_bocina()), numerico, SLOT(estadoBocinaPrincipal()));
 
-      //the next signals is to handle changes in the settings windows when it is oppened from the numeric view
-      QObject::connect(numerico, SIGNAL(change_color()), this, SLOT(change_color_once()));
-      QObject::connect(numerico, SIGNAL(detection_change()), this, SLOT(detection_toggle()));
-      QObject::connect(numerico, SIGNAL(time_save_change(int)), this, SLOT(time_save_change(int)));
-      //signals for serial ports, sound and start graphics again
-      QObject::connect(numerico, SIGNAL(startpani()), this, SLOT(startpani()));
-      QObject::connect(numerico, SIGNAL(stoppani()), this, SLOT(stoppani()));
-      QObject::connect(numerico, SIGNAL(sound_change_on()), this, SLOT(sound_toggle()));
-      QObject::connect(numerico, SIGNAL(closing_window()), this, SLOT(close_mode2()));
+          //the next signals is to handle changes in the settings windows when it is oppened from the numeric view
+          QObject::connect(numerico, SIGNAL(change_color()), this, SLOT(change_color_once()));
+          QObject::connect(numerico, SIGNAL(detection_change()), this, SLOT(detection_toggle()));
+          QObject::connect(numerico, SIGNAL(time_save_change(int)), this, SLOT(time_save_change(int)));
+          //signals for serial ports, sound and start graphics again
+          QObject::connect(numerico, SIGNAL(startpani()), this, SLOT(startpani()));
+          QObject::connect(numerico, SIGNAL(stoppani()), this, SLOT(stoppani()));
+          QObject::connect(numerico, SIGNAL(sound_change_on()), this, SLOT(sound_toggle()));
+          QObject::connect(numerico, SIGNAL(closing_window()), this, SLOT(close_mode2()));
 
-      QObject::connect(numerico, SIGNAL(records_2()), this, SLOT(on_open_records_pressed()));
-      QObject::connect(numerico, SIGNAL(paciente_2()), this, SLOT(on_Paciente_pressed()));
-      QObject::connect(numerico, SIGNAL(alarmas_2()), this, SLOT(on_alarmas_pressed()));
-      QObject::connect(numerico, SIGNAL(iniciarpani_2()), this, SLOT(on_iniciarpani_pressed()));
-      QObject::connect(numerico, SIGNAL(ajustes_2()), this, SLOT(on_ajustes_pressed()));
-      QObject::connect(numerico, SIGNAL(galeria_2()), this, SLOT(on_galeria_open_pressed()));
-      QObject::connect(numerico, SIGNAL(registro_2()), this, SLOT(on_registro_usuario_pressed()));
-      QObject::connect(numerico, SIGNAL(time_check_alarms()), this, SLOT(check_alarms_time_to()));
-      QObject::connect(numerico, SIGNAL(bandera_perilla_8()), this, SLOT(cambiar_bandera_barra_2()));
-      //QObject::connect(numerico, SIGNAL((), this, SLOT()))
-      numerico->exec();
-      show();
+          QObject::connect(numerico, SIGNAL(records_2()), this, SLOT(on_open_records_pressed()));
+          QObject::connect(numerico, SIGNAL(paciente_2()), this, SLOT(on_Paciente_pressed()));
+          QObject::connect(numerico, SIGNAL(alarmas_2()), this, SLOT(on_alarmas_pressed()));
+          QObject::connect(numerico, SIGNAL(iniciarpani_2()), this, SLOT(on_iniciarpani_pressed()));
+          QObject::connect(numerico, SIGNAL(ajustes_2()), this, SLOT(on_ajustes_pressed()));
+          QObject::connect(numerico, SIGNAL(galeria_2()), this, SLOT(on_galeria_open_pressed()));
+          QObject::connect(numerico, SIGNAL(registro_2()), this, SLOT(on_registro_usuario_pressed()));
+          QObject::connect(numerico, SIGNAL(time_check_alarms()), this, SLOT(check_alarms_time_to()));
+          QObject::connect(numerico, SIGNAL(bandera_perilla_8()), this, SLOT(cambiar_bandera_barra_2()));
+          QObject::connect(numerico, SIGNAL( cambioEstadBtnBocina()), this, SLOT(recibeEdoBocinaMod2()));
+          //QObject::connect(numerico, SIGNAL((), this, SLOT()))
+          numerico->exec();
+          show();
+      }
 }
 //check the values for the alarms every 400 ms
 void MainWindow::check_alarms_time_to(){
@@ -1777,7 +1847,7 @@ void MainWindow::close_mode2(){
    // cronometro->destroyed();
     //QTimer *cronometro =new QTimer();
    // cronometro->connect(cronometro, SIGNAL(timeout()), this, SLOT(funcionActivacionTimer()));
-    cronometro->start(1);
+    cronometro->start(100);
  //   is_graph_ples_activated = true;
 }
 

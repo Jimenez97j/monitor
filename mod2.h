@@ -46,6 +46,8 @@ public:
     bool get_pani_status();
     void alarmasnumeros(QLabel *label,QString color);
     void changebackground(QString color);
+    void recibirBanderaTouch(bool);
+    void deshabilitaTouch();
 
 
 
@@ -69,11 +71,11 @@ private slots:
     void on_registro_pressed();
     void on_paciente_pressed();
     void on_pani_pressed();
-    void on_internet_pressed();
     void boton_handle_8(QString y);
     void opciones_mod2();
     void on_okay_clicked();
     void cambiar_bandera_barra();
+    void estadoBocinaPrincipal();
 
 
 signals:
@@ -85,6 +87,7 @@ signals:
     void closing_window();
     void stoppani();
     void bandera_perilla_8();
+    void cambioEstadBtnBocina();
 
 private:
     Ui::MOD2 *ui;
@@ -92,6 +95,7 @@ private:
     ajustes* settings;
     enviardatos* envdat;
     SerialSpo2 *spo2serial_8;
+    bool  banderaEdoTouch;
 };
 
 #endif // MOD2_H

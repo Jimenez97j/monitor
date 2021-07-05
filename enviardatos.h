@@ -17,6 +17,7 @@ class enviardatos : public QDialog
 public:
     explicit enviardatos(QWidget *parent = nullptr, SerialSpo2 *serialspo2_ajustes = NULL );
     ~enviardatos();
+    void on_okay_clicked();
 
 private slots:
     void on_bpm_envio_clicked();

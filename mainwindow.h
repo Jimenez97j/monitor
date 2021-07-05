@@ -61,6 +61,7 @@ public:
     void leds_inicio();
     void sonidoboton2(QString audio);
     void active_timer_for_alarms(bool state);
+    void deshabiliTouch();
   //  void RecibirArreglo_ECG();
     QTimer *mqttTimer;
     //
@@ -69,6 +70,9 @@ public:
     QTimer *timerCloseBoxTemp;
     //timer libera valvula
     QTimer *timerValvula;
+    //timer sonido para alarmas
+    QTimer *timerAlarmasSonido;
+
 public slots:
     void alarm_sound();
     void check_alarms_time_to();
@@ -114,11 +118,15 @@ public slots:
     void rec_mqtt();
     void rec_mqtt_termo();
     void cerrar_box_temp();
+    void recibeEdoBocinaMod2();
     //valvula
     void cerrar_valvula();
+    //sonido de alarmas
+    void detenerSonido();
 signals:
     void networkReplyReadyRead();
     void cambiar_estado_bandera_3();
+    void cambiar_estado_bocina();
 private slots:
     void boton_ajustes2(QString h);
     void funcionActivacionTimer();

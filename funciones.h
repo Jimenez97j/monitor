@@ -234,13 +234,13 @@ void MainWindow::RecibirArreglo(int caso){
            if(!is_spo2_ready){
                ui->SPO2->setText("...");
                sop2_mod2 = "...";
-               ui->bpmsp2_2->setText("<font color='yellow' size='2'>Midiendo</font>");
-               ui->bpmsp2_2->setGeometry(35,15,61,31);
-               ui->SPO2->setGeometry(40,10,111,51);
+               ui->bpmsp2_2->setText("<font color='red' size='2'>Midiendo</font>");
+               ui->bpmsp2_2->setGeometry(20,10,201,61);
+               ui->SPO2->setGeometry(40,10,111,61);
            }else{
                 ui->bpmsp2_2->setText("<font color='#16ff17' size='2'>%</font>");
                 ui->bpmsp2_2->setGeometry(119,30,41,31);
-                ui->SPO2->setGeometry(10,10,111,51);
+                ui->SPO2->setGeometry(10,10,200,61);
                 if(savespo2 > alarma_max_spo2){
                     spo2_in = true;
                     spo2_out = true;

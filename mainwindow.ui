@@ -1678,7 +1678,7 @@
        <rect>
         <x>20</x>
         <y>0</y>
-        <width>71</width>
+        <width>131</width>
         <height>81</height>
        </rect>
       </property>
@@ -3209,7 +3209,7 @@
        <rect>
         <x>10</x>
         <y>0</y>
-        <width>111</width>
+        <width>141</width>
         <height>81</height>
        </rect>
       </property>
@@ -3630,7 +3630,7 @@
      <widget class="QLabel" name="pres_sis_label">
       <property name="geometry">
        <rect>
-        <x>190</x>
+        <x>120</x>
         <y>40</y>
         <width>101</width>
         <height>41</height>
@@ -3830,8 +3830,8 @@
      <widget class="QLabel" name="pres_sis_label_3">
       <property name="geometry">
        <rect>
-        <x>190</x>
-        <y>10</y>
+        <x>140</x>
+        <y>0</y>
         <width>61</width>
         <height>41</height>
        </rect>
