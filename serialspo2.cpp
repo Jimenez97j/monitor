@@ -242,8 +242,8 @@ void SerialSpo2::handle_data()
                                     qv_red.clear();
                                     values_ready  = false;
                                     if(!(spo2_string == "nan")){
-                                           R_red = qLn(min_spo2_red/max_spo2_red);
-                                           R_ir = qLn(min_spo2_ir/max_spo2_ir);
+                                           R_ir = qLn(min_spo2_red/max_spo2_red);
+                                           R_red= qLn(min_spo2_ir/max_spo2_ir);
 
                                            /* max_spo2_ir = 0;
                                             max_spo2_red = 0;
@@ -252,7 +252,7 @@ void SerialSpo2::handle_data()
                                             //first_save_ir = true;
                                             //first_save_red = true;
                                           spo2_new_value = R_ir / R_red;
-                                          //////qDebug()<< spo2_new_value;
+                                         qDebug()<< spo2_new_value;
 
                                           if(( min_spo2_red>13000) && spo2_new_value>0.60){
                                               finger_out = true;
