@@ -48,10 +48,26 @@ MainWindow::MainWindow(QWidget *parent)
     mqtt_cont_ecg = 0;
     mqtt_list_ecg = new QStringList;
 
+    //MQTT termo
+    mqtt_connected_termo = false;
+    msgBoxTemp = nullptr;
+    color_msgBoxTemp = "black";
+
     //reconexion mqtt
     reconexionMqtt = new QTimer;
     connect(reconexionMqtt, SIGNAL(timeout()),this, SLOT(rec_mqtt()));
     reconexionMqtt->setSingleShot(true);
+
+    //reconexion mqtt local
+    reconexionMqttTermo = new QTimer;
+    connect(reconexionMqttTermo, SIGNAL(timeout()),this, SLOT(rec_mqtt_termo()));
+    reconexionMqttTermo->setSingleShot(true);
+
+    //timer cierrar box temp
+    timerCloseBoxTemp = new QTimer;
+    connect(timerCloseBoxTemp, SIGNAL(timeout()),this, SLOT(cerrar_box_temp()));
+    timerCloseBoxTemp->setSingleShot(true);
+
 
     //valvula
     timerValvula = new QTimer;
@@ -118,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent)
         registro_firebase = crear.value(4).toInt();
         consulta.clear();
         ui->color->setStyleSheet("background-color:" + maincolor); //set color choosen
-
+        //color_msgBoxTemp = maincolor;
         //check if detection is on or off
         if(crear.value(2).toString() == "true"){
             detection = true;
@@ -331,7 +347,7 @@ MainWindow::MainWindow(QWidget *parent)
     //error for pani
     connect(spo2serial, SIGNAL(errorpani()), this, SLOT(errorpani()), Qt::QueuedConnection);
 
-    teclado = new SerialSpo2(nullptr,"ttyUSB0");
+    teclado = new SerialSpo2(nullptr,"teclado");
     connect(teclado, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
     connect(teclado,SIGNAL(boton_bateria(QString)),this,SLOT(actualizaEdoBateria(QString)),Qt::QueuedConnection);
    connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
@@ -381,6 +397,53 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_client->connectToHost();
     reconexionMqtt->start(10000);
+
+    //////////////////////////////////////// MQTT termometro
+
+    m_client_termo = new QMqttClient(this);
+    m_client_termo->setHostname("localhost"); //192.168.1.248
+    m_client_termo->setPort(1883); //1883
+    connect(m_client_termo, &QMqttClient::stateChanged, this, &MainWindow::updateLogStateChangeTermo);
+    connect(m_client_termo, &QMqttClient::disconnected, this, &MainWindow::brokerDisconnectedTermo);
+    connect(m_client_termo, &QMqttClient::connected, this, &MainWindow::brokerConnectedTermo);
+    connect(m_client_termo, &QMqttClient::messageReceived, this, [this](const QByteArray &message, const QMqttTopicName &topic) {
+        //mostrar el dialog con la temperatura
+        qDebug() << "[MQTT TEMP] message: " << message;
+
+        if(timerCloseBoxTemp->isActive()){
+            qDebug() << "[MSG BOX] TERMINA TIMER";
+            timerCloseBoxTemp->stop();
+            msgBoxTemp->done(0);
+        }
+        //QMessageBox msgBoxTemp;
+        msgBoxTemp = new QMessageBox;
+        msgBoxTemp->setWindowFlag(Qt::FramelessWindowHint);
+        msgBoxTemp->setStandardButtons(0);
+        msgBoxTemp->setStyleSheet("QMessageBox{background-color: " + color_msgBoxTemp + "; color: rgb(49, 150, 219); border-radius: 8px; border: 5px solid rgb(49, 150, 219);}"
+                                  "QMessageBox QLabel{ color: rgb(49, 150, 219);}"); //rgb(49, 150, 219);
+        msgBoxTemp->setGeometry(600, 400, 200, 50);
+        QPalette pa;
+        pa.setColor(QPalette::Text, QColor::fromRgb(49, 150, 219));
+        msgBoxTemp->setPalette(pa);
+        QFont *font = new QFont;
+        font->setBold(true);
+        font->setPixelSize(24);
+        msgBoxTemp->setFont(*font);
+        //msgBoxTemp->exec();
+        msgBoxTemp->setText("<p style='text-align: center;'>Termometro: " + message + " °C</p>");
+        msgBoxTemp->setForegroundRole(QPalette::Mid);     // default is WindowText
+        msgBoxTemp->setBackgroundRole(QPalette::Window);
+        msgBoxTemp->show();
+        //aqui va a ir el timer y con este puedo saber is hay un message abierto
+        timerCloseBoxTemp->start(5000);
+        qDebug() << "[MSG  BOX] Inicia timer";
+    });
+
+    m_client_termo->connectToHost();
+    reconexionMqttTermo->start(10000);
+
+    ///////////////////////////////////
+
     //connect(serial,SIGNAL(readyRead()),this , SLOT(RecibirArreglo()));
     connect(serial_ecg_data,SIGNAL(readyRead()),this , SLOT(RecibirArreglo_ECG_numerico()) );
 
@@ -412,6 +475,20 @@ void MainWindow::rec_mqtt(){
        // qDebug() << "[MQTT] Reconexion";
     }
 
+}
+
+void MainWindow::rec_mqtt_termo(){
+    if(!mqtt_connected_termo){
+        m_client_termo->connectToHost();
+        reconexionMqttTermo->start(10000);
+       // qDebug() << "[MQTT] Reconexion";
+    }
+
+}
+
+void MainWindow::cerrar_box_temp(){
+    qDebug() <<"[msgBoxTemp] cerrar por timer" ;
+    msgBoxTemp->done(0);
 }
 
 void MainWindow::detenerSonido(){
@@ -897,6 +974,31 @@ void MainWindow::brokerDisconnected()
     qDebug() << "[MQTT] Desconectado";
     mqtt_connected = false;
     reconexionMqtt->start(3000);
+}
+
+void MainWindow::updateLogStateChangeTermo(){
+    const QString content = QDateTime::currentDateTime().toString()
+                    + QLatin1String(": State Change")
+                    + QString::number(m_client->state())
+                    + QLatin1Char('\n');
+}
+
+void MainWindow::brokerConnectedTermo(){
+    qDebug() << "[MQTT TERMO] Conectado";
+    const QString topic = "ztp/temp";
+    mqtt_connected_termo = true;
+    auto subscription = m_client_termo->subscribe(topic);
+    if (!subscription)
+    {
+        return;
+    }
+}
+
+void MainWindow::brokerDisconnectedTermo()
+{
+    qDebug() << "[MQTT TERMO] Desconectado";
+    mqtt_connected_termo = false;
+    reconexionMqttTermo->start(3000);
 }
 
 void MainWindow::get_alarms_value(){
@@ -1448,6 +1550,7 @@ void MainWindow::change_color_once(){
         ui->color->setStyleSheet("background-color:" + maincolor);//background
         ui->borrargraph->setStyleSheet("background-color:" + maincolor);//background erase rectangle
         ui->ecg->change_square_ecg(maincolor);
+        //color_msgBoxTemp = maincolor;
       //  ui->ecg_2->change_square_ecg(maincolor);
         //ui->borrargraph_ecg->setStyleSheet("background-color:" + maincolor);//background erase rectangle
 
