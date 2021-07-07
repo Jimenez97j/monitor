@@ -33,6 +33,7 @@ SOURCES += \
     serialthread.cpp \
     serialthread2.cpp \
     teclado.cpp \
+    widgettemperatura.cpp \
     wificontrol.cpp
 
 HEADERS += \
@@ -60,6 +61,7 @@ HEADERS += \
     serialthread.h \
     serialthread2.h \
     teclado.h \
+    widgettemperatura.h \
     wificontrol.h
 
 FORMS += \

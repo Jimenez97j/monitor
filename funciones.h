@@ -35,7 +35,7 @@ med_mod2="--", temp_save_reg ="sin-datos";
 bool ecg_in = false, ecg_out = false, spo2_in = false, spo2_out = false, temp_in = false, temp_out = false;
 bool is_graph_ples_activated = true; //if the second mode is on, graphs should stop
 
-bool press_flag_data = false,silenciado = true, status = true, change_bottom_sound_status = false;
+bool press_flag_data = false,silenciado = false, status = true, change_bottom_sound_status = false;
 //variables for knowing if the serial command for alarms has been send before
 bool alarm1 = false, alarm2 = false, alarm3 = false;
 //variables for ecg detection

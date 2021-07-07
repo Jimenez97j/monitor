@@ -26,8 +26,8 @@
 #include <QMessageBox>
 #include <configred.h>
 #include <alarmasx.h>
-
-
+#include <QProcess>
+#include <widgettemperatura.h>
 
 
 QT_BEGIN_NAMESPACE
@@ -167,6 +167,9 @@ private slots:
     void brokerDisconnectedTermo();
     void brokerConnectedTermo();
 
+    void terminaTimerAlarmaR();
+    void processFinishedAlarmaR(int val);
+
 private:
     QNetworkSession *session;
     QNetworkAccessManager * m_networkManager;
@@ -211,6 +214,14 @@ private:
 
     QMessageBox *msgBoxTemp;
     QString color_msgBoxTemp;
+
+    bool alarma_reproduciendo;
+    QTimer *timerAlarmaR;
+
+    QProcess *processAlarmaR;
+    QString audioAlarmaReproduciendoR;
+
+    WidgetTemperatura *widgetTemperatura;
 
 };
 #endif // MAINWINDOW_H
