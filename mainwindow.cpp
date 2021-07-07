@@ -69,6 +69,20 @@ MainWindow::MainWindow(QWidget *parent)
     timerCloseBoxTemp->setSingleShot(true);
 
 
+
+    //alarma reproducicnedo con qprocess
+    alarma_reproduciendo = false;
+    timerAlarmaR  = new QTimer;
+    timerAlarmaR->setSingleShot(true);
+    connect(timerAlarmaR, SIGNAL(timeout()), this, SLOT(terminaTimerAlarmaR()));
+
+    processAlarmaR = new QProcess;
+    connect(processAlarmaR, SIGNAL(finished(int)), this, SLOT(processFinishedAlarmaR(int)));
+    //connect(processAlarmaR, &QProcess::finished, this, &MainWindow::processFinishedAlarmaR);
+
+    audioAlarmaReproduciendoR = "";
+
+
     //valvula
     timerValvula = new QTimer;
     timerValvula->setSingleShot(true);
@@ -410,13 +424,14 @@ MainWindow::MainWindow(QWidget *parent)
         //mostrar el dialog con la temperatura
         qDebug() << "[MQTT TEMP] message: " << message;
 
+
         if(timerCloseBoxTemp->isActive()){
             qDebug() << "[MSG BOX] TERMINA TIMER";
             timerCloseBoxTemp->stop();
-            msgBoxTemp->done(0);
+            //msgBoxTemp->done(0);
+            widgetTemperatura->hide();
         }
-        //QMessageBox msgBoxTemp;
-        msgBoxTemp = new QMessageBox;
+        /*msgBoxTemp = new QMessageBox;
         msgBoxTemp->setWindowFlag(Qt::FramelessWindowHint);
         msgBoxTemp->setStandardButtons(0);
         msgBoxTemp->setStyleSheet("QMessageBox{background-color: " + color_msgBoxTemp + "; color: rgb(49, 150, 219); border-radius: 8px; border: 5px solid rgb(49, 150, 219);}"
@@ -429,12 +444,14 @@ MainWindow::MainWindow(QWidget *parent)
         font->setBold(true);
         font->setPixelSize(24);
         msgBoxTemp->setFont(*font);
-        //msgBoxTemp->exec();
         msgBoxTemp->setText("<p style='text-align: center;'>Termometro: " + message + " °C</p>");
         msgBoxTemp->setForegroundRole(QPalette::Mid);     // default is WindowText
         msgBoxTemp->setBackgroundRole(QPalette::Window);
         msgBoxTemp->show();
         //aqui va a ir el timer y con este puedo saber is hay un message abierto
+        timerCloseBoxTemp->start(5000);*/
+        widgetTemperatura->set_valor(message);
+        widgetTemperatura->show();
         timerCloseBoxTemp->start(5000);
         qDebug() << "[MSG  BOX] Inicia timer";
     });
@@ -459,7 +476,15 @@ MainWindow::MainWindow(QWidget *parent)
     //ui->toolButton->setStyleSheet("qproperty-icon: url(:/imagenes/btn_Bocina.png);");
     //ui->toolButton->setIcon(QIcon(QPixmap(":/imagenes/btn_Bocina.png")));
 
-    qDebug()<<"btn_Bocina";
+    //qDebug()<<"btn_Bocina";
+
+    //widget temperatura
+    widgetTemperatura = new WidgetTemperatura(this, 250, 100);
+    widgetTemperatura->setGeometry(QRect(777, 245, 250, 100));
+    widgetTemperatura->setWindowFlags( Qt::FramelessWindowHint | Qt::WindowSystemMenuHint); // | Qt::Popup //Qt::Window |
+    //widgetTemperatura->setObjectName("widgetTemperatura");
+    //widgetTemperatura->setStyleSheet("QWidget#widgetTemperatura { border: 5Px solid rgb(9, 150, 219); border-radius: 5Px;}"); //#widgetTemperatura
+    widgetTemperatura->hide();
 
 }
 
@@ -488,7 +513,26 @@ void MainWindow::rec_mqtt_termo(){
 
 void MainWindow::cerrar_box_temp(){
     qDebug() <<"[msgBoxTemp] cerrar por timer" ;
-    msgBoxTemp->done(0);
+    //msgBoxTemp->done(0);
+    widgetTemperatura->hide();
+}
+
+void MainWindow::terminaTimerAlarmaR(){
+    //comando = "omxplayer --vol -10000 -o local "+ audio + " &";
+    qDebug() << "[terminaTimerAlarmaR] termina timer";
+    QStringList params;
+    params.append("--vol");
+    params.append("-100");
+    params.append("-o");
+    params.append("local");
+    params.append(audioAlarmaReproduciendoR);
+    //params.append("&");
+    processAlarmaR->start("omxplayer", params, QIODevice::ReadWrite);
+}
+
+void MainWindow::processFinishedAlarmaR(int val){
+    qDebug() << "[processFinishedAlarmaR] termina proceso";
+    alarma_reproduciendo = false;
 }
 
 void MainWindow::detenerSonido(){
@@ -670,8 +714,6 @@ void MainWindow::cambiar_bandera(){
 
    }
 }
-
-
 
 void MainWindow::cambiar_bandera_barra_2(){
     bandera_barra_2 =true;
@@ -1017,7 +1059,7 @@ void MainWindow::get_alarms_value(){
     alarma_max_temp = alarmas.value(5).toInt();
 }
 
-void MainWindow::sonidoboton2(QString audio)
+/*void MainWindow::sonidoboton2(QString audio)
 {
     if(!soundWait){
         QString comando, sound;
@@ -1034,6 +1076,30 @@ void MainWindow::sonidoboton2(QString audio)
         else {
              qDebug()<<"Reproduciendo";
          }
+    }
+}*/
+
+void MainWindow::sonidoboton2(QString audio)
+{
+    /*if(!soundWait){
+        QString comando, sound;
+        if(!silenciado){
+            comando = "omxplayer --vol -10000 -o local "+ audio + " &";
+        }
+        int estado = system(comando.toStdString().c_str());
+        if(estado == -1) {
+             qDebug()<<"Error sonidoboton2";
+        }
+        else {
+             qDebug()<<"Reproduciendo";
+         }
+    }*/
+    qDebug() << "[sonidoboton2] entra";
+    if(!silenciado && !alarma_reproduciendo){
+        qDebug() << "[sonidoboton2] manda a iniciar el timer";
+        alarma_reproduciendo = true;
+        timerAlarmaR->start(2000);
+        audioAlarmaReproduciendoR = audio;
     }
 }
 
@@ -1379,13 +1445,6 @@ void MainWindow::funcionActivacionTimer(){
             if(save_alarm_data_bpm < alarma_min_ecg){
                 ecg_in = true;
                 ecg_out = true;
-                soundWait = true;
-                activeTimer = true;
-                if(activeTimer){
-                    timerAlarmasSonido->start(10000);
-                    activeTimer = false;
-                }
-             //   silenciar_alarmas(true, silenciado);
             }
             else{
                 ecg_in = false;
