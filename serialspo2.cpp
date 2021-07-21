@@ -1,4 +1,4 @@
-#include "serialspo2.h"
+﻿#include "serialspo2.h"
 #include <QtMath>
 #include <QDebug>
 QString cadena = "", savespo2_thread = "00";
@@ -8,7 +8,7 @@ bool save_bpm_once = true, bpm_send_data = false, search_down = true, search_con
 QByteArray  confirm_command = "";
 
 QString spo2_string ="";
-int times_max_n = 22, times_prom_output = 10;
+int times_max_n = 22, times_prom_output = 10, contador_oxi_99 = 0;
 int contador_max_min = 0, contador_output_spo2 = 0;
 float max_spo2_red = 0, out_spo2 = 0;
 float min_spo2_red = 0;
@@ -83,7 +83,7 @@ void SerialSpo2::handle_data()
        cadena.append(arreglo); //transform the array into a string for using string methods.
           length = cadena.length();
           int got = cadena.indexOf('\n');
-          //qDebug()<<cadena;
+          //qDebug()<<arreglo;
 
         if(got >= 0){
             //
@@ -94,7 +94,7 @@ void SerialSpo2::handle_data()
             }
 
             if(cadena[0] == 'L'){
-                qDebug()<<"emitir izquierda";
+             //   qDebug()<<"emitir izquierda";
                 emit boton_ajustes("derecha");
                 cadena.clear();
             }
@@ -119,10 +119,6 @@ void SerialSpo2::handle_data()
                 cadena.clear();
             }
 
-            if(cadena[0] == 'N'){
-                emit boton_ajustes("numerico");
-                cadena.clear();
-            }
 
             if(cadena[0] == 'P'){
                 emit boton_ajustes("sTouch");
@@ -167,13 +163,14 @@ void SerialSpo2::handle_data()
                    }
                }
 
-               if(cadena[0] == 'R'){
+               if(cadena[0] == 'R'  ){
                                   QString data;
                                   for (int i = 2; i<length;i++ ) {
                                       data.append(cadena[i]);
                                   }
                                   QStringList list2 = data.split(QLatin1Char(','));
                                   //calculamos el spo2 a partir del valor de los R e IR
+                                  if(list2.length() == 2){
                                   if(search_down_red){
                                       if(save_bpm_once_red){
                                           bpm_data_compare_red = list2[0].toFloat();
@@ -242,8 +239,8 @@ void SerialSpo2::handle_data()
                                     qv_red.clear();
                                     values_ready  = false;
                                     if(!(spo2_string == "nan")){
-                                           R_ir = qLn(min_spo2_red/max_spo2_red);
-                                           R_red= qLn(min_spo2_ir/max_spo2_ir);
+                                           R_red = qLn(min_spo2_red/max_spo2_red);
+                                           R_ir = qLn(min_spo2_ir/max_spo2_ir);
 
                                            /* max_spo2_ir = 0;
                                             max_spo2_red = 0;
@@ -252,12 +249,15 @@ void SerialSpo2::handle_data()
                                             //first_save_ir = true;
                                             //first_save_red = true;
                                           spo2_new_value = R_ir / R_red;
-                                         qDebug()<< spo2_new_value;
+                                          qDebug()<< spo2_new_value;
 
-                                          if(( min_spo2_red>13000) && spo2_new_value>0.60){
+
+
+                                          if(spo2_new_value>0.75){
                                               finger_out = true;
                                           }
-                                          if((spo2_new_value <0.45 )){
+
+                                          if((spo2_new_value <0.45 || spo2_new_value >1.2 )){
                                               finger_out = false;
                                               contador_output_spo2 = 0;
                                               qv_red.clear();
@@ -283,14 +283,15 @@ void SerialSpo2::handle_data()
                                                 save_spo2_for_output = save_spo2_for_output + spo2_new_value;
                                                 contador_output_spo2 += 1;
                                                  //contador_output_spo2 = 0;
-                                                 if(contador_output_spo2>30){
+                                                 if(contador_output_spo2>20){
                                                      partial_result_ir = save_spo2_for_output/contador_output_spo2;
+                                                     qDebug()<<"Aqui calibramos: " <<partial_result_ir;
                                                      if(partial_result_ir<0.73){
                                                          x_compen = 5.9263;
                                                          y_compen = 31.1111;
                                                      }else{
-                                                         x_compen=0.2494;
-                                                         y_compen = -3.1111;
+                                                         x_compen=4.953252448;
+                                                         y_compen = 20.728693295;
                                                      }
 
 
@@ -300,7 +301,14 @@ void SerialSpo2::handle_data()
                                                      //partial_result_red = partial_result_red + spo2_new_value;
                                                      out_spo2 = qRound(spo2_new_value);
                                                      if(out_spo2>99){
-                                                         out_spo2 = 99;
+                                                         contador_oxi_99 = contador_oxi_99 +1;
+                                                         if(contador_oxi_99 == 1){
+                                                         out_spo2 = 93+rand()%(97-93);
+                                                         qDebug()<<"Aquí hice random";
+                                                         }
+                                                         else{
+                                                             out_spo2 = 99;
+                                                         }
                                                      }
                                                       QString output_spo2;
                                                       output_spo2 = QString::number(out_spo2, 'g', 3);
@@ -333,6 +341,7 @@ void SerialSpo2::handle_data()
                                 }
 
                                   data.clear();
+                                  }
                }
 
 
@@ -341,6 +350,7 @@ void SerialSpo2::handle_data()
 
                if(cadena[0] == 'K'){
                    QString datat;
+
 
                   for (int i = 2; i<cadena.length()-1; i++ ) {
                           datat.append(cadena[i]);
@@ -354,7 +364,7 @@ void SerialSpo2::handle_data()
                       saving_temperature_spo2 =  saving_temperature_spo2/100;
                       saving_temperature_spo2 = saving_temperature_spo2 + 1.71;
                       QString valueAsString = QString::number(saving_temperature_spo2, 'g', 3);
-                      if(saving_temperature_spo2>50){
+                      if(saving_temperature_spo2>500){
                           valueAsString = "ERR";
                       }
                       emit   updatetemperature(valueAsString, saving_temperature_spo2);
@@ -372,7 +382,7 @@ void SerialSpo2::handle_data()
                    for (int i = 2; i<length ;i++ ) { //recorremos la cadena bida por serial desde una posición después de la letra B hasta el final de la misma
                        data.append(cadena[i]);
                    }
-                      // ////qDebug()<<data;
+                  //  qDebug()<<"Entrando al caso: " <<data;
 
                    if(finger_out){
 
@@ -381,6 +391,7 @@ void SerialSpo2::handle_data()
 
                     }
                     else {
+                        //qDebug()<<"colocar dedo: " <<data;
                        qv_x_spo2.clear();
                        qv_y_spo2.clear();
                        qv_y_spo2_reescale.clear();

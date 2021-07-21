@@ -122,16 +122,13 @@ MainWindow::MainWindow(QWidget *parent)
         WiFisList.clear();
         for (auto &x : netcfgList)
         {
-
                 if(x.name() =!";
     mqtt_bpm =75;= "")
                     WiFisList << "Unknown(Other Network)";
                 else
                     WiFisList << x.name();
                 ui->comboBox->addItem(x.name());
-
                 qDebug() << x.type();
-
         }*/
     //name of the data base for this proyect
     QString nombre;
@@ -364,7 +361,7 @@ MainWindow::MainWindow(QWidget *parent)
     teclado = new SerialSpo2(nullptr,"teclado");
     connect(teclado, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
     connect(teclado,SIGNAL(boton_bateria(QString)),this,SLOT(actualizaEdoBateria(QString)),Qt::QueuedConnection);
-   connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
+   //connect(spo2serial, SIGNAL(boton_ajustes(QString)), this, SLOT(boton_ajustes2(QString)), Qt::QueuedConnection);
    //mqtt jeru
    connect(spo2serial, SIGNAL(spo2_plot_mqtt(double)),this, SLOT(publish_spo2_mqtt(double)));
 
@@ -582,13 +579,13 @@ void MainWindow::publish_ecg_mqtt(QString data){
 void MainWindow::boton_ajustes2(QString h)
 {
     if (bandera_2 == true){
-    qDebug()<< "llegando";
     if (h == "derecha"){
    if (deshabilitarTouch == true){
     contpos = contpos + 1;
     if(contpos > 11){
         contpos = 11;
     }
+    qDebug()<<"Cuenta derecha "+QString::number(contpos);
     opciones();
    }
     }
@@ -599,6 +596,7 @@ void MainWindow::boton_ajustes2(QString h)
                     if(contpos < 0){
                         contpos = 0;
                     }
+                 qDebug()<<"Cuenta izquierda "+QString::number(contpos);
                  opciones();
             }
     }
@@ -1428,7 +1426,11 @@ void MainWindow::funcionActivacionTimer(){
         ui->analisis->setText("Realizando Analisis...");
         puntos=0;
     }
-
+     qDebug() << "puntos: "  << puntos;
+    if(puntos == 145){
+        spo2serial->bpm_flag_update();
+        puntos =0;
+    }
     //return to blank the label that appers when takes a screenshot
     if(hora_captura>2){
         ui->label_6->setText("");
@@ -1464,7 +1466,7 @@ void MainWindow::funcionActivacionTimer(){
    if(pantalla>80){
        ui->label_5->setText("");
         pantalla=0;
-        spo2serial->bpm_flag_update();
+
    }
 
    //this blocks are for bliding the numbers when alarms are activated
@@ -2016,7 +2018,3 @@ void MainWindow::actualizaEdoBateria(QString dato)
         }
     }
 }
-
-
-
-

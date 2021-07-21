@@ -84,7 +84,7 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
            if(!alarm_first_ecg){
                alarm_first_ecg = true;
                //qDebug()<<"serialecgon";
-               emit spo2serial->escribe("H");
+         //      emit spo2serial->escribe("H");
                spo2_out = false;
                temp_out = false;
            }
@@ -95,7 +95,7 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
                activated = false; //apagar parpadeo numerico ecg
               // qDebug()<<"serialecgoff";
                // serial->write("L");
-               emit spo2serial->escribe("L");
+           //    emit spo2serial->escribe("L");
                alarm_first_ecg = false;
                 if(spo2_in || temp_in){
                     alarmasonido(boton, true); // si hay otras alarmas dejamos encendido el sonido
@@ -116,7 +116,7 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
                    alarm2 = true;
                    temp_out = false;
                    //serial->write("K");
-                   emit spo2serial->escribe("K");
+                   //emit spo2serial->escribe("K");
                }
 
            }
@@ -128,7 +128,7 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
                 //qDebug() << "serialspo2off";
                 //serial->write("L");
                 alarm_first_spo2 = false;
-                spo2serial->escribe("L");
+              //  spo2serial->escribe("L");
            }
        }
        if(temp_in){
@@ -140,7 +140,7 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
                    alarm_first_temp = true;
                    //qDebug()<<"serialtempon"; //serial write el comando al arduino para el color azul y sonido
                    //serial->write("J");
-                   emit spo2serial->escribe("J");
+                //   emit spo2serial->escribe("J");
                    alarm3 = true;
                 }
            }
@@ -151,7 +151,7 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
                activated3 = false; //apagar parpadeo numerico temp
                qDebug()<< "serialtempoff";
                //serial->write("L");
-               emit spo2serial->escribe("L");
+           //    emit spo2serial->escribe("L");
                alarm_first_temp = false;
             }
        }
