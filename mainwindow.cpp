@@ -409,7 +409,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_client->connectToHost();
     reconexionMqtt->start(10000);
 
-    //////////////////////////////////////// MQTT termometro
+    // MQTT termometro
 
     m_client_termo = new QMqttClient(this);
     m_client_termo->setHostname("localhost"); //192.168.1.248
@@ -1006,7 +1006,6 @@ void MainWindow::brokerConnected(){
     {
         return;
     }
-    //qDebug()<<"holi";
 }
 
 void MainWindow::brokerDisconnected()
@@ -1908,7 +1907,7 @@ void MainWindow::close_mode2(){
    // cronometro->destroyed();
     //QTimer *cronometro =new QTimer();
    // cronometro->connect(cronometro, SIGNAL(timeout()), this, SLOT(funcionActivacionTimer()));
-    cronometro->start(100);
+   // cronometro->start(100);
  //   is_graph_ples_activated = true;
 }
 

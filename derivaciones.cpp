@@ -1,3 +1,6 @@
+
+
+
 #include "derivaciones.h"
 #include "ui_derivaciones.h"
 #include <QDebug>
