@@ -1389,7 +1389,8 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
            }
        }
        else{
-           if(activated2){
+           if(activated2){87LV!nCDij
+
                 alarm2 = false;
                 activated2 = false; //apagar parpadeo numerico spo2
                 //qDebug() << "serialspo2off";
