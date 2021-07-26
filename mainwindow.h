@@ -72,6 +72,8 @@ public:
     QTimer *timerValvula;
     //timer sonido para alarmas
     QTimer *timerAlarmasSonido;
+    //timer para comprobar las alarmas
+    QTimer *timerCheckAlarmStatus;
 
 public slots:
     void alarm_sound();

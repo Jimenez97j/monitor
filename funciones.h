@@ -12,7 +12,7 @@
 
 //Check if every port is open
 bool usbready = false, spo2 = false, ecg = false, ecg_datos= false, database_exist = false, folder_img = false;
-bool is_spo2_ready = false, reciving_spo2_data = false;;
+bool is_spo2_ready = false, reciving_spo2_data = false;
 //Wait for hardware to send an ok signal
 
 //alarms values
@@ -73,6 +73,7 @@ void MainWindow::alarmasonido(bool boton, bool activado){
 
 
 void MainWindow::silenciar_alarmas(bool valor, bool boton){
+
     if(ecg_in){
            if(!alarm1){
                activated = true; //parpadeo numerico aquí
@@ -93,8 +94,6 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
            if(activated){
                alarm1 = false;
                activated = false; //apagar parpadeo numerico ecg
-              // qDebug()<<"serialecgoff";
-               // serial->write("L");
                emit spo2serial->escribe("L");
                alarm_first_ecg = false;
                 if(spo2_in || temp_in){
@@ -121,16 +120,16 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
 
            }
        }
-       else{
-           if(activated2){
+       else if(activated2){
                 alarm2 = false;
                 activated2 = false; //apagar parpadeo numerico spo2
                 //qDebug() << "serialspo2off";
                 //serial->write("L");
                 alarm_first_spo2 = false;
                 emit spo2serial->escribe("L");
+                alarm_first_temp = false;
            }
-       }
+
        if(temp_in){
            if(!alarm3){
                activated3 = true; //parpadeo numerico aquí
@@ -145,8 +144,7 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
                 }
            }
        }
-       else{
-           if(activated3){
+       else if(activated3){
                alarm3 = false;
                activated3 = false; //apagar parpadeo numerico temp
                qDebug()<< "serialtempoff";
@@ -154,7 +152,6 @@ void MainWindow::silenciar_alarmas(bool valor, bool boton){
              emit spo2serial->escribe("L");
                alarm_first_temp = false;
             }
-       }
        if(ecg_in && activated_before){
            //alarmasonido(boton, true);
            qDebug()<<"ecgsound";
@@ -241,45 +238,8 @@ void MainWindow::RecibirArreglo(int caso){
                 ui->bpmsp2_2->setText("<font color='#16ff17' size='2'>%</font>");
                 ui->bpmsp2_2->setGeometry(119,30,41,31);
                 ui->SPO2->setGeometry(10,10,200,61);
-                if(savespo2 > alarma_max_spo2){
-                    spo2_in = true;
-                    spo2_out = true;
-                  // silenciar_alarmas(true, silenciado);
-                }
-                else{
-                    if(savespo2 < alarma_min_spo2){
-
-                        spo2_in = true;
-                        spo2_out = true;
-                     //   silenciar_alarmas(true, silenciado);
-                    }
-                    else{
-                        spo2_in = false;
-                        spo2_out = false;
-                       // silenciar_alarmas(false, silenciado);
-                    }
-                }
            }
        }
-   if(caso == 2){
-       qDebug()<<caso;
-       //rutine for temperature alarms
-       if(saving_temperature < alarma_min_temp){
-           temp_in = true;
-           temp_out = true;
-          // silenciar_alarmas(true, silenciado);
-       }
-       else if(saving_temperature > alarma_max_temp){
-               temp_in = true;
-               temp_out = true;
-            //   silenciar_alarmas(true, silenciado);
-           }
-           else{
-               temp_in = false;
-               temp_out = false;
-              // silenciar_alarmas(false, silenciado);
-           }
-   }
 }
 
 

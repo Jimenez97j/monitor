@@ -389,10 +389,7 @@ void MOD2::funcionActivacionTimer(){
          ui->frame->hide();
          capture_activated_animation = false;
     }
-     if(time_check_alarms_value == 400){
-         emit time_check_alarms();
-         time_check_alarms_value = 0;
-     }
+
 
     if(numbers_alarms == 500){
         if(cambio_numeros_mod2 && activated_mod[0]){

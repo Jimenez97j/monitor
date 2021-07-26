@@ -33,7 +33,6 @@ signals:
     void ajustes_2();
     void galeria_2();
     void iniciarpani_2();
-    void time_check_alarms();
 
 
 public:
