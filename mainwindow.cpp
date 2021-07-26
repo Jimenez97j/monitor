@@ -93,6 +93,10 @@ MainWindow::MainWindow(QWidget *parent)
     timerAlarmasSonido->setSingleShot(true);
     connect(timerAlarmasSonido, SIGNAL(timeout()), this, SLOT(detenerSonido()));
 
+    //Checar alarmas de signos vitales
+    timerCheckAlarmStatus = new QTimer;
+    connect(timerCheckAlarmStatus, SIGNAL(timeout()), this, SLOT(check_alarms_time_to()));
+    timerCheckAlarmStatus->start(1700);
     //
     ui->setupUi(this);
     opciones();
@@ -863,7 +867,6 @@ void MainWindow::updatetemperature(QString temperature, double saving_temperatur
     temp_mod2 = temperature;
     saving_temperature = saving_temperature_number;
     temp_save_reg = temperature;
-    RecibirArreglo(2);
 }
 
 void MainWindow::porcentualspo2(QString spo2value){
@@ -875,7 +878,7 @@ void MainWindow::porcentualspo2(QString spo2value){
         spo2_save_reg = spo2value + " " + "%";
         mqtt_porce_spo2 = savespo2;
         if(savespo2<70){
-            is_spo2_ready = false;
+            is_spo2_ready = true;
         }
         else{
          is_spo2_ready = true;
@@ -897,6 +900,11 @@ void MainWindow::bpm_count_spo2(QString bpm){
 
 void MainWindow::not_data(){
     sop2_mod2 = "not";
+    if(spo2_out){
+        spo2_out = false;
+        spo2_in = false;
+        spo2serial->escribe("L");
+    }
     ui->bpmsp2_2->setText("<font color='red' size='.3'>Coloque \r\n dedo</font>");
     ui->bpmsp2_2->setGeometry(95,30,210,61);
     savespo2 = 0;
@@ -1425,7 +1433,10 @@ void MainWindow::funcionActivacionTimer(){
         ui->analisis->setText("Realizando Analisis...");
         puntos=0;
     }
+<<<<<<< HEAD
      //qDebug() << "puntos: "  << puntos;
+=======
+>>>>>>> 295c7162c3f69aeba7fec92816604f3fd098ec7c
     if(puntos == 145){
         spo2serial->bpm_flag_update();
         puntos =0;
@@ -1465,7 +1476,6 @@ void MainWindow::funcionActivacionTimer(){
    if(pantalla>80){
        ui->label_5->setText("");
         pantalla=0;
-
    }
 
    //this blocks are for bliding the numbers when alarms are activated
@@ -1870,7 +1880,6 @@ void MainWindow::on_modelo2_pressed(){
           QObject::connect(numerico, SIGNAL(ajustes_2()), this, SLOT(on_ajustes_pressed()));
           QObject::connect(numerico, SIGNAL(galeria_2()), this, SLOT(on_galeria_open_pressed()));
           QObject::connect(numerico, SIGNAL(registro_2()), this, SLOT(on_registro_usuario_pressed()));
-          QObject::connect(numerico, SIGNAL(time_check_alarms()), this, SLOT(check_alarms_time_to()));
           QObject::connect(numerico, SIGNAL(bandera_perilla_8()), this, SLOT(cambiar_bandera_barra_2()));
           QObject::connect(numerico, SIGNAL( cambioEstadBtnBocina()), this, SLOT(recibeEdoBocinaMod2()));
           //QObject::connect(numerico, SIGNAL((), this, SLOT()))
@@ -1880,6 +1889,7 @@ void MainWindow::on_modelo2_pressed(){
 }
 //check the values for the alarms every 400 ms
 void MainWindow::check_alarms_time_to(){
+    qDebug()<< "se cumplió el tiempo";
     if(save_alarm_data_bpm > alarma_max_ecg){
         ecg_in = true;
         ecg_out = true;
@@ -1897,6 +1907,44 @@ void MainWindow::check_alarms_time_to(){
            // silenciar_alarmas(false, silenciado);
         }
     }
+
+    if(is_spo2_ready){
+        if(savespo2 > alarma_max_spo2){
+            spo2_in = true;
+            spo2_out = true;
+          // silenciar_alarmas(true, silenciado);
+        }
+        else{
+            if(savespo2 < alarma_min_spo2){
+
+                spo2_in = true;
+                spo2_out = true;
+             //   silenciar_alarmas(true, silenciado);
+            }
+            else{
+                spo2_in = false;
+                spo2_out = false;
+               // silenciar_alarmas(false, silenciado);
+                if(saving_temperature < alarma_min_temp){
+                    temp_in = true;
+                    temp_out = true;
+                   // silenciar_alarmas(true, silenciado);
+                }
+                else if(saving_temperature > alarma_max_temp){
+                        temp_in = true;
+                        temp_out = true;
+                     //   silenciar_alarmas(true, silenciado);
+                    }
+                    else{
+                        temp_in = false;
+                        temp_out = false;
+                       // silenciar_alarmas(false, silenciado);
+                    }
+            }
+        }
+    }
+
+
     silenciar_alarmas(true, silenciado);
 }
 

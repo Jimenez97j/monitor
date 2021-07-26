@@ -249,7 +249,10 @@ void SerialSpo2::handle_data()
                                             //first_save_ir = true;
                                             //first_save_red = true;
                                           spo2_new_value = R_ir / R_red;
+<<<<<<< HEAD
                                           qDebug()<<"Ratio: " << spo2_new_value;
+=======
+>>>>>>> 295c7162c3f69aeba7fec92816604f3fd098ec7c
 
 
 
@@ -288,7 +291,6 @@ void SerialSpo2::handle_data()
                                                  //contador_output_spo2 = 0;
                                                  if(contador_output_spo2>22){
                                                      partial_result_ir = save_spo2_for_output/contador_output_spo2;
-                                                     qDebug()<<"Aqui calibramos: " <<partial_result_ir;
                                                      if(partial_result_ir<0.73){
                                                          x_compen = 5.9263;
                                                          y_compen = 31.1111;
@@ -307,7 +309,7 @@ void SerialSpo2::handle_data()
                                                          contador_oxi_99 = contador_oxi_99 +1;
                                                          if(contador_oxi_99 == 1){
                                                          out_spo2 = 93+rand()%(97-93);
-                                                         qDebug()<<"Aquí hice random";
+
                                                          }
                                                          else{
                                                              out_spo2 = 99;
@@ -587,7 +589,7 @@ void SerialSpo2::procesaDato(QByteArray value_write)
         spo2_port->write(value_write);
     }
     if(value_write == "BOK\n"){
-        qDebug() << "ESTADO_BATERIA";
+
         spo2_port->write(value_write);
     }
     //qDebug()<<value_write;
