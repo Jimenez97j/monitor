@@ -679,3 +679,11 @@ void Teclado::on_Teclado_finished(int result)
 {
     emit close_keyboard();
 }
+
+void Teclado::on_ENTER_pressed()
+{
+    this->close();
+
+
+}
+

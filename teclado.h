@@ -114,6 +114,8 @@ private slots:
 
     void funcionActivacionTimer();
 
+    void on_ENTER_pressed();
+
 private:
     Ui::Teclado *ui;
 };

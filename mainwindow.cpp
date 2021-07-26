@@ -1425,7 +1425,7 @@ void MainWindow::funcionActivacionTimer(){
         ui->analisis->setText("Realizando Analisis...");
         puntos=0;
     }
-     qDebug() << "puntos: "  << puntos;
+     //qDebug() << "puntos: "  << puntos;
     if(puntos == 145){
         spo2serial->bpm_flag_update();
         puntos =0;

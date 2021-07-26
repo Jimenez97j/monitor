@@ -249,13 +249,16 @@ void SerialSpo2::handle_data()
                                             //first_save_ir = true;
                                             //first_save_red = true;
                                           spo2_new_value = R_ir / R_red;
-                                          qDebug()<< spo2_new_value;
+                                          qDebug()<<"Ratio: " << spo2_new_value;
 
 
 
-                                          if(spo2_new_value>0.75){
-                                              finger_out = true;
-                                          }
+                                          //if(spo2_new_value>0.75){
+                                            //  finger_out = true;
+                                          //}
+                                          if(( min_spo2_red>13000) && spo2_new_value>0.60){
+                                                finger_out = true;
+                                                }
 
                                           if((spo2_new_value <0.45 || spo2_new_value >1.2 )){
                                               finger_out = false;
@@ -283,15 +286,15 @@ void SerialSpo2::handle_data()
                                                 save_spo2_for_output = save_spo2_for_output + spo2_new_value;
                                                 contador_output_spo2 += 1;
                                                  //contador_output_spo2 = 0;
-                                                 if(contador_output_spo2>20){
+                                                 if(contador_output_spo2>22){
                                                      partial_result_ir = save_spo2_for_output/contador_output_spo2;
                                                      qDebug()<<"Aqui calibramos: " <<partial_result_ir;
                                                      if(partial_result_ir<0.73){
                                                          x_compen = 5.9263;
                                                          y_compen = 31.1111;
                                                      }else{
-                                                         x_compen=4.953252448;
-                                                         y_compen = 20.728693295;
+                                                         x_compen = -2.209714059;
+                                                         y_compen = -15.213041087;
                                                      }
 
 
