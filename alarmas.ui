@@ -509,7 +509,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>9</pointsize>
+     <pointsize>14</pointsize>
     </font>
    </property>
    <property name="cursor" stdset="0">
@@ -524,6 +524,9 @@
    <property name="autoScrollMargin">
     <number>16</number>
    </property>
+   <property name="alternatingRowColors">
+    <bool>true</bool>
+   </property>
    <property name="columnCount">
     <number>8</number>
    </property>
@@ -531,7 +534,7 @@
     <number>30</number>
    </attribute>
    <attribute name="horizontalHeaderDefaultSectionSize">
-    <number>88</number>
+    <number>147</number>
    </attribute>
    <attribute name="verticalHeaderMinimumSectionSize">
     <number>19</number>

@@ -97,6 +97,11 @@ MainWindow::MainWindow(QWidget *parent)
     timerCheckAlarmStatus = new QTimer;
     connect(timerCheckAlarmStatus, SIGNAL(timeout()), this, SLOT(check_alarms_time_to()));
     timerCheckAlarmStatus->start(1700);
+
+    timerSPO2 = new QTimer;
+    connect(timerSPO2, SIGNAL(timeout()), this, SLOT(graficar_plestimografia()));
+    timerSPO2->start(100);
+
     //
     ui->setupUi(this);
     opciones();
@@ -492,6 +497,12 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::cerrar_valvula(){
     qDebug() << "[VALVULA] Cerrar";
     emit spo2serial->escribe("Q");
+}
+
+void MainWindow::graficar_plestimografia(){
+    ui->plot->replot(); //paint the new values in the screen
+    ui->plot->update(); // update the graph
+    RecibirArreglo(1);
 }
 
 void MainWindow::rec_mqtt(){
@@ -1433,10 +1444,7 @@ void MainWindow::funcionActivacionTimer(){
         ui->analisis->setText("Realizando Analisis...");
         puntos=0;
     }
-<<<<<<< HEAD
-     //qDebug() << "puntos: "  << puntos;
-=======
->>>>>>> 295c7162c3f69aeba7fec92816604f3fd098ec7c
+
     if(puntos == 145){
         spo2serial->bpm_flag_update();
         puntos =0;
@@ -1799,50 +1807,62 @@ void MainWindow::on_derivaciones_pressed(){
 //the next 12 blocks handdle the signal to write the instruction into the serial port
 void MainWindow::der1(){
     serial_ecg_data->write("a\n");
+    qDebug()<<"der1";
     estatebutton = 0;
 }
 void MainWindow::der2(){
     serial_ecg_data->write("b\n");
+    qDebug()<<"der1";
     estatebutton = 1;
 }
 void MainWindow::der3(){
     serial_ecg_data->write("c\n");
+    qDebug()<<"der1";
     estatebutton = 2;
 }
 void MainWindow::der4(){
     serial_ecg_data->write("d\n");
+    qDebug()<<"der1";
     estatebutton = 3;
 }
 void MainWindow::der5(){
     serial_ecg_data->write("e\n");
+    qDebug()<<"der1";
     estatebutton = 4;
 }
 void MainWindow::der6(){
     serial_ecg_data->write("f\n");
+    qDebug()<<"der1";
     estatebutton = 5;
 }
 void MainWindow::der7(){
     serial_ecg_data->write("g\n");
+    qDebug()<<"der1";
     estatebutton = 6;
 }
 void MainWindow::der8(){
     serial_ecg_data->write("h\n");
+    qDebug()<<"der1";
     estatebutton = 7;
 }
 void MainWindow::der9(){
     serial_ecg_data->write("i\n");
+    qDebug()<<"der1";
     estatebutton = 8;
 }
 void MainWindow::der10(){
     serial_ecg_data->write("j\n");
+    qDebug()<<"der1";
     estatebutton = 9;
 }
 void MainWindow::der11(){
     serial_ecg_data->write("k\n");
+    qDebug()<<"der1";
     estatebutton = 10;
 }
 void MainWindow::der12(){
     serial_ecg_data->write("l\n");
+    qDebug()<<"der1";
     estatebutton = 11;
 }
 
@@ -1889,7 +1909,7 @@ void MainWindow::on_modelo2_pressed(){
 }
 //check the values for the alarms every 400 ms
 void MainWindow::check_alarms_time_to(){
-    qDebug()<< "se cumplió el tiempo";
+    //qDebug()<< "se cumplió el tiempo";
     if(save_alarm_data_bpm > alarma_max_ecg){
         ecg_in = true;
         ecg_out = true;

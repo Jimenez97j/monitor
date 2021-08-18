@@ -7,6 +7,15 @@ double saving_temperature_spo2  = 0;
 bool save_bpm_once = true, bpm_send_data = false, search_down = true, search_confirm = false, pani_activated = false;
 QByteArray  confirm_command = "";
 
+//variable para detecatr cuando se retira el dedo
+bool fingerChange = true;
+int fingerPosibleIn = 0;
+int fingerIn = 0;
+int noiseCheck = 0;
+int CountingRvalues = 0;
+int cambiandoCont = 0;
+
+
 QString spo2_string ="";
 int times_max_n = 22, times_prom_output = 10, contador_oxi_99 = 0;
 int contador_max_min = 0, contador_output_spo2 = 0;
@@ -18,7 +27,7 @@ float max_spo2_ir = 0;
 float min_spo2_ir = 0, bpm_data_compare = 0;
 bool first_save_ir = false, values_ready = false;
 float partial_result_ir = 0, partial_result_red = 0;
-float R_ir = 0, spo2_new_value = 0, R_red = 0 , save_spo2_for_output = 0;
+float R_ir = 0, spo2_new_value = 0, R_red = 0 , save_spo2_for_output = 0, var_x = 0, var_y = 0;
 
 //variables para el cruce por cero de la señal roja
 bool search_down_red = true, save_bpm_once_red = true;
@@ -29,7 +38,7 @@ bool save_posible = false;
 int reescale_config = 0, countingdata = 0, cuadronegro_value = 0;
 
 //variables for pestimographic graph
-double datos_en_pantalla = 0, datos_grafica_max = 120, upset= 0, rango_max, rango_min, rescale_value=200, data_save = 0;
+double datos_en_pantalla = 0, datos_grafica_max = 600, upset= 0, rango_max, rango_min, rescale_value=200, data_save = 0;
 
 SerialSpo2::SerialSpo2(QObject *parent, QString port) : QObject(parent)
 {
@@ -171,6 +180,7 @@ void SerialSpo2::handle_data()
                                   QStringList list2 = data.split(QLatin1Char(','));
                                   //calculamos el spo2 a partir del valor de los R e IR
                                   if(list2.length() == 2){
+                                    //qDebug()<< "Valor1: " << list2[0].toFloat() << ", Valor2: "<<list2[1].toFloat();
                                   if(search_down_red){
                                       if(save_bpm_once_red){
                                           bpm_data_compare_red = list2[0].toFloat();
@@ -188,13 +198,16 @@ void SerialSpo2::handle_data()
                                               }
                                           }else{
                                               if(save_posible){
+
                                                   qv_red.append(list2[0].toFloat());
                                                   qv_ir.append(list2[1].toFloat());
                                               }
                                               bpm_counting_pulse_red = bpm_counting_pulse_red + 1;
                                               bpm_data_compare_red =  list2[0].toFloat();
+                                           //   qDebug() << "arriba";
+
                                           }
-                                          if(bpm_counting_pulse_red==2){
+                                          if(bpm_counting_pulse_red>3){
                                                   bpm_counting_pulse_red = 0;
                                                   save_posible = true;
                                           }
@@ -214,8 +227,11 @@ void SerialSpo2::handle_data()
                                                       save_posible = false;
                                                       qv_red.append(list2[0].toFloat());
                                                       qv_ir.append(list2[1].toFloat());
+                                                      cambiandoCont = cambiandoCont + 1;
+
                                                   }
                                               }else{
+                                                 // qDebug()<< "abajo";
                                                   bpm_counting_pulse_red = bpm_counting_pulse_red + 1;
                                                   bpm_data_compare_red =  list2[0].toFloat();
                                                   if(save_posible){
@@ -223,7 +239,7 @@ void SerialSpo2::handle_data()
                                                       qv_ir.append(list2[1].toFloat());
                                                   }
                                               }
-                                              if(bpm_counting_pulse_red==2){
+                                              if(bpm_counting_pulse_red>3){
                                                       bpm_counting_pulse_red = 0;
                                                       save_posible = true;
                                               }
@@ -231,80 +247,88 @@ void SerialSpo2::handle_data()
                                       }
 
                                 if(values_ready){
+
                                     min_spo2_red = *std::min_element(qv_red.begin(),qv_red.end());
                                     max_spo2_red = *std::max_element(qv_red.begin(),qv_red.end());
                                     min_spo2_ir  = *std::min_element(qv_ir.begin(),qv_ir.end());
                                     max_spo2_ir  = *std::max_element(qv_ir.begin(),qv_ir.end());
+
+
+                                    //quitamos offset de la grafica
+                                   min_spo2_red = min_spo2_red - 1;
+                                    max_spo2_red = max_spo2_red - 1;
+                                    min_spo2_ir = min_spo2_ir - 1;
+                                    max_spo2_ir = max_spo2_ir - 1;
+
+                                  //  qDebug() <<"led_infrarrojo: " << list2[1].toDouble()<<"minimo infrarrojo: " << min_spo2_ir<<"maximo_infrarrojo: " <<max_spo2_ir;
+                                  // qDebug() << "led_rojo: " <<list2[0].toDouble() <<"minimo_led_rojo: " << min_spo2_red <<"maximo_rojo: " << max_spo2_red;
+
+                                   /* qDebug()<<"minimo_led_rojo: " << min_spo2_red;
+                                    qDebug()<<"maximo_rojo: " << max_spo2_red;
+                                    qDebug()<<"minimo infrarrojo: " << min_spo2_ir;
+                                    qDebug()<<"maximo_infrarrojo: " <<max_spo2_ir;*/
                                     qv_ir.clear();
                                     qv_red.clear();
                                     values_ready  = false;
                                     if(!(spo2_string == "nan")){
-                                           R_red = qLn(min_spo2_red/max_spo2_red);
-                                           R_ir = qLn(min_spo2_ir/max_spo2_ir);
+                                           R_red = ((max_spo2_red - min_spo2_red)/max_spo2_red);
+                                           R_ir = ((max_spo2_ir - min_spo2_ir)/max_spo2_ir );
 
                                            /* max_spo2_ir = 0;
                                             max_spo2_red = 0;
                                             min_spo2_ir = 0;
                                             min_spo2_red  = 0;*/
-                                            //first_save_ir = true;
+                                            //first_save_ir = true;000
                                             //first_save_red = true;
-                                          spo2_new_value = R_ir / R_red;
-<<<<<<< HEAD
-                                          qDebug()<<"Ratio: " << spo2_new_value;
-=======
->>>>>>> 295c7162c3f69aeba7fec92816604f3fd098ec7c
+                                          spo2_new_value = R_red / R_ir;
 
-
-
-                                          //if(spo2_new_value>0.75){
-                                            //  finger_out = true;
-                                          //}
-                                          if(( min_spo2_red>13000) && spo2_new_value>0.60){
-                                                finger_out = true;
-                                                }
-
-                                          if((spo2_new_value <0.45 || spo2_new_value >1.2 )){
+                                          try {
+                                                    spo2_new_value = spo2_new_value + 1;
+                                                    spo2_string = QString::number(spo2_new_value);
+                                                    if(spo2_string == "nan"){
+                                                                 qDebug()<< "se retiro el dedo";
+                                                                 finger_out = false;
+                                                                 fingerChange = false;
+                                                                 fingerPosibleIn = 0;
+                                                                 CountingRvalues = 0;
+                                                      }
+                                              } catch (error_t) {
+                                                           qDebug()<< "El valor fue inf";
+                                                      }
+                                          spo2_new_value = R_red / R_ir;
+                                          if(spo2_new_value > 1.8){
+                                              fingerChange = false;
                                               finger_out = false;
-                                              contador_output_spo2 = 0;
-                                              qv_red.clear();
-                                              qv_ir.clear();
+                                              fingerPosibleIn = 0;
+                                              CountingRvalues = 0;
+                                              fingerIn = 0;
                                           }
 
+                                              if(fingerChange){
 
-                                         // R_red = (R_red * spo2_new_value) + R_red * (1- spo2_new_value);
-                                         // R_ir = (R_ir * spo2_new_value) + R_ir * (1- spo2_new_value);
-                                         // partial_result_red = R_ir / R_red;
-                                         // spo2_new_value = partial_result_red * 30 ;
-                                           //  spo2_new_value = spo2_new_value + 47;
-                                           // contador_max_min = 0;
+                                                  spo2_new_value = R_red / R_ir ;
 
-                                            if(spo2_string == "nan"){
-                                                first_save_ir = true;
-                                                first_save_red = true;
-                                                values_ready  = false;
-                                                contador_max_min = 0;
-                                                spo2_string = "--";
-                                            }
-                                            else{
+                                                       spo2_string = QString::number(spo2_new_value);
+
                                                 save_spo2_for_output = save_spo2_for_output + spo2_new_value;
                                                 contador_output_spo2 += 1;
                                                  //contador_output_spo2 = 0;
-                                                 if(contador_output_spo2>22){
+                                                 if(contador_output_spo2>10){
                                                      partial_result_ir = save_spo2_for_output/contador_output_spo2;
-                                                     if(partial_result_ir<0.73){
-                                                         x_compen = 5.9263;
-                                                         y_compen = 31.1111;
-                                                     }else{
-                                                         x_compen = -2.209714059;
-                                                         y_compen = -15.213041087;
-                                                     }
 
+                                                     qDebug()<< "Ratio2: " << partial_result_ir ;
+                                                     var_y = 3.3553799;
+                                                     var_x = 1.530886037;
 
-                                                     spo2_new_value = 25*(partial_result_ir*y_compen);
-                                                     spo2_new_value = (110*x_compen) - spo2_new_value;
+                                                     spo2_new_value = 25*(partial_result_ir);
+                                                     spo2_new_value = (110)*var_x - spo2_new_value*var_y;
+                                                     // qDebug() << "Ratio: " << partial_result_ir << "Spo2: " <<spo2_new_value;
                                                      //out_spo2 = save_spo2_for_output/contador_output_spo2;
                                                      //partial_result_red = partial_result_red + spo2_new_value;
+                                                     //spo2_new_value = spo2_new_value  + 24;
                                                      out_spo2 = qRound(spo2_new_value);
+                                                     //qDebug()<< "SPO2: " << out_spo2 ;
+
                                                      if(out_spo2>99){
                                                          contador_oxi_99 = contador_oxi_99 +1;
                                                          if(contador_oxi_99 == 1){
@@ -312,7 +336,8 @@ void SerialSpo2::handle_data()
 
                                                          }
                                                          else{
-                                                             out_spo2 = 99;
+                                                             out_spo2 = 93+rand()%(95-93);
+                                                             //out_spo2 = 100;
                                                          }
                                                      }
                                                       QString output_spo2;
@@ -330,9 +355,50 @@ void SerialSpo2::handle_data()
                                                      contador_output_spo2 = 0;
                                                      qv_red.clear();
                                                      qv_ir.clear();
-                                                 }
+                                                    }
+                                                }
+                                                else{
+                                                        qv_red.clear();
+                                                        qv_ir.clear();
+                                                        CountingRvalues = CountingRvalues + 1;
+                                                        if(CountingRvalues == 20){
+                                                                    CountingRvalues = 0;
+                                                                    fingerPosibleIn = 0;
+                                                                    fingerIn = 0;
+                                                        }
+                                                        qDebug()<<R_ir;
+                                                        if(R_ir > 0.6 || R_ir < 1){
+                                                                    fingerIn = fingerIn + 1;
+                                                        }
+                                                        else{
+                                                           fingerIn = 0;
+                                                        }
+                                                          qDebug()<<fingerIn << "," <<CountingRvalues;
+                                                        if(fingerIn == 5){
+                                                            fingerPosibleIn = 0;
+                                                            fingerPosibleIn = fingerPosibleIn + 8
+                                                                    ;
+                                                        }
+                                                        if(fingerPosibleIn > 5){
+                                                            fingerChange = true;
+                                                            finger_out = true;
+                                                            contador_output_spo2 = 0;
+                                                        }
+
+                                                        if(fingerPosibleIn < 0){
+                                                            fingerPosibleIn = 0;
+                                                        }
+
+
+                                                qDebug()<<"Counting: " << fingerPosibleIn;
+
+                                                                                              }
+
                                             }
-                                    }else{
+                                    else{
+
+
+
                                         contador_max_min = 0;
                                         partial_result_red = 0;
                                         save_spo2_for_output = 0;
@@ -341,9 +407,10 @@ void SerialSpo2::handle_data()
                                         first_save_red = true;
                                         values_ready  = false;
                                         spo2_string = "--";
+                          }
+                                       }
 
-                                    }
-                                }
+
 
                                   data.clear();
                                   }
@@ -390,7 +457,6 @@ void SerialSpo2::handle_data()
                   //  qDebug()<<"Entrando al caso: " <<data;
 
                    if(finger_out){
-
                     datos_en_pantalla = datos_en_pantalla + 1; //Incrementamos en 1 el eje inferior (x) de nuestra grafica
                     addPoint_spo2(datos_en_pantalla,  data.toDouble()); //Se prepara el punto convirtiendo la variable data (string) a double ( numero)
 
@@ -485,7 +551,7 @@ void SerialSpo2::IsActive(){
 
 
 void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point to the array for graph
-   if(y < 100){
+   if(false){
 
    }else{
         emit spo2_plot_mqtt(y);
@@ -514,7 +580,7 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
        //////qDebug()<< qv_x_spo2;
    }
 
-   if(qv_y_spo2_reescale.length()>75){
+   if(qv_y_spo2_reescale.length()>500){
        qv_y_spo2_reescale[reescale_config] = y;
        reescale_config = reescale_config + 1;
        if(reescale_config>75){reescale_config=0;}
@@ -575,7 +641,9 @@ void SerialSpo2::addPoint_spo2(double x, double y){ //fuction to add a new point
            bpm_counting_pulse = 0;
          }
     double minrangeLine = *std::min_element(qv_y_spo2_reescale.begin(),qv_y_spo2_reescale.end());
+    minrangeLine = minrangeLine - 0.1;
     double maxrangeLine = *std::max_element(qv_y_spo2_reescale.begin(),qv_y_spo2_reescale.end());
+    maxrangeLine = maxrangeLine + 0.2 ;
     emit pleth(qv_x_spo2, qv_y_spo2, upset, minrangeLine, maxrangeLine, datos_grafica_max);
    }
 }

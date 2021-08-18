@@ -48,6 +48,7 @@ void SerialThread2::handle_data()
     QByteArray arreglo; //variable donde recibirimos el dato serial
     int aux = 0; //Como limpiaremos el buffer es necesesario comprobar que nuestro dato continuo venga completo, esta variable ayudará a ese proposito
     arreglo.append(ecg_port->readLine());
+
     //port->clear();
     //Jeru
     cadena2_2.append(arreglo);
@@ -57,7 +58,6 @@ void SerialThread2::handle_data()
             double grafica = cadena2_2.toDouble();
             aux = cadena2_2.length();
                if(aux>8){ // Para el ECG esperamos un dato similar a -xxx.x- de un total de 7 espacios, por lo que con 6, es considerado dato completo
-                   if(true){
                        //qDebug()<< "grafica";
                        datos_en_pantalla_ECG_22 = datos_en_pantalla_ECG_22 + 1; //Incrementamos en 1 el eje inferior (x) de nuestra grafica
                        addPoint_ECG(datos_en_pantalla_ECG_22,  grafica); //Se prepara el punto convirtiendo la variable data (string) a double ( numero)
@@ -67,7 +67,6 @@ void SerialThread2::handle_data()
                        cadena2_2.clear();
                        arreglo.clear();
                       // ecg_port->clear();
-                    }
            }
                cadena2_2.clear();
                arreglo.clear();

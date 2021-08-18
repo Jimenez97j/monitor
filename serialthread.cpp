@@ -58,7 +58,6 @@ void SerialThread::handle_data()
             double grafica = cadena2.toDouble();
             aux = cadena2.length();
                if(aux>8){ // Para el ECG esperamos un dato similar a -xxx.x- de un total de 7 espacios, por lo que con 6, es considerado dato completo
-                   if(true){
                        //qDebug()<< "grafica";
                        emit envia_a_mqtt_publish(cadena2);
                        datos_en_pantalla_ECG = datos_en_pantalla_ECG + 1; //Incrementamos en 1 el eje inferior (x) de nuestra grafica
@@ -69,7 +68,7 @@ void SerialThread::handle_data()
                        cadena2.clear();
                        arreglo.clear();
                       // ecg_port->clear();
-                    }
+
            }
                cadena2.clear();
                arreglo.clear();

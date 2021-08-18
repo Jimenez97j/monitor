@@ -73,6 +73,8 @@ void ecghandle::plot_ECG(QVector<double> x , QVector<double> y , int square, dou
    //qDebug() << "plot_ECG";
     ui->borrargraph_ecg->setGeometry(square, 8, 23, 151); //a rectange is moved as the system create the graph
    //ui->plot_ecg->yAxis->rescale(true);
+    minrangeLine = minrangeLine -10;
+    maxrangeLine = maxrangeLine +10;
    ui->plot_ecg->yAxis->setRange(minrangeLine, maxrangeLine);  //Reescale the Y axis if it is necessary
    ui->plot_ecg->xAxis->setRange(0,max); //Reescale the X axis if it is necessary
    ui->plot_ecg->graph(0)->setData(x,y);

@@ -74,10 +74,13 @@ public:
     QTimer *timerAlarmasSonido;
     //timer para comprobar las alarmas
     QTimer *timerCheckAlarmStatus;
+    //timer para graficar plestimografia
+    QTimer *timerSPO2;
 
 public slots:
     void alarm_sound();
     void check_alarms_time_to();
+    void graficar_plestimografia();
     void startpani();
     void leds_inicio_carga();
     void leds_inicio_okey();

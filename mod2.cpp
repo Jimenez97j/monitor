@@ -349,46 +349,7 @@ void MOD2::funcionActivacionTimer(){
     captura = captura + 1;
     numbers_alarms = numbers_alarms + 1;
     //clean the letters of notification after 2 seconds
-    if(captura==2000 && capture_activated){
-        ui->notificacion->setText("");
-        ui->notificacion2->setText("");
-        ui->notificacion3->setText("");
-        ui->notificacion4->setText("");
-        ui->notificacion5->setText("");
-        ui->notificacion6->setText("");
-        ui->notificacion7->setText("");
-        ui->notificacion8->setText("");
-        ui->notificacion9->setText("");
-        ui->notificacion10->setText("");
-        ui->notificacion11->setText("");
-        ui->notificacion12->setText("");
-        ui->notificacion13->setText("");
-        captura=0;
-        capture_activated = false;
-    }
 
-    //create an effect for screenshot
-    if(captura==100 && capture_activated_animation)
-    {
-         ui->frame->setStyleSheet("background-color: rgba(255, 255, 255, 183);");
-    }
-    if(captura==140 && capture_activated_animation)
-    {
-         ui->frame->setStyleSheet("background-color: rgba(255, 255, 255, 155);");
-    }
-    if(captura==190 && capture_activated_animation)
-    {
-         ui->frame->setStyleSheet("background-color: rgba(255, 255, 255, 105);");
-    }
-    if(captura==240 && capture_activated_animation)
-    {
-         ui->frame->setStyleSheet("background-color: rgba(255, 255, 255, 80);");
-    }
-    if(captura==290 && capture_activated_animation)
-    {
-         ui->frame->hide();
-         capture_activated_animation = false;
-    }
 
 
     if(numbers_alarms == 500){
@@ -528,21 +489,6 @@ void MOD2::on_captura_pressed()
         QPixmap qpix = QSCREEN->grabWindow(this->winId(), 0, 0, QApplication::desktop()->width(),
                                        QApplication::desktop()->height());
         qpix.save("./imagenes/"+hora2+".png");
-        ui->notificacion->setText("<font color='#08afff'>C</font>");
-        ui->notificacion2->setText("<font color='#08afff'>A</font>");
-        ui->notificacion3->setText("<font color='#08afff'>P</font>");
-        ui->notificacion4->setText("<font color='#08afff'>T</font>");
-        ui->notificacion5->setText("<font color='#08afff'>U</font>");
-        ui->notificacion6->setText("<font color='#08afff'>R</font>");
-        ui->notificacion7->setText("<font color='#08afff'>A</font>");
-        ui->notificacion8->setText("<font color='#08afff'>T</font>");
-        ui->notificacion9->setText("<font color='#08afff'>O</font>");
-        ui->notificacion10->setText("<font color='#08afff'>M</font>");
-        ui->notificacion11->setText("<font color='#08afff'>A</font>");
-        ui->notificacion12->setText("<font color='#08afff'>D</font>");
-        ui->notificacion13->setText("<font color='#08afff'>A</font>");
-        ui->frame->show();
-        ui->frame->setStyleSheet("background-color: #ffffff;");
         captura = 0;
         capture_activated = true;
         capture_activated_animation = true;

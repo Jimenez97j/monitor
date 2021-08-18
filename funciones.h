@@ -193,9 +193,6 @@ void MainWindow::plot_spo2(QVector<double> x, QVector<double> y, int upset_data,
        ui->plot->yAxis->setRange(min_range, max_range);  //Reescale the Y axis if it is necessary
        ui->plot->xAxis->setRange(upset_data, size_max); //Reescale the X axis if it is necessary
        ui->plot->graph(0)->setData(x,y); //Add the array of values to the graph set
-       ui->plot->replot(); //paint the new values in the screen
-       ui->plot->update(); // update the graph
-       RecibirArreglo(1);
     // datos_grafica_max=datos_grafica_max+1; //increment the variable to move the graph along with data.
     // upset=upset+1; //increment the value to move the array along with data.
    }
